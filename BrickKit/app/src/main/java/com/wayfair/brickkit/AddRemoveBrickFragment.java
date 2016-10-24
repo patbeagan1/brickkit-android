@@ -2,13 +2,20 @@ package com.wayfair.brickkit;
 
 import android.annotation.SuppressLint;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.wayfair.brickkit.bricks.ControllerBrick;
 import com.wayfair.bricks.BaseBrick;
+import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
+import com.wayfair.bricks.BrickRecyclerAdapter;
 import com.wayfair.bricks.SimpleBrickSize;
+import com.wayfair.bricks.StickyFooterHelper;
+import com.wayfair.bricks.StickyHeaderHelper;
 import com.wayfair.bricks.samples.TextBrick;
+
+import java.util.ArrayList;
 
 public class AddRemoveBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
@@ -99,6 +106,11 @@ public class AddRemoveBrickFragment extends BrickFragment {
                 brickRecyclerAdapter.addItem(brick);
             }
         }
+    }
+
+    @Override
+    public ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView) {
+        return new ArrayList<>();
     }
 
     @Override

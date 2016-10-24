@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
-public class StickyFooterHelper extends RecyclerView.OnScrollListener implements StickyHelperCallback {
+public class StickyFooterHelper extends BrickBehaviour {
     public BrickRecyclerAdapter adapter;
     public int footerPosition = RecyclerView.NO_POSITION;
     public BrickViewHolder stickyFooterViewHolder;
@@ -17,7 +17,6 @@ public class StickyFooterHelper extends RecyclerView.OnScrollListener implements
 
     public StickyFooterHelper(BrickRecyclerAdapter adapter) {
         this.adapter = adapter;
-        this.adapter.dataManager.stickyFooterCallback = this;
     }
 
     private static void resetFooter(RecyclerView.ViewHolder footer) {
@@ -50,24 +49,8 @@ public class StickyFooterHelper extends RecyclerView.OnScrollListener implements
                 ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    public void attachToRecyclerView(RecyclerView parent) {
-        if (adapter.recyclerView != null) {
-            adapter.recyclerView.removeOnScrollListener(this);
-            clearFooter();
-        }
-        adapter.recyclerView = parent;
-        if (adapter.recyclerView != null) {
-            adapter.recyclerView.addOnScrollListener(this);
-            adapter.recyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    initStickyFootersHolder();
-                }
-            });
-        }
-    }
-
-    private void initStickyFootersHolder() {
+    @Override
+    public void onScroll() {
         //Initialize Holder Layout and show sticky footer if exists already
         stickyHolderLayout = getStickySectionFootersHolder();
         if (stickyHolderLayout != null) {
@@ -80,6 +63,11 @@ public class StickyFooterHelper extends RecyclerView.OnScrollListener implements
             Log.w(this.getClass().getSimpleName(), "WARNING! ViewGroup for Sticky Footers unspecified! You must include @layout/sticky_footer_layout"
                     + " or implement FlexibleAdapter.getStickySectionFootersHolder() method");
         }
+    }
+
+    @Override
+    public void onDataSetChanged() {
+        updateOrClearFooter(true);
     }
 
     public void detachFromRecyclerView(RecyclerView parent) {
@@ -240,10 +228,5 @@ public class StickyFooterHelper extends RecyclerView.OnScrollListener implements
 
     public ViewGroup getStickySectionFootersHolder() {
         return adapter.recyclerView != null ? (ViewGroup) ((Activity) adapter.recyclerView.getContext()).findViewById(R.id.sticky_footer_container) : null;
-    }
-
-    @Override
-    public void updateStickyItem() {
-        updateOrClearFooter(true);
     }
 }

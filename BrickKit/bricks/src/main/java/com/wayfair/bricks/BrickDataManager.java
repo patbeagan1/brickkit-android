@@ -8,12 +8,12 @@ public class BrickDataManager implements Serializable {
     private ArrayList<BaseBrick> items;
     private ArrayList<BaseBrick> currentlyVisibleItems;
     private boolean dataHasChanged;
-    StickyHelperCallback stickyHeaderCallback;
-    StickyHelperCallback stickyFooterCallback;
+    public ArrayList<BrickBehaviour> behaviours;
 
     public BrickDataManager(int maxSpanCount) {
         this.maxSpanCount = maxSpanCount;
         this.items = new ArrayList<>();
+        this.behaviours = new ArrayList<>();
         this.currentlyVisibleItems = new ArrayList<>();
     }
 
@@ -100,8 +100,9 @@ public class BrickDataManager implements Serializable {
 
     public void dataHasChanged() {
         dataHasChanged = true;
-        stickyHeaderCallback.updateStickyItem();
-        stickyFooterCallback.updateStickyItem();
+        for (BrickBehaviour behaviour : behaviours) {
+            behaviour.onDataSetChanged();
+        }
     }
 
     public int dataSourceIndex(BaseBrick item) {

@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 public abstract class BrickFragment extends Fragment {
     public BrickRecyclerAdapter brickRecyclerAdapter;
-    public StickyHeaderHelper stickyHeaderHelper;
-    public StickyFooterHelper stickyFooterHelper;
 
 
     @Override
@@ -53,10 +53,7 @@ public abstract class BrickFragment extends Fragment {
             recyclerView.setAdapter(brickRecyclerAdapter);
             recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(dataManager));
 
-            stickyHeaderHelper = new StickyHeaderHelper(brickRecyclerAdapter);
-            stickyHeaderHelper.attachToRecyclerView(recyclerView);
-            stickyFooterHelper = new StickyFooterHelper(brickRecyclerAdapter);
-            stickyFooterHelper.attachToRecyclerView(recyclerView);
+            dataManager.behaviours.addAll(addBehaviours(brickRecyclerAdapter, recyclerView));
 
             createBricks();
         }
@@ -64,6 +61,7 @@ public abstract class BrickFragment extends Fragment {
 
     public abstract int maxSpans();
     public abstract void createBricks();
+    public abstract ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView);
     public abstract int orientation();
     public abstract boolean reverse();
 }

@@ -10,8 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
-public class StickyHeaderHelper extends RecyclerView.OnScrollListener implements StickyHelperCallback {
-    public RecyclerView recyclerView;
+public class StickyHeaderHelper extends BrickBehaviour {
     public BrickRecyclerAdapter adapter;
     public int headerPosition = RecyclerView.NO_POSITION;
     public BrickViewHolder stickyHeaderViewHolder;
@@ -19,7 +18,6 @@ public class StickyHeaderHelper extends RecyclerView.OnScrollListener implements
 
     public StickyHeaderHelper(BrickRecyclerAdapter adapter) {
         this.adapter = adapter;
-        this.adapter.dataManager.stickyHeaderCallback = this;
     }
 
     private static void resetHeader(RecyclerView.ViewHolder header) {
@@ -52,24 +50,8 @@ public class StickyHeaderHelper extends RecyclerView.OnScrollListener implements
                 ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    public void attachToRecyclerView(RecyclerView parent) {
-        if (recyclerView != null) {
-            recyclerView.removeOnScrollListener(this);
-            clearHeader();
-        }
-        recyclerView = parent;
-        if (recyclerView != null) {
-            recyclerView.addOnScrollListener(this);
-            recyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    initStickyHeadersHolder();
-                }
-            });
-        }
-    }
-
-    private void initStickyHeadersHolder() {
+    @Override
+    public void onScroll() {
         //Initialize Holder Layout and show sticky header if exists already
         stickyHolderLayout = getStickySectionHeadersHolder();
         if (stickyHolderLayout != null) {
@@ -84,12 +66,9 @@ public class StickyHeaderHelper extends RecyclerView.OnScrollListener implements
         }
     }
 
-    public void detachFromRecyclerView(RecyclerView parent) {
-        if (recyclerView == parent) {
-            recyclerView.removeOnScrollListener(this);
-            clearHeader();
-            recyclerView = null;
-        }
+    @Override
+    public void onDataSetChanged() {
+        updateOrClearHeader(true);
     }
 
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -97,7 +76,7 @@ public class StickyHeaderHelper extends RecyclerView.OnScrollListener implements
     }
 
     public void updateOrClearHeader(boolean updateHeaderContent) {
-        if (stickyHolderLayout == null || recyclerView == null || recyclerView.getChildCount() == 0) {
+        if (stickyHolderLayout == null || adapter.recyclerView == null || adapter.recyclerView.getChildCount() == 0) {
             clearHeader();
             return;
         }
@@ -111,8 +90,8 @@ public class StickyHeaderHelper extends RecyclerView.OnScrollListener implements
 
     private int getHeaderPosition(int adapterPosHere) {
         if (adapterPosHere == RecyclerView.NO_POSITION) {
-            View firstChild = recyclerView.getChildAt(0);
-            adapterPosHere = recyclerView.getChildAdapterPosition(firstChild);
+            View firstChild = adapter.recyclerView.getChildAt(0);
+            adapterPosHere = adapter.recyclerView.getChildAdapterPosition(firstChild);
         }
         BaseBrick header = adapter.getSectionHeader(adapterPosHere);
         //Header cannot be sticky if it's also an Expandable in collapsed status, RV will raise an exception
@@ -149,30 +128,30 @@ public class StickyHeaderHelper extends RecyclerView.OnScrollListener implements
 
     private BrickViewHolder getHeaderViewHolder(int position) {
         //Find existing ViewHolder
-        BrickViewHolder holder = (BrickViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        BrickViewHolder holder = (BrickViewHolder) adapter.recyclerView.findViewHolderForAdapterPosition(position);
         if (holder == null) {
             //Create and binds a new ViewHolder
-            holder = (BrickViewHolder) adapter.createViewHolder(recyclerView, adapter.getItemViewType(position));
+            holder = (BrickViewHolder) adapter.createViewHolder(adapter.recyclerView, adapter.getItemViewType(position));
             adapter.bindViewHolder(holder, position);
 
             //Calculate width and height
             int widthSpec;
             int heightSpec;
-            if (getOrientation(recyclerView) == LinearLayoutManager.VERTICAL) {
-                widthSpec = View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), View.MeasureSpec.EXACTLY);
-                heightSpec = View.MeasureSpec.makeMeasureSpec(recyclerView.getHeight(), View.MeasureSpec.UNSPECIFIED);
+            if (getOrientation(adapter.recyclerView) == LinearLayoutManager.VERTICAL) {
+                widthSpec = View.MeasureSpec.makeMeasureSpec(adapter.recyclerView.getWidth(), View.MeasureSpec.EXACTLY);
+                heightSpec = View.MeasureSpec.makeMeasureSpec(adapter.recyclerView.getHeight(), View.MeasureSpec.UNSPECIFIED);
             } else {
-                widthSpec = View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-                heightSpec = View.MeasureSpec.makeMeasureSpec(recyclerView.getHeight(), View.MeasureSpec.EXACTLY);
+                widthSpec = View.MeasureSpec.makeMeasureSpec(adapter.recyclerView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+                heightSpec = View.MeasureSpec.makeMeasureSpec(adapter.recyclerView.getHeight(), View.MeasureSpec.EXACTLY);
             }
 
             //Measure and Layout the itemView
             final View headerView = holder.itemView;
             int childWidth = ViewGroup.getChildMeasureSpec(widthSpec,
-                    recyclerView.getPaddingLeft() + recyclerView.getPaddingRight(),
+                    adapter.recyclerView.getPaddingLeft() + adapter.recyclerView.getPaddingRight(),
                     headerView.getLayoutParams().width);
             int childHeight = ViewGroup.getChildMeasureSpec(heightSpec,
-                    recyclerView.getPaddingTop() + recyclerView.getPaddingBottom(),
+                    adapter.recyclerView.getPaddingTop() + adapter.recyclerView.getPaddingBottom(),
                     headerView.getLayoutParams().height);
 
             headerView.measure(childWidth, childHeight);
@@ -210,12 +189,12 @@ public class StickyHeaderHelper extends RecyclerView.OnScrollListener implements
 
         //Search for the position where the next header item is found and take the new offset
         for (int i = 1; i > 0; i--) {
-            final View nextChild = recyclerView.getChildAt(i);
+            final View nextChild = adapter.recyclerView.getChildAt(i);
             if (nextChild != null) {
-                int adapterPos = recyclerView.getChildAdapterPosition(nextChild);
+                int adapterPos = adapter.recyclerView.getChildAdapterPosition(nextChild);
                 int nextHeaderPosition = getHeaderPosition(adapterPos);
                 if (headerPosition != nextHeaderPosition) {
-                    if (getOrientation(recyclerView) == LinearLayoutManager.HORIZONTAL) {
+                    if (getOrientation(adapter.recyclerView) == LinearLayoutManager.HORIZONTAL) {
                         if (nextChild.getLeft() > 0) {
                             int headerWidth = stickyHeaderViewHolder.itemView.getMeasuredWidth();
                             headerOffsetX = Math.min(nextChild.getLeft() - headerWidth, 0);
@@ -241,11 +220,6 @@ public class StickyHeaderHelper extends RecyclerView.OnScrollListener implements
     }
 
     public ViewGroup getStickySectionHeadersHolder() {
-        return recyclerView != null ? (ViewGroup) ((Activity) recyclerView.getContext()).findViewById(R.id.sticky_header_container) : null;
-    }
-
-    @Override
-    public void updateStickyItem() {
-        updateOrClearHeader(true);
+        return adapter.recyclerView != null ? (ViewGroup) ((Activity) adapter.recyclerView.getContext()).findViewById(R.id.sticky_header_container) : null;
     }
 }

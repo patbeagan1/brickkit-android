@@ -1,10 +1,13 @@
 package com.wayfair.brickkit;
 
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.wayfair.bricks.BaseBrick;
+import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
+import com.wayfair.bricks.BrickRecyclerAdapter;
 import com.wayfair.bricks.SimpleBrickSize;
 import com.wayfair.bricks.samples.UnusedBrick;
 import com.wayfair.bricks.samples.UsedBrick;
@@ -134,6 +137,27 @@ public class MainActivityFragment extends BrickFragment {
                         }
                 )
         );
+        usedBricks.add(
+                new UsedBrick(
+                        getContext(),
+                        new SimpleBrickSize(brickRecyclerAdapter) {
+                            @Override
+                            protected int size() {
+                                return TWO_FIFTH;
+                            }
+                        },
+                        "Fragment Brick View",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.content, new FragmentBrickFragment())
+                                        .addToBackStack(null)
+                                        .commit();
+                            }
+                        }
+                )
+        );
 
         for (int i = 0; i < usedBricks.size() + 2; i++) {
             SimpleBrickSize first;
@@ -192,6 +216,11 @@ public class MainActivityFragment extends BrickFragment {
             UnusedBrick unusedBrick2 = new UnusedBrick(getContext(), last);
             brickRecyclerAdapter.addItem(unusedBrick2);
         }
+    }
+
+    @Override
+    public ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView) {
+        return new ArrayList<>();
     }
 
     @Override

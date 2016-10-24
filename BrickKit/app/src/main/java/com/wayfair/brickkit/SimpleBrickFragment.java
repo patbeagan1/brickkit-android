@@ -1,10 +1,15 @@
 package com.wayfair.brickkit;
 
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 
+import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
+import com.wayfair.bricks.BrickRecyclerAdapter;
 import com.wayfair.bricks.OrientationBrickSize;
 import com.wayfair.bricks.samples.TextBrick;
+
+import java.util.ArrayList;
 
 public class SimpleBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
@@ -35,6 +40,11 @@ public class SimpleBrickFragment extends BrickFragment {
             );
             brickRecyclerAdapter.addItem(unusedBrick2);
         }
+    }
+
+    @Override
+    public ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView) {
+        return new ArrayList<>();
     }
 
     @Override

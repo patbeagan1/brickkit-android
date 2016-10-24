@@ -3,18 +3,18 @@ package com.wayfair.brickkit;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 
+import com.wayfair.bricks.BaseBrick;
 import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
 import com.wayfair.bricks.BrickRecyclerAdapter;
+import com.wayfair.bricks.FragmentBrick;
 import com.wayfair.bricks.OrientationBrickSize;
 import com.wayfair.bricks.SimpleBrickSize;
-import com.wayfair.bricks.StickyFooterHelper;
-import com.wayfair.bricks.StickyHeaderHelper;
 import com.wayfair.bricks.samples.TextBrick;
 
 import java.util.ArrayList;
 
-public class HeaderBrickFragment extends BrickFragment {
+public class FragmentBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
     private static final int HALF = 120;
 
@@ -25,40 +25,26 @@ public class HeaderBrickFragment extends BrickFragment {
 
     @Override
     public void createBricks() {
-        for (int i = 0; i < 100; i++) {
-            TextBrick unusedBrick2 = new TextBrick(
+        for (int i = 0; i < 1; i++) {
+            BaseBrick brick = new FragmentBrick(
                     getContext(),
-                    new OrientationBrickSize(brickRecyclerAdapter){
+                    new SimpleBrickSize(brickRecyclerAdapter) {
                         @Override
-                        protected int portrait() {
+                        protected int size() {
                             return MAX_SPANS;
                         }
-
-                        @Override
-                        protected int landscape() {
-                            return HALF;
-                        }
                     },
-                    "Brick: " + i
+                    getChildFragmentManager(),
+                    new SimpleBrickFragment(),
+                    "simple" + i
             );
-
-            if (i % 10 == 0) {
-                unusedBrick2.header = true;
-            }
-
-            brickRecyclerAdapter.addItem(unusedBrick2);
+            brickRecyclerAdapter.addItem(brick);
         }
     }
 
     @Override
     public ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView) {
-        ArrayList<BrickBehaviour> behaviours = new ArrayList<>();
-
-        StickyHeaderHelper stickyHeaderHelper = new StickyHeaderHelper(brickRecyclerAdapter);
-        stickyHeaderHelper.attachToRecyclerView(recyclerView);
-        behaviours.add(stickyHeaderHelper);
-
-        return behaviours;
+        return new ArrayList<>();
     }
 
     @Override
