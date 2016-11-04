@@ -189,7 +189,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
 
     @Override
     public int getItemCount() {
-        return dataManager.getItems().size();
+        return dataManager.getRecyclerViewItems().size();
     }
 
     @Override
@@ -202,11 +202,11 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
     }
 
     public BaseBrick get(int position) {
-        return dataManager.getItems().get(position);
+        return dataManager.getRecyclerViewItems().get(position);
     }
 
     public int indexOf(BaseBrick brick) {
-        return dataManager.getItems().indexOf(brick);
+        return dataManager.getRecyclerViewItems().indexOf(brick);
     }
 
     public BaseBrick getSectionHeader(int position) {
@@ -224,7 +224,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
 
     public BaseBrick getSectionFooter(int position) {
         if (position != -1) {
-            for (int i = position; i < dataManager.adapterSize(); i++) {
+            for (int i = position; i < dataManager.getRecyclerViewItems().size(); i++) {
                 BaseBrick baseBrick = get(i);
                 if (baseBrick != null && baseBrick.footer) {
                     return baseBrick;
@@ -233,81 +233,6 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
         }
 
         return null;
-    }
-
-    public void setItems(ArrayList<BaseBrick> items) {
-        dataManager.setItems(items);
-    }
-
-    public void addItem(BaseBrick item) {
-        dataManager.addItem(item);
-        safeNotifyItemInserted(dataManager.adapterSize());
-    }
-
-    public void addItem(int index, BaseBrick item) {
-        dataManager.addItem(index, item);
-        safeNotifyItemInserted(index);
-    }
-
-    public void removeItem(BaseBrick item) {
-        dataManager.removeItem(item);
-        safeNotifyItemRemoved(dataManager.adapterIndex(item));
-    }
-
-    public void removeItem(int index) {
-        dataManager.removeItem(index);
-        safeNotifyItemRemoved(index);
-    }
-
-    public void addItems(ArrayList<BaseBrick> items) {
-        if (items != null && items.size() > 0) {
-            dataManager.addItems(items);
-            safeNotifyItemRangeInserted(items.indexOf(items.get(0)), items.size());
-        }
-    }
-
-    public void addItems(int index, ArrayList<BaseBrick> items) {
-        if (items != null && items.size() > 0) {
-            dataManager.addItems(items);
-            safeNotifyItemRangeInserted(index, items.size());
-        }
-    }
-
-    public void removeItems(int start, int count) {
-        dataManager.removeItems(start, count);
-        safeNotifyItemRangeRemoved(start, count);
-    }
-
-    public void removeItems(ArrayList<BaseBrick> items) {
-        if (items != null && items.size() > 0) {
-            dataManager.removeItems(items);
-            safeNotifyItemRangeRemoved(items.indexOf(items.get(0)), items.size());
-        }
-    }
-
-    public void clear() {
-        dataManager.clear();
-        safeNotifyDataSetChanged();
-    }
-
-    public void replaceItem(int index, BaseBrick replacement) {
-        dataManager.replaceItem(index, replacement);
-        safeNotifyItemChanged(index);
-    }
-
-    public void replaceItem(BaseBrick target, BaseBrick replacement) {
-        dataManager.replaceItem(target, replacement);
-        safeNotifyItemChanged(dataManager.adapterIndex(replacement));
-    }
-
-    public void refreshItem(int index) {
-        dataManager.dataHasChanged();
-        safeNotifyItemChanged(index);
-    }
-
-    public void refreshItem(BaseBrick item) {
-        dataManager.dataHasChanged();
-        safeNotifyItemChanged(dataManager.adapterIndex(item));
     }
 
     public int dataSourceIndex(BaseBrick item) {
@@ -320,10 +245,6 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
 
     public void removeAll(Class clazz) {
         dataManager.removeAll(clazz);
-    }
-
-    public int size() {
-        return dataManager.adapterSize();
     }
 
     public void setOnReachedItemAtPosition(OnReachedItemAtPosition onReachedItemAtPosition) {

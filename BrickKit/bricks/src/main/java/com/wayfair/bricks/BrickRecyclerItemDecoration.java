@@ -24,13 +24,13 @@ public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        if (parent.getChildAdapterPosition(view) == -1 || brickDataManager.getItems().get(parent.getChildAdapterPosition(view)) == null) {
+        if (parent.getChildAdapterPosition(view) == -1 || brickDataManager.getRecyclerViewItems().get(parent.getChildAdapterPosition(view)) == null) {
             return;
         }
 
         //brickDataManager.getItems().get(parent.getChildAdapterPosition(view)).padding(outRect);
         int adapterPosition = parent.getChildAdapterPosition(view);
-        BaseBrick brick = brickDataManager.getItems().get(adapterPosition);
+        BaseBrick brick = brickDataManager.getRecyclerViewItems().get(adapterPosition);
 
         if (useDynamicPadding && !brick.excludeFromDynamicPadding && brick.padding == null) {
             applyDynamicPadding(view.getContext(), outRect, adapterPosition, brick);
@@ -67,7 +67,7 @@ public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
      */
     private void applyDynamicPadding(Context context, Rect outRect, int adapterPosition, BaseBrick brick) {
         // Find range of group
-        List<BaseBrick> bricks = brickDataManager.getItems();
+        List<BaseBrick> bricks = brickDataManager.getRecyclerViewItems();
         int groupStartPosition = -1;
         int groupEndPosition = -1;
         for (int i = 0; i < bricks.size(); i++) {

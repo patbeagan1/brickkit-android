@@ -28,7 +28,7 @@ public class HeaderBrickFragment extends BrickFragment {
         for (int i = 0; i < 100; i++) {
             TextBrick unusedBrick2 = new TextBrick(
                     getContext(),
-                    new OrientationBrickSize(brickRecyclerAdapter){
+                    new OrientationBrickSize(dataManager){
                         @Override
                         protected int portrait() {
                             return MAX_SPANS;
@@ -46,19 +46,13 @@ public class HeaderBrickFragment extends BrickFragment {
                 unusedBrick2.header = true;
             }
 
-            brickRecyclerAdapter.addItem(unusedBrick2);
+            dataManager.addLast(unusedBrick2);
         }
     }
 
     @Override
-    public ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView) {
-        ArrayList<BrickBehaviour> behaviours = new ArrayList<>();
-
-        StickyHeaderHelper stickyHeaderHelper = new StickyHeaderHelper(brickRecyclerAdapter);
-        stickyHeaderHelper.attachToRecyclerView(recyclerView);
-        behaviours.add(stickyHeaderHelper);
-
-        return behaviours;
+    public void addBehaviours() {
+        dataManager.behaviours.add(new StickyHeaderHelper(dataManager));
     }
 
     @Override

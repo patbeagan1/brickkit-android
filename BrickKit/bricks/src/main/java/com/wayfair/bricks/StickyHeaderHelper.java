@@ -1,7 +1,6 @@
 package com.wayfair.bricks;
 
 import android.app.Activity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,13 +10,14 @@ import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 public class StickyHeaderHelper extends BrickBehaviour {
-    public BrickRecyclerAdapter adapter;
-    public int headerPosition = RecyclerView.NO_POSITION;
-    public BrickViewHolder stickyHeaderViewHolder;
+    private BrickRecyclerAdapter adapter;
+    private int headerPosition = RecyclerView.NO_POSITION;
+    private BrickViewHolder stickyHeaderViewHolder;
     private ViewGroup stickyHolderLayout;
 
-    public StickyHeaderHelper(BrickRecyclerAdapter adapter) {
-        this.adapter = adapter;
+    public StickyHeaderHelper(BrickDataManager brickDataManager) {
+        this.adapter = brickDataManager.brickRecyclerAdapter;
+        attachToRecyclerView();
     }
 
     private static void resetHeader(RecyclerView.ViewHolder header) {
@@ -51,6 +51,11 @@ public class StickyHeaderHelper extends BrickBehaviour {
     }
 
     @Override
+    public void onDataSetChanged() {
+        updateOrClearHeader(true);
+    }
+
+    @Override
     public void onScroll() {
         //Initialize Holder Layout and show sticky header if exists already
         stickyHolderLayout = getStickySectionHeadersHolder();
@@ -67,15 +72,29 @@ public class StickyHeaderHelper extends BrickBehaviour {
     }
 
     @Override
-    public void onDataSetChanged() {
-        updateOrClearHeader(true);
+    public void attachToRecyclerView() {
+        adapter.recyclerView.addOnScrollListener(this);
+        adapter.recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                onScroll();
+            }
+        });
+    }
+
+    @Override
+    public void detachFromRecyclerView() {
+        if (adapter.recyclerView != null) {
+            adapter.recyclerView.removeOnScrollListener(this);
+            clearHeader();
+        }
     }
 
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         updateOrClearHeader(false);
     }
 
-    public void updateOrClearHeader(boolean updateHeaderContent) {
+    private void updateOrClearHeader(boolean updateHeaderContent) {
         if (stickyHolderLayout == null || adapter.recyclerView == null || adapter.recyclerView.getChildCount() == 0) {
             clearHeader();
             return;
@@ -101,7 +120,7 @@ public class StickyHeaderHelper extends BrickBehaviour {
         return adapter.indexOf(header);
     }
 
-    public void clearHeader() {
+    private void clearHeader() {
         if (stickyHeaderViewHolder != null) {
             //if (FlexibleAdapter.DEBUG) Log.v(TAG, "clearFooter");
             resetHeader(stickyHeaderViewHolder);
@@ -131,7 +150,7 @@ public class StickyHeaderHelper extends BrickBehaviour {
         BrickViewHolder holder = (BrickViewHolder) adapter.recyclerView.findViewHolderForAdapterPosition(position);
         if (holder == null) {
             //Create and binds a new ViewHolder
-            holder = (BrickViewHolder) adapter.createViewHolder(adapter.recyclerView, adapter.getItemViewType(position));
+            holder = adapter.createViewHolder(adapter.recyclerView, adapter.getItemViewType(position));
             adapter.bindViewHolder(holder, position);
 
             //Calculate width and height
@@ -219,7 +238,7 @@ public class StickyHeaderHelper extends BrickBehaviour {
         stickyHeaderViewHolder.itemView.setTranslationY(headerOffsetY);
     }
 
-    public ViewGroup getStickySectionHeadersHolder() {
+    private ViewGroup getStickySectionHeadersHolder() {
         return adapter.recyclerView != null ? (ViewGroup) ((Activity) adapter.recyclerView.getContext()).findViewById(R.id.sticky_header_container) : null;
     }
 }
