@@ -1,8 +1,8 @@
 package com.wayfair.bricks;
 
 public abstract class DeviceBrickSize extends BrickSize {
-    public DeviceBrickSize(BrickRecyclerAdapter brickRecyclerAdapter) {
-        super(brickRecyclerAdapter);
+    public DeviceBrickSize(BrickDataManager brickDataManager) {
+        super(brickDataManager);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class FragmentBrickFragment extends BrickFragment {
         for (int i = 0; i < 1; i++) {
             BaseBrick brick = new FragmentBrick(
                     getContext(),
-                    new SimpleBrickSize(brickRecyclerAdapter) {
+                    new SimpleBrickSize(dataManager) {
                         @Override
                         protected int size() {
                             return MAX_SPANS;
@@ -38,13 +38,13 @@ public class FragmentBrickFragment extends BrickFragment {
                     new SimpleBrickFragment(),
                     "simple" + i
             );
-            brickRecyclerAdapter.addItem(brick);
+            dataManager.addLast(brick);
         }
     }
 
     @Override
-    public ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView) {
-        return new ArrayList<>();
+    public void addBehaviours() {
+
     }
 
     @Override

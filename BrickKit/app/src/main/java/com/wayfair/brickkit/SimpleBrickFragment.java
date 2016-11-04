@@ -25,7 +25,7 @@ public class SimpleBrickFragment extends BrickFragment {
         for (int i = 0; i < 100; i++) {
             TextBrick unusedBrick2 = new TextBrick(
                     getContext(),
-                    new OrientationBrickSize(brickRecyclerAdapter) {
+                    new OrientationBrickSize(dataManager) {
                         @Override
                         protected int portrait() {
                             return MAX_SPANS;
@@ -38,13 +38,13 @@ public class SimpleBrickFragment extends BrickFragment {
                     },
                     "Brick: " + i
             );
-            brickRecyclerAdapter.addItem(unusedBrick2);
+            dataManager.addLast(unusedBrick2);
         }
     }
 
     @Override
-    public ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView) {
-        return new ArrayList<>();
+    public void addBehaviours() {
+
     }
 
     @Override

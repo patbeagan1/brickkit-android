@@ -19,11 +19,11 @@ class BrickGridLayoutManager extends GridLayoutManager {
         setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (brickDataManager.getItems().get(position) == null) {
+                if (brickDataManager.getRecyclerViewItems().get(position) == null) {
                     return 1;
                 }
 
-                return brickDataManager.getItems().get(position).spanSize.getSpans(context);
+                return brickDataManager.getRecyclerViewItems().get(position).spanSize.getSpans(context);
             }
         });
     }

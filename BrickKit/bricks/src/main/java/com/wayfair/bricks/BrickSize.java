@@ -8,8 +8,8 @@ public abstract class BrickSize {
     private int maxSpan;
     private BaseBrick baseBrick;
 
-    public BrickSize(BrickRecyclerAdapter brickRecyclerAdapter) {
-        this.maxSpan = brickRecyclerAdapter.dataManager.maxSpanCount;
+    public BrickSize(BrickDataManager dataManager) {
+        this.maxSpan = dataManager.maxSpanCount;
     }
 
     public void setBaseBrick(BaseBrick baseBrick) {

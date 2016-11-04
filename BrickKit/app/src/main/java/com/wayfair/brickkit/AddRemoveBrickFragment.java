@@ -2,20 +2,15 @@ package com.wayfair.brickkit;
 
 import android.annotation.SuppressLint;
 import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.wayfair.brickkit.bricks.ControllerBrick;
 import com.wayfair.bricks.BaseBrick;
-import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
-import com.wayfair.bricks.BrickRecyclerAdapter;
 import com.wayfair.bricks.SimpleBrickSize;
 import com.wayfair.bricks.StickyFooterHelper;
 import com.wayfair.bricks.StickyHeaderHelper;
 import com.wayfair.bricks.samples.TextBrick;
-
-import java.util.ArrayList;
 
 public class AddRemoveBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
@@ -35,27 +30,24 @@ public class AddRemoveBrickFragment extends BrickFragment {
             if (i == 0) {
                 controllerBrick = new ControllerBrick(
                         getContext(),
-                        new SimpleBrickSize(brickRecyclerAdapter){
+                        new SimpleBrickSize(dataManager){
                             @Override
                             protected int size() {
                                 return MAX_SPANS;
                             }
                         },
-                        String.valueOf(NUMBER_OF_BRICKS),
+                        String.valueOf(NUMBER_OF_BRICKS - 1),
                         "Index",
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 int index = Integer.parseInt(controllerBrick.value);
 
-                                if (index < 0 || index >= brickRecyclerAdapter.size()) {
+                                if (index < 0 || index >= dataManager.getRecyclerViewItems().size()) {
                                     return;
                                 }
 
-                                brickRecyclerAdapter.removeItem(index);
-
-                                controllerBrick.value = String.valueOf(index - 1);
-                                brickRecyclerAdapter.refreshItem(brickRecyclerAdapter.adapterIndex(controllerBrick));
+                                dataManager.removeItem(dataManager.getRecyclerViewItems().get(index));
                             }
                         },
                         new View.OnClickListener() {
@@ -64,37 +56,53 @@ public class AddRemoveBrickFragment extends BrickFragment {
                             public void onClick(View v) {
                                 int index = Integer.parseInt(controllerBrick.value);
 
-                                if (index < 0 || index > brickRecyclerAdapter.size()) {
+                                if (index < 0 || index > dataManager.getRecyclerViewItems().size()) {
                                     return;
                                 }
 
-                                brickRecyclerAdapter.addItem(
-                                        index,
-                                        new TextBrick(
-                                                getContext(),
-                                                new SimpleBrickSize(brickRecyclerAdapter) {
-                                                    @Override
-                                                    protected int size() {
-                                                        return MAX_SPANS;
-                                                    }
-                                                },
-                                                String.format(FORMAT, index)
-                                        )
-                                );
+                                if (index == dataManager.getRecyclerViewItems().size()) {
+                                    dataManager.addLast(
+                                            new TextBrick(
+                                                    getContext(),
+                                                    new SimpleBrickSize(dataManager) {
+                                                        @Override
+                                                        protected int size() {
+                                                            return MAX_SPANS;
+                                                        }
+                                                    },
+                                                    String.format(FORMAT, index)
+                                            )
+                                    );
+                                } else {
+                                    dataManager.addBeforeItem(
+                                            dataManager.getRecyclerViewItems().get(index),
+                                            new TextBrick(
+                                                    getContext(),
+                                                    new SimpleBrickSize(dataManager) {
+                                                        @Override
+                                                        protected int size() {
+                                                            return MAX_SPANS;
+                                                        }
+                                                    },
+                                                    String.format(FORMAT, index)
+                                            )
+                                    );
+                                }
 
                                 controllerBrick.value = String.valueOf(index + 1);
-                                brickRecyclerAdapter.refreshItem(brickRecyclerAdapter.adapterIndex(controllerBrick));
+                                dataManager.refreshItem(controllerBrick);
                             }
                         }
                 );
 
                 controllerBrick.header = true;
+                controllerBrick.footer = true;
 
-                brickRecyclerAdapter.addItem(controllerBrick);
+                dataManager.addLast(controllerBrick);
             } else {
                 @SuppressLint("DefaultLocale") BaseBrick brick = new TextBrick(
                         getContext(),
-                        new SimpleBrickSize(brickRecyclerAdapter) {
+                        new SimpleBrickSize(dataManager) {
                             @Override
                             protected int size() {
                                 return MAX_SPANS;
@@ -103,14 +111,15 @@ public class AddRemoveBrickFragment extends BrickFragment {
                         String.format(FORMAT, i)
                 );
 
-                brickRecyclerAdapter.addItem(brick);
+                dataManager.addLast(brick);
             }
         }
     }
 
     @Override
-    public ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView) {
-        return new ArrayList<>();
+    public void addBehaviours() {
+        dataManager.behaviours.add(new StickyHeaderHelper(dataManager));
+        dataManager.behaviours.add(new StickyFooterHelper(dataManager));
     }
 
     @Override

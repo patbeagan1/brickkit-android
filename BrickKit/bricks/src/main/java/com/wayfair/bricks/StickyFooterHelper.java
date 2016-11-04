@@ -10,13 +10,14 @@ import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 public class StickyFooterHelper extends BrickBehaviour {
-    public BrickRecyclerAdapter adapter;
-    public int footerPosition = RecyclerView.NO_POSITION;
-    public BrickViewHolder stickyFooterViewHolder;
+    private BrickRecyclerAdapter adapter;
+    private int footerPosition = RecyclerView.NO_POSITION;
+    private BrickViewHolder stickyFooterViewHolder;
     private ViewGroup stickyHolderLayout;
 
-    public StickyFooterHelper(BrickRecyclerAdapter adapter) {
-        this.adapter = adapter;
+    public StickyFooterHelper(BrickDataManager brickDataManager) {
+        this.adapter = brickDataManager.brickRecyclerAdapter;
+        attachToRecyclerView();
     }
 
     private static void resetFooter(RecyclerView.ViewHolder footer) {
@@ -70,19 +71,31 @@ public class StickyFooterHelper extends BrickBehaviour {
         updateOrClearFooter(true);
     }
 
-    public void detachFromRecyclerView(RecyclerView parent) {
-        if (adapter.recyclerView == parent) {
-            adapter.recyclerView.removeOnScrollListener(this);
-            clearFooter();
-            adapter.recyclerView = null;
-        }
-    }
-
+    @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         updateOrClearFooter(false);
     }
 
-    public void updateOrClearFooter(boolean updateFooterContent) {
+    @Override
+    public void attachToRecyclerView() {
+        adapter.recyclerView.addOnScrollListener(this);
+        adapter.recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                onScroll();
+            }
+        });
+    }
+
+    @Override
+    public void detachFromRecyclerView() {
+        if (adapter.recyclerView != null) {
+            adapter.recyclerView.removeOnScrollListener(this);
+            clearFooter();
+        }
+    }
+
+    private void updateOrClearFooter(boolean updateFooterContent) {
         if (stickyHolderLayout == null || adapter.recyclerView == null || adapter.recyclerView.getChildCount() == 0) {
             clearFooter();
             return;
@@ -108,7 +121,7 @@ public class StickyFooterHelper extends BrickBehaviour {
         return adapter.indexOf(footer);
     }
 
-    public void clearFooter() {
+    private void clearFooter() {
         if (stickyFooterViewHolder != null) {
             //if (FlexibleAdapter.DEBUG) Log.v(TAG, "clearFooter");
             resetFooter(stickyFooterViewHolder);
@@ -138,7 +151,7 @@ public class StickyFooterHelper extends BrickBehaviour {
         BrickViewHolder holder = (BrickViewHolder) adapter.recyclerView.findViewHolderForAdapterPosition(position);
         if (holder == null) {
             //Create and binds a new ViewHolder
-            holder = (BrickViewHolder) adapter.createViewHolder(adapter.recyclerView, adapter.getItemViewType(position));
+            holder = adapter.createViewHolder(adapter.recyclerView, adapter.getItemViewType(position));
             adapter.bindViewHolder(holder, position);
 
             //Calculate width and height
@@ -226,7 +239,7 @@ public class StickyFooterHelper extends BrickBehaviour {
         stickyFooterViewHolder.itemView.setTranslationY(footerOffsetY);
     }
 
-    public ViewGroup getStickySectionFootersHolder() {
+    private ViewGroup getStickySectionFootersHolder() {
         return adapter.recyclerView != null ? (ViewGroup) ((Activity) adapter.recyclerView.getContext()).findViewById(R.id.sticky_footer_container) : null;
     }
 }

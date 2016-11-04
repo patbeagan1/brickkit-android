@@ -1,25 +1,35 @@
 package com.wayfair.bricks;
 
+import android.support.v7.widget.RecyclerView;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class BrickDataManager implements Serializable {
     int maxSpanCount = 1;
-    private ArrayList<BaseBrick> items;
-    private ArrayList<BaseBrick> currentlyVisibleItems;
+    private LinkedList<BaseBrick> items;
+    private LinkedList<BaseBrick> currentlyVisibleItems;
     private boolean dataHasChanged;
     public ArrayList<BrickBehaviour> behaviours;
+    public BrickRecyclerAdapter brickRecyclerAdapter;
 
-    public BrickDataManager(int maxSpanCount) {
+    public BrickDataManager(RecyclerView recyclerView, int maxSpanCount) {
         this.maxSpanCount = maxSpanCount;
-        this.items = new ArrayList<>();
+        this.items = new LinkedList<>();
         this.behaviours = new ArrayList<>();
-        this.currentlyVisibleItems = new ArrayList<>();
+        this.currentlyVisibleItems = new LinkedList<>();
+        this.brickRecyclerAdapter = new BrickRecyclerAdapter(this, recyclerView);
+
+        recyclerView.setAdapter(brickRecyclerAdapter);
+        recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(this));
     }
 
-    public ArrayList<BaseBrick> getItems() {
+    public LinkedList<BaseBrick> getRecyclerViewItems() {
         if (dataHasChanged) {
-            currentlyVisibleItems = new ArrayList<>();
+            currentlyVisibleItems = new LinkedList<>();
 
             for (int i = 0; i < items.size(); i++) {
                 if (items.get(i) != null && !items.get(i).hidden) {
@@ -33,69 +43,128 @@ public class BrickDataManager implements Serializable {
         return currentlyVisibleItems;
     }
 
-    public void setItems(ArrayList<BaseBrick> items) {
-        this.items = items;
-        dataHasChanged();
+    public LinkedList<BaseBrick> getDataManagerItems() {
+        return items;
     }
 
-    public void addItem(BaseBrick item) {
-        items.add(item);
+    public void setItems(Collection<BaseBrick> items) {
+        clear();
+
+        this.items = new LinkedList<>(items);
         dataHasChanged();
+        brickRecyclerAdapter.safeNotifyItemRangeInserted(0, getRecyclerViewItems().size());
     }
 
-    public void addItem(int index, BaseBrick item) {
-        items.add(index, item);
+    public void addLast(BaseBrick item) {
+        this.items.addLast(item);
         dataHasChanged();
+        brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
+    }
+
+    public void addFirst(BaseBrick item) {
+        this.items.addFirst(item);
+        dataHasChanged();
+        brickRecyclerAdapter.safeNotifyItemInserted(0);
+    }
+
+    public void addLast(Collection<BaseBrick> items) {
+        int index = getRecyclerViewItems().size();
+        this.items.addAll(items);
+        dataHasChanged();
+        brickRecyclerAdapter.safeNotifyItemRangeInserted(index, items.size());
+    }
+
+    public void addFirst(Collection<BaseBrick> items) {
+        this.items.addAll(0, items);
+        dataHasChanged();
+        brickRecyclerAdapter.safeNotifyItemRangeInserted(0, items.size());
+    }
+
+    public void addBeforeItem(BaseBrick anchor, BaseBrick item) {
+        int anchorDataManagerIndex = this.items.indexOf(anchor);
+
+        if (anchorDataManagerIndex == -1) {
+            this.items.addFirst(item);
+        } else {
+            this.items.add(anchorDataManagerIndex, item);
+        }
+
+        if (!item.hidden) {
+            dataHasChanged();
+
+            if (anchorDataManagerIndex == -1) {
+                brickRecyclerAdapter.safeNotifyItemInserted(0);
+            } else {
+                int anchorRecyclerViewIndex = getPreviousVisibleItem(anchor);
+
+                if (anchorRecyclerViewIndex == -1) {
+                    brickRecyclerAdapter.safeNotifyItemInserted(0);
+                } else {
+                    brickRecyclerAdapter.safeNotifyItemInserted(anchorRecyclerViewIndex - 1);
+                }
+            }
+        }
+    }
+
+    public void addAfterItem(BaseBrick anchor, BaseBrick item) {
+        int anchorDataManagerIndex = this.items.indexOf(anchor);
+
+        if (anchorDataManagerIndex == -1) {
+            this.items.addLast(item);
+        } else {
+            this.items.add(anchorDataManagerIndex + 1, item);
+        }
+
+        if (!item.hidden) {
+            dataHasChanged();
+
+            if (anchorDataManagerIndex == -1) {
+                brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
+            } else {
+                int anchorRecyclerViewIndex = getNextVisibleItem(anchor);
+
+                if (anchorRecyclerViewIndex == -1) {
+                    brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
+                } else {
+                    brickRecyclerAdapter.safeNotifyItemInserted(anchorRecyclerViewIndex + 1);
+                }
+            }
+        }
     }
 
     public void removeItem(BaseBrick item) {
-        items.remove(item);
-        dataHasChanged();
-    }
+        this.items.remove(item);
 
-    public void removeItem(int index) {
-        items.remove(index);
-        dataHasChanged();
-    }
-
-    public void addItems(ArrayList<BaseBrick> items) {
-        this.items.addAll(items);
-        dataHasChanged();
-    }
-
-    public void addItems(int index, ArrayList<BaseBrick> items) {
-        this.items.addAll(index, items);
-        dataHasChanged();
-    }
-
-    public void removeItems(int start, int count) {
-        for (int i = start + count - 1; i >= start; i--) {
-            items.remove(i);
+        if (!item.hidden) {
+            int index = getRecyclerViewItems().indexOf(item);
+            dataHasChanged();
+            brickRecyclerAdapter.safeNotifyItemRemoved(index);
         }
-        dataHasChanged();
     }
 
-    public void removeItems(ArrayList<BaseBrick> items) {
+    public void removeItems(Collection<BaseBrick> items) {
         this.items.removeAll(items);
         dataHasChanged();
+        brickRecyclerAdapter.safeNotifyDataSetChanged();
     }
 
     public void clear() {
-        this.items.clear();
+        int startCount = getRecyclerViewItems().size();
+        this.items = new LinkedList<>();
         dataHasChanged();
-    }
-
-    public void replaceItem(int index, BaseBrick replacement) {
-        this.items.remove(index);
-        this.items.add(index, replacement);
-        dataHasChanged();
+        brickRecyclerAdapter.safeNotifyItemRangeRemoved(0, startCount);
     }
 
     public void replaceItem(BaseBrick target, BaseBrick replacement) {
-        int position = this.items.indexOf(target);
-        this.items.remove(target);
-        this.items.add(position, replacement);
+        int index = this.items.indexOf(target);
+        this.items.remove(index);
+        this.items.add(index, replacement);
+        brickRecyclerAdapter.safeNotifyItemChanged(index);
+    }
+
+    public void refreshItem(BaseBrick item) {
         dataHasChanged();
+        brickRecyclerAdapter.safeNotifyItemChanged(adapterIndex(item));
     }
 
     public void dataHasChanged() {
@@ -110,22 +179,52 @@ public class BrickDataManager implements Serializable {
     }
 
     public int adapterIndex(BaseBrick item) {
-        return getItems().indexOf(item);
+        return getRecyclerViewItems().indexOf(item);
     }
 
     public void removeAll(Class clazz) {
-        for (int i = items.size() - 1; i > 0; i--) {
-            if (clazz.isInstance(items.get(i))) {
-                removeItem(i);
+        ArrayList<BaseBrick> itemToRemove = new ArrayList<>();
+
+        for (BaseBrick item : this.items) {
+            if (clazz.isInstance(item)) {
+                itemToRemove.add(item);
             }
         }
+
+        removeItems(itemToRemove);
     }
 
-    public int adapterSize() {
-        return currentlyVisibleItems.size();
+    public int getPreviousVisibleItem(BaseBrick item) {
+        if (!item.hidden) {
+            return getRecyclerViewItems().indexOf(item);
+        } else {
+            BaseBrick baseBrick;
+            ListIterator<BaseBrick> listIterator = this.items.listIterator(this.items.indexOf(item));
+            while (listIterator.hasPrevious()) {
+                baseBrick = listIterator.previous();
+                if (!baseBrick.hidden) {
+                    return getRecyclerViewItems().indexOf(baseBrick);
+                }
+            }
+        }
+
+        return -1;
     }
 
-    public int dataSourceSize() {
-        return items.size();
+    public int getNextVisibleItem(BaseBrick item) {
+        if (!item.hidden) {
+            return getRecyclerViewItems().indexOf(item);
+        } else {
+            BaseBrick baseBrick;
+            ListIterator<BaseBrick> listIterator = this.items.listIterator(this.items.indexOf(item));
+            while (listIterator.hasNext()) {
+                baseBrick = listIterator.next();
+                if (!baseBrick.hidden) {
+                    return getRecyclerViewItems().indexOf(baseBrick);
+                }
+            }
+        }
+
+        return -1;
     }
 }
