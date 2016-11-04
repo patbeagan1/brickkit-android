@@ -1,8 +1,8 @@
 package com.wayfair.bricks;
 
 public abstract class OrientationBrickSize extends BrickSize {
-    public OrientationBrickSize(BrickRecyclerAdapter brickRecyclerAdapter) {
-        super(brickRecyclerAdapter);
+    public OrientationBrickSize(BrickDataManager brickDataManager) {
+        super(brickDataManager);
     }
 
     @Override

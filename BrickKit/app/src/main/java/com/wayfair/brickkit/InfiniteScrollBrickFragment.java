@@ -27,11 +27,11 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
 
     @Override
     public void createBricks() {
-        brickRecyclerAdapter.setOnReachedItemAtPosition(
+        dataManager.brickRecyclerAdapter.setOnReachedItemAtPosition(
                 new OnReachedItemAtPosition() {
                     @Override
                     public void bindingItemAtPosition(int position) {
-                        if (position == brickRecyclerAdapter.getItemCount() - 1) {
+                        if (position == dataManager.getRecyclerViewItems().size() - 1) {
                             page++;
                             addNewBricks();
                         }
@@ -43,8 +43,8 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
     }
 
     @Override
-    public ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView) {
-        return new ArrayList<>();
+    public void addBehaviours() {
+
     }
 
     @Override
@@ -61,7 +61,7 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
         for (int i = 0; i < 100; i++) {
             BaseBrick unusedBrick2 = new TextBrick(
                     getContext(),
-                    new OrientationBrickSize(brickRecyclerAdapter) {
+                    new OrientationBrickSize(dataManager) {
                         @Override
                         protected int portrait() {
                             return MAX_SPANS;
@@ -74,7 +74,7 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
                     },
                     "Brick: " + page + " " + i
             );
-            brickRecyclerAdapter.addItem(unusedBrick2);
+            dataManager.addLast(unusedBrick2);
         }
     }
 }

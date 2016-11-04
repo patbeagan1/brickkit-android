@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 public abstract class BrickFragment extends Fragment {
-    public BrickRecyclerAdapter brickRecyclerAdapter;
-
+    public BrickDataManager dataManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,7 +34,7 @@ public abstract class BrickFragment extends Fragment {
 
         if (getView() != null) {
             RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
-            BrickDataManager dataManager = new BrickDataManager(maxSpans());
+            dataManager = new BrickDataManager(recyclerView, maxSpans());
 
             int defaultPadding = (int) getContext().getResources().getDimension(R.dimen.default_brick_inset_padding);
             recyclerView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
@@ -49,19 +48,23 @@ public abstract class BrickFragment extends Fragment {
                             reverse()
                     )
             );
-            brickRecyclerAdapter = new BrickRecyclerAdapter(dataManager, recyclerView);
-            recyclerView.setAdapter(brickRecyclerAdapter);
-            recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(dataManager));
 
-            dataManager.behaviours.addAll(addBehaviours(brickRecyclerAdapter, recyclerView));
-
+            addBehaviours();
             createBricks();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        for (BrickBehaviour behaviour : dataManager.behaviours) {
+            behaviour.detachFromRecyclerView();
         }
     }
 
     public abstract int maxSpans();
     public abstract void createBricks();
-    public abstract ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView);
+    public abstract void addBehaviours();
     public abstract int orientation();
     public abstract boolean reverse();
 }
