@@ -8,6 +8,7 @@ import com.wayfair.bricks.BaseBrick;
 import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
 import com.wayfair.bricks.BrickRecyclerAdapter;
+import com.wayfair.bricks.BrickRecyclerItemDecoration;
 import com.wayfair.bricks.SimpleBrickSize;
 import com.wayfair.bricks.samples.UnusedBrick;
 import com.wayfair.bricks.samples.UsedBrick;
@@ -213,8 +214,12 @@ public class MainActivityFragment extends BrickFragment {
                 brickRecyclerAdapter.addItem(usedBricks.get(i - 1));
             }
 
+
             UnusedBrick unusedBrick2 = new UnusedBrick(getContext(), last);
             brickRecyclerAdapter.addItem(unusedBrick2);
+            setID(true);
+
+
         }
     }
 

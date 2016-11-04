@@ -9,7 +9,11 @@ public abstract class BaseBrick {
     public boolean hidden = false;
     public boolean header = false;
     public boolean footer = false;
+    public Rect padding;
+    public boolean excludeFromDynamicPadding;
+
     BrickSize spanSize;
+
 
     public BaseBrick(Context context, BrickSize spanSize) {
         this.context = context;

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public abstract class BrickFragment extends Fragment {
     public BrickRecyclerAdapter brickRecyclerAdapter;
-
+    private BrickRecyclerItemDecoration itemDecoration;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public abstract class BrickFragment extends Fragment {
             BrickDataManager dataManager = new BrickDataManager(maxSpans());
 
             int defaultPadding = (int) getContext().getResources().getDimension(R.dimen.default_brick_inset_padding);
-            recyclerView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
+            //recyclerView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
 
             recyclerView.setLayoutManager(
                     new BrickGridLayoutManager(
@@ -51,7 +51,8 @@ public abstract class BrickFragment extends Fragment {
             );
             brickRecyclerAdapter = new BrickRecyclerAdapter(dataManager, recyclerView);
             recyclerView.setAdapter(brickRecyclerAdapter);
-            recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(dataManager));
+            itemDecoration = new BrickRecyclerItemDecoration(dataManager);
+            recyclerView.addItemDecoration(itemDecoration);
 
             dataManager.behaviours.addAll(addBehaviours(brickRecyclerAdapter, recyclerView));
 
@@ -64,4 +65,8 @@ public abstract class BrickFragment extends Fragment {
     public abstract ArrayList<BrickBehaviour> addBehaviours(BrickRecyclerAdapter brickRecyclerAdapter, RecyclerView recyclerView);
     public abstract int orientation();
     public abstract boolean reverse();
+
+    protected final void setID(boolean abc){
+        itemDecoration.useDynamicPadding();
+    }
 }
