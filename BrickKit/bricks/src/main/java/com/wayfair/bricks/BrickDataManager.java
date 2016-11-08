@@ -125,7 +125,7 @@ public class BrickDataManager implements Serializable {
 
         if (!item.hidden) {
             dataHasChanged();
-
+            computePaddingPosition(item);
             if (anchorDataManagerIndex == -1) {
                 brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
             } else {
@@ -154,6 +154,7 @@ public class BrickDataManager implements Serializable {
 
     public void removeItems(Collection<BaseBrick> items) {
         this.items.removeAll(items);
+        computePaddingPosition(this.items.get(0));
         dataHasChanged();
         brickRecyclerAdapter.safeNotifyDataSetChanged();
     }
@@ -169,6 +170,8 @@ public class BrickDataManager implements Serializable {
         int index = this.items.indexOf(target);
         this.items.remove(index);
         this.items.add(index, replacement);
+        computePaddingPosition(replacement);
+        dataHasChanged();
         brickRecyclerAdapter.safeNotifyItemChanged(index);
     }
 
@@ -241,14 +244,20 @@ public class BrickDataManager implements Serializable {
     /**
      * Checks / Determines if the brick is on the left wall, first row, right wall, last row
      *
-     * @param adapterPosition   Position of the brick in the adapter
-     * @param spanSize          Span size of brick
-     * @return                  True if the brick is on the right wall, false otherwise
+     * @param item   Brick item (from) which we need to compute the position
      */
     private void computePaddingPosition(BaseBrick item) {
+
+        // Get position of item
         int position = items.indexOf(item);
+
+        // If the position is -1, it means it is a remove action
         if (position == -1) {
             position = getRecyclerViewItems().indexOf(item)-1;
+            // If the position is still -1 it means first item was removed
+            if (position == -1) {
+                position = 0;
+            }
         }
         prevSpanCount = 0;
         spanCount = 0;
@@ -309,10 +318,10 @@ public class BrickDataManager implements Serializable {
             it = items.listIterator(position);
             it.next();
             if (!it.hasNext()) {
-                if (spanCount - item.spanSize.getSpans(context) < maxSpanCount) {
-                    item.isOnRightWallWithExtraSpace = true;
-                } else {
+                if (spanCount == maxSpanCount) {
                     item.isOnRightWallWithoutExtraSpace = true;
+                } else {
+                    item.isOnRightWallWithExtraSpace = true;
                 }
                 item.isInLastRow = true;
                 it.previous();

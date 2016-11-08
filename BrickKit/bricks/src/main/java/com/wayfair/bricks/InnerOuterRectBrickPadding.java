@@ -3,7 +3,7 @@ package com.wayfair.bricks;
 
 import android.graphics.Rect;
 
-public abstract class SimpleBrickPadding4 extends BrickPadding {
+public abstract class InnerOuterRectBrickPadding extends BrickPadding {
 
     @Override
     protected int innerLeftPadding() {

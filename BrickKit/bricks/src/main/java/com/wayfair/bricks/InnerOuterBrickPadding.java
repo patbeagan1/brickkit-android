@@ -1,49 +1,49 @@
 package com.wayfair.bricks;
 
 
-import android.graphics.Rect;
-
-public abstract class SimpleBrickPadding3 extends BrickPadding {
+public abstract class InnerOuterBrickPadding extends BrickPadding {
 
     @Override
     protected int innerLeftPadding() {
-        return padding().left;
+        return innerPadding();
     }
 
     @Override
     protected int innerTopPadding() {
-        return padding().top;
+        return innerPadding();
     }
 
     @Override
     protected int innerRightPadding() {
-        return padding().right;
+        return innerPadding();
     }
 
     @Override
     protected int innerBottomPadding() {
-        return padding().bottom;
+        return innerPadding();
     }
 
     @Override
     protected int outerLeftPadding() {
-        return padding().left;
+        return outerPadding();
     }
 
     @Override
     protected int outerTopPadding() {
-        return padding().top;
+        return outerPadding();
     }
 
     @Override
     protected int outerRightPadding() {
-        return padding().right;
+        return outerPadding();
     }
 
     @Override
     protected int outerBottomPadding() {
-        return padding().bottom;
+        return outerPadding();
     }
 
-    protected abstract Rect padding();
+    protected abstract int innerPadding();
+
+    protected abstract int outerPadding();
 }
