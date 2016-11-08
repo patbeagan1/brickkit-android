@@ -71,8 +71,4 @@ public abstract class BrickFragment extends Fragment {
     public abstract void addBehaviours();
     public abstract int orientation();
     public abstract boolean reverse();
-
-    protected final void setID(boolean abc){
-        itemDecoration.useDynamicPadding();
-    }
 }

@@ -1,24 +1,66 @@
 package com.wayfair.bricks;
 
-import android.content.Context;
 import android.graphics.Rect;
 
-import com.wayfair.bricks.BaseBrick;
-import com.wayfair.bricks.BrickDataManager;
-import com.wayfair.bricks.R;
-
-import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
-
 public abstract class BrickPadding {
+    public int getInnerLeftPadding() {
+        return innerLeftPadding();
+    }
 
-    public Rect getPadding() {
-        Rect padding;
-        padding = innerPadding();
+    public int getInnerTopPadding() {
+        return innerTopPadding();
+    }
 
+    public int getInnerRightPadding() {
+        return innerRightPadding();
+    }
+
+    public int getInnerBottomPadding() {
+        return innerBottomPadding();
+    }
+
+    public int getOuterLeftPadding() {
+        return outerLeftPadding();
+    }
+
+    public int getOuterTopPadding() {
+        return outerTopPadding();
+    }
+
+    public int getOuterRightPadding() {
+        return outerRightPadding();
+    }
+
+    public int getOuterBottomPadding() {
+        return outerBottomPadding();
+    }
+
+
+    public Rect getInnerPadding() {
+        Rect padding = new Rect(innerLeftPadding(), innerTopPadding(), innerRightPadding(), innerBottomPadding());
         return padding;
     }
 
-    protected abstract Rect innerPadding();
-    protected abstract Rect outerPadding();
+    public Rect getOuterPadding() {
+        Rect padding = new Rect(outerLeftPadding(), outerTopPadding(), outerRightPadding(), outerBottomPadding());
+        return padding;
+    }
+
+    protected abstract int innerLeftPadding();
+
+    protected abstract int innerTopPadding();
+
+    protected abstract int innerRightPadding();
+
+    protected abstract int innerBottomPadding();
+
+    protected abstract int outerLeftPadding();
+
+    protected abstract int outerTopPadding();
+
+    protected abstract int outerRightPadding();
+
+    protected abstract int outerBottomPadding();
+
 
 }

@@ -41,9 +41,6 @@ public class VerticalTextBrick extends BaseBrick {
         this.text = text;
     }
 
-
-
-
     @Override
     public void onBindData(RecyclerView.ViewHolder holder) {
         if (holder instanceof VerticalTextViewHolder) {

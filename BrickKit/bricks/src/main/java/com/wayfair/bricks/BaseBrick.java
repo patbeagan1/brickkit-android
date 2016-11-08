@@ -1,7 +1,6 @@
 package com.wayfair.bricks;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 
 public abstract class BaseBrick {
@@ -9,14 +8,12 @@ public abstract class BaseBrick {
     public boolean hidden = false;
     public boolean header = false;
     public boolean footer = false;
-    public  boolean isInFirstRow;
-    public  boolean isInLastRow;
-    public  boolean isOnLeftWall;
-    public  boolean isOnRightWallWithExtraSpace;
-    public  boolean isOnRightWallWithoutExtraSpace;
+    public boolean isInFirstRow;
+    public boolean isInLastRow;
+    public boolean isOnLeftWall;
+    public boolean isOnRightWallWithExtraSpace;
+    public boolean isOnRightWallWithoutExtraSpace;
     public BrickPadding padding;
-    public boolean excludeFromDynamicPadding;
-
     BrickSize spanSize;
 
 
@@ -33,20 +30,48 @@ public abstract class BaseBrick {
         this.spanSize.setBaseBrick(this);
         this.padding = new BrickPadding() {
             @Override
-            protected Rect innerPadding() {
-                return new Rect(0, 0, 0, 0);
+            protected int innerLeftPadding() {
+                return getInnerBottomPadding();
             }
 
             @Override
-            protected Rect outerPadding() {
-                return new Rect(0, 0, 0, 0);
+            protected int innerTopPadding() {
+                return 0;
+            }
+
+            @Override
+            protected int innerRightPadding() {
+                return 0;
+            }
+
+            @Override
+            protected int innerBottomPadding() {
+                return 0;
+            }
+
+            @Override
+            protected int outerLeftPadding() {
+                return 0;
+            }
+
+            @Override
+            protected int outerTopPadding() {
+                return 0;
+            }
+
+            @Override
+            protected int outerRightPadding() {
+                return 0;
+            }
+
+            @Override
+            protected int outerBottomPadding() {
+                return 0;
             }
         };
     }
 
     public abstract void onBindData(RecyclerView.ViewHolder holder);
-
-//    public void padding(Rect outRect);
 
     public abstract String getTemplate();
 
