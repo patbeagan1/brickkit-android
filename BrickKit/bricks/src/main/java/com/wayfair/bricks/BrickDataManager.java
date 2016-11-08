@@ -1,11 +1,14 @@
 package com.wayfair.bricks;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 public class BrickDataManager implements Serializable {
@@ -15,8 +18,12 @@ public class BrickDataManager implements Serializable {
     private boolean dataHasChanged;
     public ArrayList<BrickBehaviour> behaviours;
     public BrickRecyclerAdapter brickRecyclerAdapter;
+    private Context context;
+    private  int spanCount;
+private int prevSpanCount;
 
-    public BrickDataManager(RecyclerView recyclerView, int maxSpanCount) {
+    public BrickDataManager(Context context, RecyclerView recyclerView, int maxSpanCount) {
+        this.context = context;
         this.maxSpanCount = maxSpanCount;
         this.items = new LinkedList<>();
         this.behaviours = new ArrayList<>();
@@ -58,7 +65,9 @@ public class BrickDataManager implements Serializable {
     public void addLast(BaseBrick item) {
         this.items.addLast(item);
         dataHasChanged();
+        checkPadding(item, items.size()-1);
         brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
+
     }
 
     public void addFirst(BaseBrick item) {
@@ -85,8 +94,10 @@ public class BrickDataManager implements Serializable {
 
         if (anchorDataManagerIndex == -1) {
             this.items.addFirst(item);
+            checkPadding(item, 0);
         } else {
             this.items.add(anchorDataManagerIndex, item);
+            checkPadding(item, anchorDataManagerIndex);
         }
 
         if (!item.hidden) {
@@ -226,5 +237,106 @@ public class BrickDataManager implements Serializable {
         }
 
         return -1;
+    }
+
+    private void checkPadding(BaseBrick item, int position ) {
+
+        prevSpanCount = 0;
+        spanCount = 0;
+
+            ListIterator<BaseBrick> it = items.listIterator(position);
+            while (it.hasNext()) {
+                item = it.next();
+
+
+//            item = items.get(position);
+            item.isOnLeftWall = false;
+            item.isOnRightWallWithExtraSpace=false;
+            item.isOnRightWallWithoutExtraSpace=false;
+            it = items.listIterator(position);
+
+            spanCount = item.spanSize.getSpans(context);
+            while (it.hasPrevious()){
+                BaseBrick prevBrick = it.previous();
+                spanCount = spanCount + prevBrick.spanSize.getSpans(context);
+                if(prevBrick.isOnLeftWall){
+                    break;
+                }
+
+            }
+
+
+            if (spanCount == item.spanSize.getSpans(context)) {
+                item.isOnLeftWall = true;
+            }
+            Log.wtf("Kunal SC",position +" "+items.size() +" "+ spanCount +item.spanSize.getSpans(context));
+            it = items.listIterator(position);
+            if (spanCount > maxSpanCount) {
+                if(spanCount - item.spanSize.getSpans(context) < maxSpanCount){
+                    it.previous().isOnRightWallWithExtraSpace = true;
+                } else {
+                    it.previous().isOnRightWallWithoutExtraSpace = true;
+                }
+//                it.previous().isOnRightWall = true;
+                item.isOnLeftWall = true;
+                prevSpanCount = spanCount;
+                spanCount = item.spanSize.getSpans(context);
+                //it.previous().isOnRightWall= false;
+                if (it.hasPrevious()){
+                    BaseBrick prevBrick = it.previous();
+                    prevBrick.isOnRightWallWithExtraSpace = false;
+                    prevBrick.isOnRightWallWithoutExtraSpace = false;
+                }
+
+
+            }
+
+            Log.wtf("Kunal SC",position +" "+items.size() +" "+ spanCount);
+            it = items.listIterator(position);
+
+            if (!it.hasPrevious()) {
+                item.isInFirstRow = true;
+            } else {
+                BaseBrick prev = it.previous();
+                if (!prev.isInFirstRow || spanCount > maxSpanCount || spanCount + prevSpanCount > maxSpanCount){
+                    item.isInFirstRow = false;
+                } else {
+                    item.isInFirstRow = true;
+                }
+            }
+            it = items.listIterator(position);
+            it.next();
+            if (!it.hasNext()) {
+                if(spanCount - item.spanSize.getSpans(context) < maxSpanCount){
+                    item.isOnRightWallWithExtraSpace = true;
+                } else {
+                    item.isOnRightWallWithoutExtraSpace = true;
+                }
+                item.isInLastRow = true;
+                it.previous();
+                while (!item.isOnLeftWall && it.hasPrevious()){
+                    BaseBrick prevBrick = it.previous();
+                    prevBrick.isInLastRow = true;
+                    prevBrick.isOnRightWallWithExtraSpace = false;
+                    prevBrick.isOnRightWallWithoutExtraSpace = false;
+
+                    if (prevBrick.isOnLeftWall) {
+                        break;
+                    }
+
+                }
+                while (it.hasPrevious()) {
+                    BaseBrick prevBrick = it.previous();
+                    prevBrick.isInLastRow = false;
+                    if (prevBrick.isOnLeftWall) {
+                        break;
+                    }
+                }
+
+            }
+            position++;
+                it = items.listIterator(position);
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 package com.wayfair.brickkit;
 
+import android.graphics.Rect;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,7 +10,9 @@ import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
 import com.wayfair.bricks.BrickRecyclerAdapter;
 import com.wayfair.bricks.BrickRecyclerItemDecoration;
+import com.wayfair.bricks.SimpleBrickPadding;
 import com.wayfair.bricks.SimpleBrickSize;
+import com.wayfair.bricks.samples.TextBrick;
 import com.wayfair.bricks.samples.UnusedBrick;
 import com.wayfair.bricks.samples.UsedBrick;
 
@@ -42,6 +45,12 @@ public class MainActivityFragment extends BrickFragment {
                                 return TWO_FIFTH;
                             }
                         },
+                        new SimpleBrickPadding() {
+                            @Override
+                            protected int padding() {
+                                return 10;
+                            }
+                        },
                         "Simple Brick View",
                         new View.OnClickListener() {
                             @Override
@@ -60,7 +69,13 @@ public class MainActivityFragment extends BrickFragment {
                         new SimpleBrickSize(dataManager) {
                             @Override
                             protected int size() {
-                                return TWO_FIFTH;
+                                return TWO_FIFTH+ONE_FIFTH-25;
+                            }
+                        },
+                        new SimpleBrickPadding() {
+                            @Override
+                            protected int padding() {
+                                return 10;
                             }
                         },
                         "Header Brick View",
@@ -84,6 +99,12 @@ public class MainActivityFragment extends BrickFragment {
                                 return TWO_FIFTH;
                             }
                         },
+                        new SimpleBrickPadding() {
+                            @Override
+                            protected int padding() {
+                                return 10;
+                            }
+                        },
                         "Footer Brick View",
                         new View.OnClickListener() {
                             @Override
@@ -103,6 +124,12 @@ public class MainActivityFragment extends BrickFragment {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
+                            }
+                        },
+                        new SimpleBrickPadding() {
+                            @Override
+                            protected int padding() {
+                                return 10;
                             }
                         },
                         "Add/Remove Brick View",
@@ -126,6 +153,12 @@ public class MainActivityFragment extends BrickFragment {
                                 return TWO_FIFTH;
                             }
                         },
+                        new SimpleBrickPadding() {
+                            @Override
+                            protected int padding() {
+                                return 10;
+                            }
+                        },
                         "Infinite Scroll Brick View",
                         new View.OnClickListener() {
                             @Override
@@ -145,6 +178,12 @@ public class MainActivityFragment extends BrickFragment {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
+                            }
+                        },
+                        new SimpleBrickPadding() {
+                            @Override
+                            protected int padding() {
+                                return 10;
                             }
                         },
                         "Fragment Brick View",
@@ -196,7 +235,12 @@ public class MainActivityFragment extends BrickFragment {
                         };
             }
 
-            UnusedBrick unusedBrick1 = new UnusedBrick(getContext(), first);
+            UnusedBrick unusedBrick1 = new UnusedBrick(getContext(), first, new SimpleBrickPadding() {
+                @Override
+                protected int padding() {
+                    return 10;
+                }
+            });
             dataManager.addLast(unusedBrick1);
 
             if (i == 0 || i == usedBricks.size() + 1) {
@@ -207,6 +251,12 @@ public class MainActivityFragment extends BrickFragment {
                             protected int size() {
                                 return TWO_FIFTH;
                             }
+                        },
+                        new SimpleBrickPadding() {
+                            @Override
+                            protected int padding() {
+                                return 10;
+                            }
                         }
                 );
                 dataManager.addLast(usedBrick);
@@ -214,10 +264,45 @@ public class MainActivityFragment extends BrickFragment {
                 dataManager.addLast(usedBricks.get(i - 1));
             }
 
-            UnusedBrick unusedBrick2 = new UnusedBrick(getContext(), last);
+            UnusedBrick unusedBrick2 = new UnusedBrick(getContext(), last, new SimpleBrickPadding() {
+                @Override
+                protected int padding() {
+                    return 10;
+                }
+            });
             dataManager.addLast(unusedBrick2);
-            setID(true);
 
+            dataManager.addBeforeItem(
+                    dataManager.getRecyclerViewItems().get(2),
+                    new UsedBrick(
+                            getContext(),
+                            new SimpleBrickSize(dataManager) {
+                                @Override
+                                protected int size() {
+                                    return 25;
+                                }
+                            },
+                            new SimpleBrickPadding() {
+                                @Override
+                                protected int padding() {
+                                    return 10;
+                                }
+                            },
+                            "Fragment Brick View",
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    getFragmentManager().beginTransaction()
+                                            .replace(R.id.content, new FragmentBrickFragment())
+                                            .addToBackStack(null)
+                                            .commit();
+                                }
+                            }
+                    )
+            );
+//            if (i == 1){
+//                break;
+//            }
 
         }
     }

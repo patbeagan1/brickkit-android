@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wayfair.bricks.BaseBrick;
+import com.wayfair.bricks.BrickPadding;
 import com.wayfair.bricks.BrickSize;
 import com.wayfair.bricks.BrickViewHolder;
 import com.wayfair.bricks.R;
@@ -32,9 +33,16 @@ public class VerticalTextBrick extends BaseBrick {
 
     public VerticalTextBrick(Context context, BrickSize spanSize, CharSequence text) {
         super(context, spanSize);
-
         this.text = text;
     }
+
+    public VerticalTextBrick(Context context, BrickSize spanSize, BrickPadding padding, CharSequence text) {
+        super(context, spanSize, padding);
+        this.text = text;
+    }
+
+
+
 
     @Override
     public void onBindData(RecyclerView.ViewHolder holder) {
@@ -42,13 +50,6 @@ public class VerticalTextBrick extends BaseBrick {
             VerticalTextViewHolder editTextViewHolder = (VerticalTextViewHolder) holder;
             editTextViewHolder.textView.setText(text);
         }
-    }
-
-    @Override
-    public void padding(Rect outRect) {
-        int defaultPadding = (int) context.getResources().getDimension(R.dimen.default_brick_inset_padding);
-
-        outRect.set(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
     }
 
     @Override

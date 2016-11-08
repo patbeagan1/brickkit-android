@@ -47,6 +47,7 @@ public class HeaderBrickFragment extends BrickFragment {
             }
 
             dataManager.addLast(unusedBrick2);
+            setID(true);
         }
     }
 

@@ -7,6 +7,7 @@ import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
 import com.wayfair.bricks.BrickRecyclerAdapter;
 import com.wayfair.bricks.OrientationBrickSize;
+import com.wayfair.bricks.SimpleBrickPadding;
 import com.wayfair.bricks.samples.TextBrick;
 
 import java.util.ArrayList;
@@ -34,6 +35,12 @@ public class SimpleBrickFragment extends BrickFragment {
                         @Override
                         protected int landscape() {
                             return HALF;
+                        }
+                    },
+                    new SimpleBrickPadding() {
+                        @Override
+                        protected int padding() {
+                            return 10;
                         }
                     },
                     "Brick: " + i

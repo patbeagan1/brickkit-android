@@ -35,7 +35,7 @@ public abstract class BrickFragment extends Fragment {
 
         if (getView() != null) {
             RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
-            dataManager = new BrickDataManager(recyclerView, maxSpans());
+            dataManager = new BrickDataManager(getContext(), recyclerView, maxSpans());
 
             int defaultPadding = (int) getContext().getResources().getDimension(R.dimen.default_brick_inset_padding);
             //recyclerView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);

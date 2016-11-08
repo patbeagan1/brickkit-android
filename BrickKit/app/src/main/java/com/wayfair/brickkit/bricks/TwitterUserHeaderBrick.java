@@ -40,7 +40,6 @@ public class TwitterUserHeaderBrick extends BaseBrick {
     public TwitterUserHeaderBrick(Context context, BrickSize spanSize, String value,
                                   String hint, View.OnClickListener removeClick, View.OnClickListener addClick) {
         super(context, spanSize);
-
         this.value = value;
         this.hint = hint;
         this.removeClick = removeClick;
@@ -53,13 +52,6 @@ public class TwitterUserHeaderBrick extends BaseBrick {
             TwitterUserHeaderBrickHolder twitterUserHeaderBrickHolder = (TwitterUserHeaderBrickHolder) holder;
 
         }
-    }
-
-    @Override
-    public void padding(Rect outRect) {
-        int defaultPadding = (int) context.getResources().getDimension(R.dimen.default_brick_inset_padding);
-
-        outRect.set(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
     }
 
     @Override

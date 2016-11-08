@@ -15,6 +15,7 @@ import android.widget.Button;
 import com.wayfair.brickkit.R;
 import com.wayfair.bricks.BaseBrick;
 import com.wayfair.bricks.BrickDataManager;
+import com.wayfair.bricks.BrickPadding;
 import com.wayfair.bricks.BrickSize;
 import com.wayfair.bricks.BrickViewHolder;
 import com.wayfair.bricks.ViewHolderRegistry;
@@ -41,6 +42,16 @@ public class ControllerBrick extends BaseBrick {
     public ControllerBrick(Context context, BrickSize spanSize, String value,
                            String hint, View.OnClickListener removeClick, View.OnClickListener addClick) {
         super(context, spanSize);
+
+        this.value = value;
+        this.hint = hint;
+        this.removeClick = removeClick;
+        this.addClick = addClick;
+    }
+
+    public ControllerBrick(Context context, BrickSize spanSize, BrickPadding padding, String value,
+                           String hint, View.OnClickListener removeClick, View.OnClickListener addClick) {
+        super(context, spanSize, padding);
 
         this.value = value;
         this.hint = hint;
@@ -75,13 +86,6 @@ public class ControllerBrick extends BaseBrick {
             controllerBrickHolder.downButton.setOnClickListener(removeClick);
             controllerBrickHolder.upButton.setOnClickListener(addClick);
         }
-    }
-
-    @Override
-    public void padding(Rect outRect) {
-        int defaultPadding = (int) context.getResources().getDimension(R.dimen.default_brick_inset_padding);
-
-        outRect.set(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
     }
 
     @Override
