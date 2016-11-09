@@ -47,7 +47,7 @@ public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
         int outerPaddingTop = brick.padding.getOuterTopPadding();
         int outerPaddingRight = brick.padding.getOuterRightPadding();
         int outerPaddingBottom = brick.padding.getOuterBottomPadding();
-        Log.wtf("Kunal", brick.isOnLeftWall+" " + brick.isInFirstRow +" "+ brick.isOnRightWallWithExtraSpace+" "+" "+brick.isOnRightWallWithoutExtraSpace+brick.isInLastRow +" "+adapterPosition);
+        Log.wtf("Kunal", brick.isOnLeftWall+" " + brick.isInFirstRow +" "+ brick.isOnRightWall+" "+brick.isInLastRow +" "+adapterPosition);
 
         // Apply padding
         if (brick.spanSize.getSpans(context) == brickDataManager.maxSpanCount) {
@@ -78,7 +78,7 @@ public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
                 } else {
                     outRect.set(outerPaddingLeft, innerPaddingTop, innerPaddingRight, innerPaddingBottom);
                 }
-            } else if (brick.isOnRightWallWithoutExtraSpace || brick.isOnRightWallWithExtraSpace) {
+            } else if (brick.isOnRightWall) {
                 if (brick.isInFirstRow) {
                     if (brick.isInLastRow) {
                         outRect.set(innerPaddingLeft, outerPaddingTop, outerPaddingRight, outerPaddingBottom);
@@ -87,8 +87,6 @@ public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
                     }
                 } else if (brick.isInLastRow) {
                     outRect.set(innerPaddingLeft, innerPaddingTop, outerPaddingRight, outerPaddingBottom);
-                } else if (brick.isOnRightWallWithExtraSpace) {
-                    outRect.set(innerPaddingLeft, innerPaddingTop, innerPaddingRight, innerPaddingBottom);
                 } else {
                     outRect.set(innerPaddingLeft, innerPaddingTop, outerPaddingRight, innerPaddingBottom);
                 }

@@ -7,7 +7,7 @@ import android.view.View;
 import com.wayfair.brickkit.bricks.ControllerBrick;
 import com.wayfair.bricks.BaseBrick;
 import com.wayfair.bricks.BrickFragment;
-import com.wayfair.bricks.SimpleBrickPadding2;
+import com.wayfair.bricks.InnerOuterBrickPadding;
 import com.wayfair.bricks.SimpleBrickSize;
 import com.wayfair.bricks.StickyFooterHelper;
 import com.wayfair.bricks.StickyHeaderHelper;
@@ -37,7 +37,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                 return MAX_SPANS;
                             }
                         },
-                        new SimpleBrickPadding2() {
+                        new InnerOuterBrickPadding() {
                             @Override
                             protected int outerPadding() {
                                 return 10;
@@ -82,7 +82,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                                             return MAX_SPANS;
                                                         }
                                                     },
-                                                    new SimpleBrickPadding2() {
+                                                    new InnerOuterBrickPadding() {
                                                         @Override
                                                         protected int outerPadding() {
                                                             return 10;
@@ -107,7 +107,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                                             return MAX_SPANS;
                                                         }
                                                     },
-                                                    new SimpleBrickPadding2() {
+                                                    new InnerOuterBrickPadding() {
                                                         @Override
                                                         protected int outerPadding() {
                                                             return 10;
@@ -142,7 +142,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                 return MAX_SPANS;
                             }
                         },
-                        new SimpleBrickPadding2() {
+                        new InnerOuterBrickPadding() {
                             @Override
                             protected int outerPadding() {
                                 return 10;

@@ -11,8 +11,7 @@ public abstract class BaseBrick {
     public boolean isInFirstRow;
     public boolean isInLastRow;
     public boolean isOnLeftWall;
-    public boolean isOnRightWallWithExtraSpace;
-    public boolean isOnRightWallWithoutExtraSpace;
+    public boolean isOnRightWall;
     public BrickPadding padding;
     BrickSize spanSize;
 
