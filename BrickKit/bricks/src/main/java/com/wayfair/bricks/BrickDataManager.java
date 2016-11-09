@@ -18,7 +18,6 @@ public class BrickDataManager implements Serializable {
     private boolean dataHasChanged;
     private Context context;
     private int spanCount;
-    private int prevSpanCount;
 
     public BrickDataManager(Context context, RecyclerView recyclerView, int maxSpanCount) {
         this.context = context;
@@ -63,15 +62,17 @@ public class BrickDataManager implements Serializable {
     public void addLast(BaseBrick item) {
         this.items.addLast(item);
         dataHasChanged();
-        computePaddingPosition(getRecyclerViewItems().size()-1);
+        // TODO verify the position
+        computePaddingPosition(getRecyclerViewItems().size() - 1);
         brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
-        brickRecyclerAdapter.safeNotifyItemChanged(getRecyclerViewItems().size()-2);
+        brickRecyclerAdapter.safeNotifyItemChanged(getRecyclerViewItems().size() - 2);
 
     }
 
     public void addFirst(BaseBrick item) {
         this.items.addFirst(item);
         dataHasChanged();
+        // TODO verify the position
         computePaddingPosition(0);
         brickRecyclerAdapter.safeNotifyItemInserted(0);
     }
@@ -80,6 +81,7 @@ public class BrickDataManager implements Serializable {
         int index = getRecyclerViewItems().size();
         this.items.addAll(items);
         dataHasChanged();
+        // TODO verify the position
         computePaddingPosition(index);
         brickRecyclerAdapter.safeNotifyItemRangeInserted(index, items.size());
     }
@@ -87,6 +89,7 @@ public class BrickDataManager implements Serializable {
     public void addFirst(Collection<BaseBrick> items) {
         this.items.addAll(0, items);
         dataHasChanged();
+        // TODO verify the position
         computePaddingPosition(0);
         brickRecyclerAdapter.safeNotifyItemRangeInserted(0, items.size());
     }
@@ -104,15 +107,18 @@ public class BrickDataManager implements Serializable {
             dataHasChanged();
 
             if (anchorDataManagerIndex == -1) {
+                // TODO verify the position
                 computePaddingPosition(0);
                 brickRecyclerAdapter.safeNotifyItemInserted(0);
             } else {
                 int anchorRecyclerViewIndex = getPreviousVisibleItem(anchor);
 
                 if (anchorRecyclerViewIndex == -1) {
+                    // TODO verify the position
                     computePaddingPosition(0);
                     brickRecyclerAdapter.safeNotifyItemInserted(0);
                 } else {
+                    // TODO verify the position
                     computePaddingPosition(anchorRecyclerViewIndex - 1);
                     brickRecyclerAdapter.safeNotifyItemInserted(anchorRecyclerViewIndex - 1);
                 }
@@ -133,15 +139,18 @@ public class BrickDataManager implements Serializable {
             dataHasChanged();
 
             if (anchorDataManagerIndex == -1) {
+                // TODO verify the position
                 computePaddingPosition(getRecyclerViewItems().size());
                 brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
             } else {
                 int anchorRecyclerViewIndex = getNextVisibleItem(anchor);
 
                 if (anchorRecyclerViewIndex == -1) {
+                    // TODO verify the position
                     computePaddingPosition(getRecyclerViewItems().size());
                     brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
                 } else {
+                    // TODO verify the position
                     computePaddingPosition(anchorRecyclerViewIndex + 1);
                     brickRecyclerAdapter.safeNotifyItemInserted(anchorRecyclerViewIndex + 1);
                 }
@@ -155,7 +164,8 @@ public class BrickDataManager implements Serializable {
         if (!item.hidden) {
             int index = getRecyclerViewItems().indexOf(item);
             dataHasChanged();
-            computePaddingPosition(index-1);
+            // TODO verify the position
+            computePaddingPosition(index - 1);
             brickRecyclerAdapter.safeNotifyItemRemoved(index);
             brickRecyclerAdapter.safeNotifyItemChanged(index - 1);
         }
@@ -164,6 +174,7 @@ public class BrickDataManager implements Serializable {
     public void removeItems(Collection<BaseBrick> items) {
         this.items.removeAll(items);
         dataHasChanged();
+        // TODO verify the position
         computePaddingPosition(0);
         brickRecyclerAdapter.safeNotifyDataSetChanged();
     }
@@ -172,6 +183,7 @@ public class BrickDataManager implements Serializable {
         int startCount = getRecyclerViewItems().size();
         this.items = new LinkedList<>();
         dataHasChanged();
+        // TODO verify the position
         computePaddingPosition(0);
         brickRecyclerAdapter.safeNotifyItemRangeRemoved(0, startCount);
     }
@@ -181,12 +193,14 @@ public class BrickDataManager implements Serializable {
         this.items.remove(index);
         this.items.add(index, replacement);
         dataHasChanged();
+        // TODO verify the position
         computePaddingPosition(index);
         brickRecyclerAdapter.safeNotifyItemChanged(index);
     }
 
     public void refreshItem(BaseBrick item) {
         dataHasChanged();
+        // TODO verify the position
         computePaddingPosition(getRecyclerViewItems().indexOf(item));
         brickRecyclerAdapter.safeNotifyItemChanged(adapterIndex(item));
     }
@@ -255,8 +269,9 @@ public class BrickDataManager implements Serializable {
     /**
      * Checks / Determines if the brick is on the left wall, first row, right wall, last row
      *
-     * @param position   Position in the adapter of the brick
+     * @param position Position in the adapter of the brick
      */
+    // TODO return range for safeNotifyItemChanged
     private void computePaddingPosition(int position) {
 
         ListIterator<BaseBrick> it = items.listIterator(position);
@@ -270,7 +285,7 @@ public class BrickDataManager implements Serializable {
 
             checkLeftWall(item);
             checkRightWall(item);
-            checkFirstRow(item,it);
+            checkFirstRow(item, it);
             checkLastRow(item, it);
 
             position++;
@@ -279,7 +294,7 @@ public class BrickDataManager implements Serializable {
 
     }
 
-    private void computeRowSpanCount (BaseBrick item, int position) {
+    private void computeRowSpanCount(BaseBrick item, int position) {
         ListIterator<BaseBrick> it = items.listIterator(position);
         spanCount = item.spanSize.getSpans(context);
         while (it.hasPrevious()) {
@@ -291,7 +306,7 @@ public class BrickDataManager implements Serializable {
         }
     }
 
-    private void checkLeftWall (BaseBrick item) {
+    private void checkLeftWall(BaseBrick item) {
         if (spanCount == item.spanSize.getSpans(context)) {
             item.isOnLeftWall = true;
         }
@@ -300,18 +315,18 @@ public class BrickDataManager implements Serializable {
         }
     }
 
-    private void checkRightWall (BaseBrick item) {
+    private void checkRightWall(BaseBrick item) {
         if (spanCount == maxSpanCount) {
             item.isOnRightWall = true;
         }
     }
 
-    private void checkFirstRow (BaseBrick item, ListIterator<BaseBrick> it) {
+    private void checkFirstRow(BaseBrick item, ListIterator<BaseBrick> it) {
         if (!it.hasPrevious()) {
             item.isInFirstRow = true;
         } else {
             BaseBrick prev = it.previous();
-            if (!prev.isInFirstRow || spanCount > maxSpanCount || spanCount + prevSpanCount > maxSpanCount) {
+            if (!prev.isInFirstRow || spanCount > maxSpanCount ) {
                 item.isInFirstRow = false;
             } else {
                 item.isInFirstRow = true;
@@ -319,7 +334,7 @@ public class BrickDataManager implements Serializable {
         }
     }
 
-    private void checkLastRow (BaseBrick item, ListIterator<BaseBrick> it) {
+    private void checkLastRow(BaseBrick item, ListIterator<BaseBrick> it) {
         it.next();
         if (!it.hasNext()) {
             item.isInLastRow = true;

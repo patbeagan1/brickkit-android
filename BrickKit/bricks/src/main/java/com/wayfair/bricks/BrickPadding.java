@@ -1,7 +1,5 @@
 package com.wayfair.bricks;
 
-import android.graphics.Rect;
-
 public abstract class BrickPadding {
     public int getInnerLeftPadding() {
         return innerLeftPadding();
@@ -33,17 +31,6 @@ public abstract class BrickPadding {
 
     public int getOuterBottomPadding() {
         return outerBottomPadding();
-    }
-
-
-    public Rect getInnerPadding() {
-        Rect padding = new Rect(innerLeftPadding(), innerTopPadding(), innerRightPadding(), innerBottomPadding());
-        return padding;
-    }
-
-    public Rect getOuterPadding() {
-        Rect padding = new Rect(outerLeftPadding(), outerTopPadding(), outerRightPadding(), outerBottomPadding());
-        return padding;
     }
 
     protected abstract int innerLeftPadding();
