@@ -47,7 +47,6 @@ public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
         int outerPaddingTop = brick.padding.getOuterTopPadding();
         int outerPaddingRight = brick.padding.getOuterRightPadding();
         int outerPaddingBottom = brick.padding.getOuterBottomPadding();
-        Log.wtf("Kunal", brick.isOnLeftWall+" " + brick.isInFirstRow +" "+ brick.isOnRightWall+" "+brick.isInLastRow +" "+adapterPosition);
 
         // Apply padding
         if (brick.spanSize.getSpans(context) == brickDataManager.maxSpanCount) {

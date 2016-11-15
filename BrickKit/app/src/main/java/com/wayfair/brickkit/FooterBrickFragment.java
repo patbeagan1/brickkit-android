@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
 import com.wayfair.bricks.BrickRecyclerAdapter;
+import com.wayfair.bricks.InnerOuterBrickPadding;
 import com.wayfair.bricks.SimpleBrickSize;
 import com.wayfair.bricks.StickyFooterHelper;
 import com.wayfair.bricks.StickyHeaderHelper;
@@ -30,6 +31,17 @@ public class FooterBrickFragment extends BrickFragment {
                         @Override
                         protected int size() {
                             return MAX_SPANS;
+                        }
+                    },
+                    new InnerOuterBrickPadding() {
+                        @Override
+                        protected int innerPadding() {
+                            return 5;
+                        }
+
+                        @Override
+                        protected int outerPadding() {
+                            return 10;
                         }
                     },
                     "Brick: " + i

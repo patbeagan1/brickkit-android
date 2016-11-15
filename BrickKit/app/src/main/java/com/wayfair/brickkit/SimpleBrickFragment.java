@@ -1,16 +1,11 @@
 package com.wayfair.brickkit;
 
 import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
 
-import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
-import com.wayfair.bricks.BrickRecyclerAdapter;
+import com.wayfair.bricks.InnerOuterBrickPadding;
 import com.wayfair.bricks.OrientationBrickSize;
-import com.wayfair.bricks.SimpleBrickPadding;
 import com.wayfair.bricks.samples.TextBrick;
-
-import java.util.ArrayList;
 
 public class SimpleBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
@@ -37,9 +32,14 @@ public class SimpleBrickFragment extends BrickFragment {
                             return HALF;
                         }
                     },
-                    new SimpleBrickPadding() {
+                    new InnerOuterBrickPadding() {
                         @Override
-                        protected int padding() {
+                        protected int innerPadding() {
+                            return 5;
+                        }
+
+                        @Override
+                        protected int outerPadding() {
                             return 10;
                         }
                     },
