@@ -2,7 +2,6 @@ package com.wayfair.brickkit;
 
 import android.support.v7.widget.OrientationHelper;
 import android.view.View;
-import android.view.View;
 
 import com.wayfair.bricks.BaseBrick;
 import com.wayfair.bricks.BrickFragment;

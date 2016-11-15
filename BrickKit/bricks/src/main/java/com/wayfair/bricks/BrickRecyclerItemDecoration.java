@@ -9,7 +9,6 @@ import android.view.View;
 public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
     private BrickDataManager brickDataManager;
 
-
     public BrickRecyclerItemDecoration(BrickDataManager recyclerViewDataManager) {
         this.brickDataManager = recyclerViewDataManager;
     }

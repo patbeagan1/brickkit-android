@@ -27,44 +27,9 @@ public abstract class BaseBrick {
         this.context = context;
         this.spanSize = spanSize;
         this.spanSize.setBaseBrick(this);
-        this.padding = new BrickPadding() {
+        this.padding = new SimpleBrickPadding() {
             @Override
-            protected int innerLeftPadding() {
-                return getInnerBottomPadding();
-            }
-
-            @Override
-            protected int innerTopPadding() {
-                return 0;
-            }
-
-            @Override
-            protected int innerRightPadding() {
-                return 0;
-            }
-
-            @Override
-            protected int innerBottomPadding() {
-                return 0;
-            }
-
-            @Override
-            protected int outerLeftPadding() {
-                return 0;
-            }
-
-            @Override
-            protected int outerTopPadding() {
-                return 0;
-            }
-
-            @Override
-            protected int outerRightPadding() {
-                return 0;
-            }
-
-            @Override
-            protected int outerBottomPadding() {
+            protected int padding() {
                 return 0;
             }
         };

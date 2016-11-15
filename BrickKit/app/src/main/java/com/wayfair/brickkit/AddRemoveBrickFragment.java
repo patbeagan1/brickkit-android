@@ -31,7 +31,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
             if (i == 0) {
                 controllerBrick = new ControllerBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager){
+                        new SimpleBrickSize(dataManager) {
                             @Override
                             protected int size() {
                                 return MAX_SPANS;
@@ -66,7 +66,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                             @SuppressLint("DefaultLocale")
                             @Override
                             public void onClick(View v) {
-                                final int index = Integer.parseInt(controllerBrick.value);
+                                int index = Integer.parseInt(controllerBrick.value);
 
                                 if (index < 0 || index > dataManager.getRecyclerViewItems().size()) {
                                     return;
