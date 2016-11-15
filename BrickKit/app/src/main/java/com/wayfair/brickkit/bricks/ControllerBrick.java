@@ -1,7 +1,6 @@
 package com.wayfair.brickkit.bricks;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +13,6 @@ import android.widget.Button;
 
 import com.wayfair.brickkit.R;
 import com.wayfair.bricks.BaseBrick;
-import com.wayfair.bricks.BrickDataManager;
 import com.wayfair.bricks.BrickPadding;
 import com.wayfair.bricks.BrickSize;
 import com.wayfair.bricks.BrickViewHolder;

@@ -22,7 +22,7 @@ public class HeaderBrickFragment extends BrickFragment {
         for (int i = 0; i < 100; i++) {
             TextBrick unusedBrick2 = new TextBrick(
                     getContext(),
-                    new OrientationBrickSize(dataManager){
+                    new OrientationBrickSize(dataManager) {
                         @Override
                         protected int portrait() {
                             return MAX_SPANS;
