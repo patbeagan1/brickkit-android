@@ -56,41 +56,43 @@ public class BrickDataManager implements Serializable {
 
         this.items = new LinkedList<>(items);
         dataHasChanged();
-        computePaddingPosition(0);
+        computePaddingPosition(this.items.getFirst());
         brickRecyclerAdapter.safeNotifyItemRangeInserted(0, getRecyclerViewItems().size());
     }
 
     public void addLast(BaseBrick item) {
         this.items.addLast(item);
         dataHasChanged();
-        int refreshStartBrick = computePaddingPosition(getRecyclerViewItems().size() - 1);
+        BaseBrick refreshStartBrick = computePaddingPosition(item);
+        int refreshStartIndex = getRecyclerViewItems().indexOf(refreshStartBrick);
         brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
-        brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartBrick, getRecyclerViewItems().size());
+        brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
     }
 
     public void addFirst(BaseBrick item) {
         this.items.addFirst(item);
         dataHasChanged();
-        computePaddingPosition(0);
+        computePaddingPosition(item);
         brickRecyclerAdapter.safeNotifyItemInserted(0);
-        brickRecyclerAdapter.safeNotifyItemRangeChanged(0, getRecyclerViewItems().size());
+        brickRecyclerAdapter.safeNotifyItemRangeChanged(1, getRecyclerViewItems().size() - 1);
     }
 
     public void addLast(Collection<BaseBrick> items) {
         int index = getRecyclerViewItems().size();
         this.items.addAll(items);
         dataHasChanged();
-        int refreshStartBrick = computePaddingPosition(index);
+        BaseBrick refreshStartBrick = computePaddingPosition(this.items.get(index));
+        int refreshStartIndex = getRecyclerViewItems().indexOf(refreshStartBrick);
         brickRecyclerAdapter.safeNotifyItemRangeInserted(index, items.size());
-        brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartBrick, getRecyclerViewItems().size());
+        brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
     }
 
     public void addFirst(Collection<BaseBrick> items) {
         this.items.addAll(0, items);
         dataHasChanged();
-        computePaddingPosition(0);
+        computePaddingPosition(this.items.getFirst());
         brickRecyclerAdapter.safeNotifyItemRangeInserted(0, items.size());
-        brickRecyclerAdapter.safeNotifyItemRangeChanged(0, getRecyclerViewItems().size());
+        brickRecyclerAdapter.safeNotifyItemRangeChanged(1, getRecyclerViewItems().size() - 1);
     }
 
     public void addBeforeItem(BaseBrick anchor, BaseBrick item) {
@@ -104,23 +106,19 @@ public class BrickDataManager implements Serializable {
 
         if (!item.hidden) {
             dataHasChanged();
+            BaseBrick refreshStartBrick = computePaddingPosition(item);
+            int refreshStartIndex = getRecyclerViewItems().indexOf(refreshStartBrick);
             if (anchorDataManagerIndex == -1) {
-                computePaddingPosition(0);
                 brickRecyclerAdapter.safeNotifyItemInserted(0);
-                brickRecyclerAdapter.safeNotifyItemRangeChanged(0, getRecyclerViewItems().size());
             } else {
                 int anchorRecyclerViewIndex = getPreviousVisibleItem(anchor);
-
                 if (anchorRecyclerViewIndex == -1) {
-                    computePaddingPosition(0);
                     brickRecyclerAdapter.safeNotifyItemInserted(0);
-                    brickRecyclerAdapter.safeNotifyItemRangeChanged(0, getRecyclerViewItems().size());
                 } else {
-                    int refreshStartBrick = computePaddingPosition(anchorRecyclerViewIndex - 1);
                     brickRecyclerAdapter.safeNotifyItemInserted(anchorRecyclerViewIndex - 1);
-                    brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartBrick, getRecyclerViewItems().size());
                 }
             }
+            brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size()- refreshStartIndex);
         }
     }
 
@@ -135,24 +133,19 @@ public class BrickDataManager implements Serializable {
 
         if (!item.hidden) {
             dataHasChanged();
-
+            BaseBrick refreshStartBrick = computePaddingPosition(item);
+            int refreshStartIndex = getRecyclerViewItems().indexOf(refreshStartBrick);
             if (anchorDataManagerIndex == -1) {
-                int refreshStartBrick = computePaddingPosition(getRecyclerViewItems().size() - 1);
                 brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
-                brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartBrick, getRecyclerViewItems().size());
             } else {
                 int anchorRecyclerViewIndex = getNextVisibleItem(anchor);
-
                 if (anchorRecyclerViewIndex == -1) {
-                    int refreshStartBrick = computePaddingPosition(getRecyclerViewItems().size() - 1);
                     brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
-                    brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartBrick, getRecyclerViewItems().size());
                 } else {
-                    int refreshStartBrick = computePaddingPosition(anchorRecyclerViewIndex + 1);
                     brickRecyclerAdapter.safeNotifyItemInserted(anchorRecyclerViewIndex + 1);
-                    brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartBrick, getRecyclerViewItems().size());
                 }
             }
+            brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
         }
     }
 
@@ -162,18 +155,18 @@ public class BrickDataManager implements Serializable {
         if (!item.hidden) {
             int index = getRecyclerViewItems().indexOf(item);
             dataHasChanged();
-            int refreshStartBrick = computePaddingPosition(index - 1);
+            BaseBrick refreshStartBrick = computePaddingPosition(this.items.get(index - 1));
+            int refreshStartIndex = getRecyclerViewItems().indexOf(refreshStartBrick);
             brickRecyclerAdapter.safeNotifyItemRemoved(index);
-            brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartBrick, getRecyclerViewItems().size());
+            brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
         }
     }
 
     public void removeItems(Collection<BaseBrick> items) {
         this.items.removeAll(items);
         dataHasChanged();
-        computePaddingPosition(0);
+        computePaddingPosition(this.items.getFirst());
         brickRecyclerAdapter.safeNotifyDataSetChanged();
-        brickRecyclerAdapter.safeNotifyItemRangeChanged(0, getRecyclerViewItems().size());
     }
 
     public void clear() {
@@ -188,16 +181,18 @@ public class BrickDataManager implements Serializable {
         this.items.remove(index);
         this.items.add(index, replacement);
         dataHasChanged();
-        int refreshStartBrick = computePaddingPosition(index);
+        BaseBrick refreshStartBrick = computePaddingPosition(replacement);
+        int refreshStartIndex = getRecyclerViewItems().indexOf(refreshStartBrick);
         brickRecyclerAdapter.safeNotifyItemChanged(index);
-        brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartBrick, getRecyclerViewItems().size());
+        brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
     }
 
     public void refreshItem(BaseBrick item) {
         dataHasChanged();
-        int refreshStartBrick = computePaddingPosition(getRecyclerViewItems().indexOf(item));
+        BaseBrick refreshStartBrick = computePaddingPosition(item);
+        int refreshStartIndex = getRecyclerViewItems().indexOf(refreshStartBrick);
         brickRecyclerAdapter.safeNotifyItemChanged(adapterIndex(item));
-        brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartBrick, getRecyclerViewItems().size());
+        brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
     }
 
     public void dataHasChanged() {
@@ -264,45 +259,46 @@ public class BrickDataManager implements Serializable {
     /**
      * Checks / Determines if the brick is on the left wall, first row, right wall, last row
      *
-     * @param position Position in the adapter of the brick
+     * @param item BaseBrick item that was changed / added / removed
      */
-    private int computePaddingPosition(int position) {
-        if (position == -1) {
-            position = 0;
-        }
-        int changedBrickStart = 0;
+    private BaseBrick computePaddingPosition(BaseBrick item) {
+
+        int position = items.indexOf(item);
+        BaseBrick leftMostItemVisited = item;
         ListIterator<BaseBrick> it = items.listIterator(position);
+        spanCount = 0;
+        while (it.hasPrevious()) {
+            BaseBrick prev = it.previous();
+            position--;
+            if (prev.isOnLeftWall) {
+                break;
+            }
+        }
+
+        it = items.listIterator(position);
         while (it.hasNext()) {
-            BaseBrick item = it.next();
+            item = it.next();
 
             item.isOnLeftWall = false;
             item.isOnRightWall = false;
 
-            computeRowSpanCount(item, position);
+            spanCount = spanCount + item.spanSize.getSpans(context);
 
             checkLeftWall(item);
             checkRightWall(item);
 
             checkFirstRow(item, it);
 
-            changedBrickStart = checkLastRow(item, it);
+            leftMostItemVisited = checkLastRow(item, it);
+
+            if (spanCount > maxSpanCount) {
+                spanCount = item.spanSize.getSpans(context);
+            }
 
             position++;
             it = items.listIterator(position);
         }
-        return changedBrickStart;
-    }
-
-    private void computeRowSpanCount(BaseBrick item, int position) {
-        ListIterator<BaseBrick> it = items.listIterator(position);
-        spanCount = item.spanSize.getSpans(context);
-        while (it.hasPrevious()) {
-            BaseBrick prevBrick = it.previous();
-            spanCount = spanCount + prevBrick.spanSize.getSpans(context);
-            if (prevBrick.isOnLeftWall) {
-                break;
-            }
-        }
+        return leftMostItemVisited;
     }
 
     private void checkLeftWall(BaseBrick item) {
@@ -323,7 +319,7 @@ public class BrickDataManager implements Serializable {
             item.isInFirstRow = true;
         } else {
             BaseBrick prev = it.previous();
-            if (!prev.isInFirstRow || spanCount > maxSpanCount ) {
+            if (!prev.isInFirstRow || spanCount > maxSpanCount || spanCount == item.spanSize.getSpans(context)) {
                 item.isInFirstRow = false;
             } else {
                 item.isInFirstRow = true;
@@ -332,9 +328,8 @@ public class BrickDataManager implements Serializable {
         }
     }
 
-    private int checkLastRow(BaseBrick item, ListIterator<BaseBrick> it) {
-        int refreshIndex = 0;
-        refreshIndex = items.indexOf(item);
+    private BaseBrick checkLastRow(BaseBrick item, ListIterator<BaseBrick> it) {
+        BaseBrick leftMostItemVisited = item;
 
         it.next();
         if (!it.hasNext()) {
@@ -345,7 +340,7 @@ public class BrickDataManager implements Serializable {
                 BaseBrick prevBrick = it.previous();
                 prevBrick.isInLastRow = true;
                 if (prevBrick.isOnLeftWall) {
-                    refreshIndex = items.indexOf(prevBrick);
+                    leftMostItemVisited = prevBrick;
                     break;
                 }
             }
@@ -355,11 +350,11 @@ public class BrickDataManager implements Serializable {
                 BaseBrick prevBrick = it.previous();
                 prevBrick.isInLastRow = false;
                 if (prevBrick.isOnLeftWall) {
-                    refreshIndex = items.indexOf(prevBrick);
+                    leftMostItemVisited = prevBrick;
                     break;
                 }
             }
         }
-        return refreshIndex;
+        return leftMostItemVisited;
     }
 }
