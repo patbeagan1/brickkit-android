@@ -8,8 +8,8 @@ import com.wayfair.golleycore.core.models.GolleyBaseRequest;
 import java.util.HashMap;
 
 public class TokenRequest extends GolleyBaseRequest {
-    static private final String CONSUMER_KEY = "PeItiRrlTnNkIudVPosZ97zdr";
-    static private final String CONSUMER_SECRET = "Zcp4td83QB5T0l1nw5ytML3ufZCK7zcGMLdTQ2JB0hRKyXwEdR";
+    private static final String CONSUMER_KEY = "PeItiRrlTnNkIudVPosZ97zdr";
+    private static final String CONSUMER_SECRET = "Zcp4td83QB5T0l1nw5ytML3ufZCK7zcGMLdTQ2JB0hRKyXwEdR";
 
     @Override
     public String urlParameters() {
