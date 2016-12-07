@@ -9,10 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 
 public abstract class BrickFragment extends Fragment {
     public BrickDataManager dataManager;
+    public BrickRecyclerAdapter brickRecyclerAdapter;
+    private BrickRecyclerItemDecoration itemDecoration;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,10 +35,7 @@ public abstract class BrickFragment extends Fragment {
 
         if (getView() != null) {
             RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
-            dataManager = new BrickDataManager(recyclerView, maxSpans());
-
-            int defaultPadding = (int) getContext().getResources().getDimension(R.dimen.default_brick_inset_padding);
-            recyclerView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
+            dataManager = new BrickDataManager(getContext(), recyclerView, maxSpans());
 
             recyclerView.setLayoutManager(
                     new BrickGridLayoutManager(
@@ -48,6 +46,9 @@ public abstract class BrickFragment extends Fragment {
                             reverse()
                     )
             );
+
+            itemDecoration = new BrickRecyclerItemDecoration(dataManager);
+            recyclerView.addItemDecoration(itemDecoration);
 
             addBehaviours();
             createBricks();

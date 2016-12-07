@@ -1,18 +1,13 @@
 package com.wayfair.brickkit;
 
 import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
 
 import com.wayfair.bricks.BaseBrick;
-import com.wayfair.bricks.BrickBehaviour;
 import com.wayfair.bricks.BrickFragment;
-import com.wayfair.bricks.BrickRecyclerAdapter;
+import com.wayfair.bricks.InnerOuterBrickPadding;
 import com.wayfair.bricks.OnReachedItemAtPosition;
 import com.wayfair.bricks.OrientationBrickSize;
 import com.wayfair.bricks.samples.TextBrick;
-import com.wayfair.bricks.samples.VerticalTextBrick;
-
-import java.util.ArrayList;
 
 public class InfiniteScrollBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
@@ -70,6 +65,17 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
                         @Override
                         protected int landscape() {
                             return HALF;
+                        }
+                    },
+                    new InnerOuterBrickPadding() {
+                        @Override
+                        protected int innerPadding() {
+                            return 5;
+                        }
+
+                        @Override
+                        protected int outerPadding() {
+                            return 10;
                         }
                     },
                     "Brick: " + page + " " + i

@@ -7,6 +7,7 @@ import android.view.View;
 import com.wayfair.brickkit.bricks.ControllerBrick;
 import com.wayfair.bricks.BaseBrick;
 import com.wayfair.bricks.BrickFragment;
+import com.wayfair.bricks.InnerOuterBrickPadding;
 import com.wayfair.bricks.SimpleBrickSize;
 import com.wayfair.bricks.StickyFooterHelper;
 import com.wayfair.bricks.StickyHeaderHelper;
@@ -30,10 +31,21 @@ public class AddRemoveBrickFragment extends BrickFragment {
             if (i == 0) {
                 controllerBrick = new ControllerBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager){
+                        new SimpleBrickSize(dataManager) {
                             @Override
                             protected int size() {
                                 return MAX_SPANS;
+                            }
+                        },
+                        new InnerOuterBrickPadding() {
+                            @Override
+                            protected int innerPadding() {
+                                return 5;
+                            }
+
+                            @Override
+                            protected int outerPadding() {
+                                return 10;
                             }
                         },
                         String.valueOf(NUMBER_OF_BRICKS - 1),
@@ -70,6 +82,17 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                                             return MAX_SPANS;
                                                         }
                                                     },
+                                                    new InnerOuterBrickPadding() {
+                                                        @Override
+                                                        protected int innerPadding() {
+                                                            return 5;
+                                                        }
+
+                                                        @Override
+                                                        protected int outerPadding() {
+                                                            return 10;
+                                                        }
+                                                    },
                                                     String.format(FORMAT, index)
                                             )
                                     );
@@ -82,6 +105,17 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                                         @Override
                                                         protected int size() {
                                                             return MAX_SPANS;
+                                                        }
+                                                    },
+                                                    new InnerOuterBrickPadding() {
+                                                        @Override
+                                                        protected int innerPadding() {
+                                                            return 5;
+                                                        }
+
+                                                        @Override
+                                                        protected int outerPadding() {
+                                                            return 10;
                                                         }
                                                     },
                                                     String.format(FORMAT, index)
@@ -106,6 +140,17 @@ public class AddRemoveBrickFragment extends BrickFragment {
                             @Override
                             protected int size() {
                                 return MAX_SPANS;
+                            }
+                        },
+                        new InnerOuterBrickPadding() {
+                            @Override
+                            protected int innerPadding() {
+                                return 5;
+                            }
+
+                            @Override
+                            protected int outerPadding() {
+                                return 10;
                             }
                         },
                         String.format(FORMAT, i)

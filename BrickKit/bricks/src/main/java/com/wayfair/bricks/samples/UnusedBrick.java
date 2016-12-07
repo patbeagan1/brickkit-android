@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wayfair.bricks.BaseBrick;
+import com.wayfair.bricks.BrickPadding;
 import com.wayfair.bricks.BrickSize;
 import com.wayfair.bricks.BrickViewHolder;
 import com.wayfair.bricks.R;
@@ -31,15 +32,13 @@ public class UnusedBrick extends BaseBrick {
         super(context, spanSize);
     }
 
-    @Override
-    public void onBindData(RecyclerView.ViewHolder holder) {
+    public UnusedBrick(Context context, BrickSize spanSize, BrickPadding padding) {
+        super(context, spanSize, padding);
     }
 
-    @Override
-    public void padding(Rect outRect) {
-        int defaultPadding = (int) context.getResources().getDimension(R.dimen.default_brick_inset_padding);
 
-        outRect.set(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
+    @Override
+    public void onBindData(RecyclerView.ViewHolder holder) {
     }
 
     @Override

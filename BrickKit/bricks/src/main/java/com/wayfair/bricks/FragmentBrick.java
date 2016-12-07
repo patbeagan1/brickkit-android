@@ -71,13 +71,6 @@ public class FragmentBrick extends BaseBrick {
     }
 
     @Override
-    public void padding(Rect outRect) {
-        int defaultPadding = (int) context.getResources().getDimension(R.dimen.default_brick_inset_padding);
-
-        outRect.set(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
-    }
-
-    @Override
     public String getTemplate() {
         return BRICK_TEMPLATE;
     }

@@ -1,9 +1,6 @@
 package com.wayfair.brickkit.models.requests;
 
-import com.wayfair.brickkit.models.responses.TokenResponse;
 import com.wayfair.golleycore.core.models.GolleyBaseRequest;
-
-import java.util.HashMap;
 
 public class StatusesUserTimeline extends GolleyBaseRequest {
     public String screenName;

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wayfair.bricks.BaseBrick;
+import com.wayfair.bricks.BrickPadding;
 import com.wayfair.bricks.BrickSize;
 import com.wayfair.bricks.BrickViewHolder;
 import com.wayfair.bricks.R;
@@ -33,7 +34,12 @@ public class UsedBrick extends BaseBrick implements TouchableBrick {
 
     public UsedBrick(Context context, BrickSize spanSize, CharSequence text, View.OnClickListener onTouch) {
         super(context, spanSize);
+        this.text = text;
+        this.onTouch = onTouch;
+    }
 
+    public UsedBrick(Context context, BrickSize spanSize, BrickPadding brickPadding,CharSequence text, View.OnClickListener onTouch) {
+        super(context, spanSize, brickPadding);
         this.text = text;
         this.onTouch = onTouch;
     }
@@ -47,13 +53,6 @@ public class UsedBrick extends BaseBrick implements TouchableBrick {
                 holder.itemView.setOnClickListener(onTouch());
             }
         }
-    }
-
-    @Override
-    public void padding(Rect outRect) {
-        int defaultPadding = (int) context.getResources().getDimension(R.dimen.default_brick_inset_padding);
-
-        outRect.set(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
     }
 
     @Override
