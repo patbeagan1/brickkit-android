@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.wayfair.brickkit", appContext.getPackageName());
+        assertEquals("com.wayfair.brickkitdemo", appContext.getPackageName());
     }
 }
