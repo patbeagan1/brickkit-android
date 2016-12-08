@@ -129,8 +129,8 @@ public class AddRemoveBrickFragment extends BrickFragment {
                         }
                 );
 
-                controllerBrick.header = true;
-                controllerBrick.footer = true;
+                controllerBrick.setHeader(true);
+                controllerBrick.setFooter(true);
 
                 dataManager.addLast(controllerBrick);
             } else {

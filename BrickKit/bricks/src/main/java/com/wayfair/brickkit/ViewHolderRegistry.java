@@ -4,7 +4,9 @@ import android.view.ViewGroup;
 
 import java.util.HashMap;
 
-public class ViewHolderRegistry {
+public final class ViewHolderRegistry {
+    private ViewHolderRegistry() { }
+
     private static HashMap<String, GenerateViewHolderInterface> registry = new HashMap<>();
 
     public static void register(String template, GenerateViewHolderInterface generateViewHolderInterface) {

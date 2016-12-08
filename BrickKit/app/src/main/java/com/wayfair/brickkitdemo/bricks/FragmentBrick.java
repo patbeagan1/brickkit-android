@@ -1,4 +1,4 @@
-package com.wayfair.brickkit;
+package com.wayfair.brickkitdemo.bricks;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -8,6 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import com.wayfair.brickkit.BaseBrick;
+import com.wayfair.brickkit.BrickSize;
+import com.wayfair.brickkit.BrickViewHolder;
+import com.wayfair.brickkit.R;
+import com.wayfair.brickkit.ViewHolderRegistry;
 
 public class FragmentBrick extends BaseBrick {
     private static final String BRICK_TEMPLATE = "cms/bricks/fragment_brick";

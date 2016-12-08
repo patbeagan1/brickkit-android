@@ -17,12 +17,12 @@ import com.wayfair.brickkit.ViewHolderRegistry;
 public class TextBrick extends BaseBrick {
     private static final String BRICK_TEMPLATE = "cms/bricks/text_brick";
 
-    public CharSequence text;
+    private final CharSequence text;
 
     static {
         ViewHolderRegistry.register(BRICK_TEMPLATE, new ViewHolderRegistry.GenerateViewHolderInterface() {
             @Override
-            public BrickViewHolder generateViewHolder(ViewGroup parent) {
+            public TextViewHolder generateViewHolder(ViewGroup parent) {
                 View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_brick, parent, false);
 
                 return new TextViewHolder(itemView);
@@ -41,11 +41,9 @@ public class TextBrick extends BaseBrick {
     }
 
     @Override
-    public void onBindData(RecyclerView.ViewHolder holder) {
-        if (holder instanceof TextViewHolder) {
-            TextViewHolder editTextViewHolder = (TextViewHolder) holder;
-            editTextViewHolder.textView.setText(text);
-        }
+    public void onBindData(RecyclerView.ViewHolder viewHolder) {
+        TextViewHolder editTextViewHolder = (TextViewHolder) viewHolder;
+        editTextViewHolder.textView.setText(text);
     }
 
     @Override
@@ -53,7 +51,7 @@ public class TextBrick extends BaseBrick {
         return BRICK_TEMPLATE;
     }
 
-    private static class TextViewHolder extends BrickViewHolder {
+    static class TextViewHolder extends BrickViewHolder {
         TextView textView;
 
         TextViewHolder(View itemView) {

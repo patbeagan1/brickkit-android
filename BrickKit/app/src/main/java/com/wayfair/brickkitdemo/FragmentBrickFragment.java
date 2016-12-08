@@ -4,7 +4,7 @@ import android.support.v7.widget.OrientationHelper;
 
 import com.wayfair.brickkit.BaseBrick;
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.FragmentBrick;
+import com.wayfair.brickkitdemo.bricks.FragmentBrick;
 import com.wayfair.brickkit.SimpleBrickSize;
 
 public class FragmentBrickFragment extends BrickFragment {

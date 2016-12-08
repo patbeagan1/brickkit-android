@@ -2,12 +2,12 @@ package com.wayfair.brickkit;
 
 import java.util.HashMap;
 
-public class TemplateRegistry {
+public final class TemplateRegistry {
     private static TemplateRegistry instance;
     private HashMap<String, Integer> templateToViewType;
     private HashMap<Integer, String> viewTypeToTemplate;
 
-    public TemplateRegistry() {
+    private TemplateRegistry() {
         templateToViewType = new HashMap<>();
         viewTypeToTemplate = new HashMap<>();
     }
@@ -20,16 +20,16 @@ public class TemplateRegistry {
         return instance;
     }
 
-    public void put(String template, Integer viewType) {
+    private void put(String template, int viewType) {
         templateToViewType.put(template, viewType);
         viewTypeToTemplate.put(viewType, template);
     }
 
-    public String get(Integer viewType) {
+    public String get(int viewType) {
         return viewTypeToTemplate.get(viewType);
     }
 
-    public Integer get(String template) {
+    public int get(String template) {
         Integer viewType = templateToViewType.get(template);
 
         if (viewType == null) {

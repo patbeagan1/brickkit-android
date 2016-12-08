@@ -177,12 +177,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
 
     @Override
     public void onViewDetachedFromWindow(BrickViewHolder holder) {
-        holder.onViewDetachedFromWindow();
-    }
-
-    @Override
-    public void onViewRecycled(BrickViewHolder holder) {
-        holder.onViewRecycled();
+        holder.releaseViewsOnDetach();
     }
 
     @Override
@@ -211,7 +206,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
         if (position != -1) {
             for (int i = position; i >= 0; i--) {
                 BaseBrick baseBrick = get(i);
-                if (baseBrick != null && baseBrick.header) {
+                if (baseBrick != null && baseBrick.isHeader()) {
                     return baseBrick;
                 }
             }
@@ -224,7 +219,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
         if (position != -1) {
             for (int i = position; i < dataManager.getRecyclerViewItems().size(); i++) {
                 BaseBrick baseBrick = get(i);
-                if (baseBrick != null && baseBrick.footer) {
+                if (baseBrick != null && baseBrick.isFooter()) {
                     return baseBrick;
                 }
             }

@@ -48,7 +48,7 @@ public class HeaderBrickFragment extends BrickFragment {
             );
 
             if (i % 10 == 0) {
-                unusedBrick2.header = true;
+                unusedBrick2.setHeader(true);
             }
 
             dataManager.addLast(unusedBrick2);

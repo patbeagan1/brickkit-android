@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 
 public abstract class BrickFragment extends Fragment {
     public BrickDataManager dataManager;
-    public BrickRecyclerAdapter brickRecyclerAdapter;
-    private BrickRecyclerItemDecoration itemDecoration;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,8 +45,7 @@ public abstract class BrickFragment extends Fragment {
                     )
             );
 
-            itemDecoration = new BrickRecyclerItemDecoration(dataManager);
-            recyclerView.addItemDecoration(itemDecoration);
+            recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(dataManager));
 
             addBehaviours();
             createBricks();
