@@ -210,19 +210,19 @@ public class BrickDataManagerTest {
         assertEquals(-1, observer.itemRangeChangedItemCount);
     }
 
-//    @Test
-//    public void testAddBeforeFirstItem() {
-//        manager.addBeforeItem(manager.getRecyclerViewItems().get(0), generateBrick());
-//
-//        assertEquals(5, manager.getRecyclerViewItems().size());
-//        assertEquals(5, manager.getDataManagerItems().size());
-//
-//        assertEquals(0, observer.itemRangeInsertedPositionStart);
-//        assertEquals(1, observer.itemRangeInsertedItemCount);
-//
-//        assertEquals(1, observer.itemRangeChangedPositionStart);
-//        assertEquals(4, observer.itemRangeChangedItemCount);
-//    }
+    @Test
+    public void testAddBeforeFirstItem() {
+        manager.addBeforeItem(manager.getRecyclerViewItems().get(0), generateBrick());
+
+        assertEquals(5, manager.getRecyclerViewItems().size());
+        assertEquals(5, manager.getDataManagerItems().size());
+
+        assertEquals(0, observer.itemRangeInsertedPositionStart);
+        assertEquals(1, observer.itemRangeInsertedItemCount);
+
+        assertEquals(0, observer.itemRangeChangedPositionStart);
+        assertEquals(5, observer.itemRangeChangedItemCount);
+    }
 
     @Test
     public void testAddBeforeLastItem() {
@@ -238,19 +238,19 @@ public class BrickDataManagerTest {
         assertEquals(3, observer.itemRangeChangedItemCount);
     }
 
-//    @Test
-//    public void testAddBeforeInvalidItem() {
-//        manager.addBeforeItem(generateBrick(), generateBrick());
-//
-//        assertEquals(5, manager.getRecyclerViewItems().size());
-//        assertEquals(5, manager.getDataManagerItems().size());
-//
-//        assertEquals(0, observer.itemRangeInsertedPositionStart);
-//        assertEquals(1, observer.itemRangeInsertedItemCount);
-//
-//        assertEquals(1, observer.itemRangeChangedPositionStart);
-//        assertEquals(4, observer.itemRangeChangedItemCount);
-//    }
+    @Test
+    public void testAddBeforeInvalidItem() {
+        manager.addBeforeItem(generateBrick(), generateBrick());
+
+        assertEquals(5, manager.getRecyclerViewItems().size());
+        assertEquals(5, manager.getDataManagerItems().size());
+
+        assertEquals(0, observer.itemRangeInsertedPositionStart);
+        assertEquals(1, observer.itemRangeInsertedItemCount);
+
+        assertEquals(0, observer.itemRangeChangedPositionStart);
+        assertEquals(5, observer.itemRangeChangedItemCount);
+    }
 
     @Test
     public void testAddAfterFirstItem() {
@@ -262,8 +262,8 @@ public class BrickDataManagerTest {
         assertEquals(1, observer.itemRangeInsertedPositionStart);
         assertEquals(1, observer.itemRangeInsertedItemCount);
 
-        assertEquals(2, observer.itemRangeChangedPositionStart);
-        assertEquals(3, observer.itemRangeChangedItemCount);
+        assertEquals(0, observer.itemRangeChangedPositionStart);
+        assertEquals(5, observer.itemRangeChangedItemCount);
     }
 
     @Test
