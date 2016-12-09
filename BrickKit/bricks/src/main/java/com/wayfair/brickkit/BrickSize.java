@@ -1,15 +1,15 @@
 package com.wayfair.brickkit;
 
 import android.content.Context;
-
-import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import android.content.res.Configuration;
+import android.util.Log;
 
 public abstract class BrickSize {
     private int maxSpan;
     private BaseBrick baseBrick;
 
     public BrickSize(BrickDataManager dataManager) {
-        this.maxSpan = dataManager.maxSpanCount;
+        this.maxSpan = dataManager.getMaxSpanCount();
     }
 
     public void setBaseBrick(BaseBrick baseBrick) {
@@ -19,30 +19,27 @@ public abstract class BrickSize {
     public int getSpans(Context context) {
         int spans;
 
-        if (baseBrick.header || baseBrick.footer) {
+        if (baseBrick.isHeader() || baseBrick.isFooter()) {
             spans = maxSpan;
         } else {
             if (context.getResources().getBoolean(R.bool.tablet)) {
-                if (context.getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
+                if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     spans = landscapeTablet();
                 } else {
                     spans = portraitTablet();
                 }
             } else {
-                if (context.getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
+                if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     spans = landscapePhone();
                 } else {
                     spans = portraitPhone();
                 }
             }
-        }
 
-        if (spans > maxSpan) {
-            android.util.Log.i(
-                    getClass().getSimpleName(),
-                    "Span needs to be less than or equal to: " + maxSpan
-            );
-            spans = maxSpan;
+            if (spans > maxSpan) {
+                Log.i(getClass().getSimpleName(), "Span needs to be less than or equal to: " + maxSpan);
+                spans = maxSpan;
+            }
         }
 
         return spans;

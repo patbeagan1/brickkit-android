@@ -42,7 +42,7 @@ public class FooterBrickFragment extends BrickFragment {
             );
 
             if (i % 10 == 0) {
-                unusedBrick2.footer = true;
+                unusedBrick2.setFooter(true);
             }
 
             dataManager.addLast(unusedBrick2);
