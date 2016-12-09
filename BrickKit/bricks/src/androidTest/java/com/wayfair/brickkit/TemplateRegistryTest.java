@@ -2,6 +2,7 @@ package com.wayfair.brickkit;
 
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -11,6 +12,11 @@ import static org.junit.Assert.assertEquals;
 public class TemplateRegistryTest {
     private static final String FIRST = "first";
     private static final String SECOND = "second";
+
+    @Before
+    public void setup() {
+        TemplateRegistry.getInstance().reset();
+    }
 
     @Test
     public void testGet() {

@@ -12,6 +12,11 @@ public final class TemplateRegistry {
         viewTypeToTemplate = new HashMap<>();
     }
 
+    void reset() {
+        templateToViewType.clear();
+        viewTypeToTemplate.clear();
+    }
+
     public static TemplateRegistry getInstance() {
         if (instance == null) {
             instance = new TemplateRegistry();
