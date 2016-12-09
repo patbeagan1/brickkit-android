@@ -126,16 +126,7 @@ public class BrickDataManager implements Serializable {
         if (!item.isHidden()) {
             dataHasChanged();
             int refreshStartIndex = computePaddingPosition(item);
-            if (anchorDataManagerIndex == -1) {
-                brickRecyclerAdapter.safeNotifyItemInserted(0);
-            } else {
-                int anchorRecyclerViewIndex = getPreviousVisibleItem(anchor);
-                if (anchorRecyclerViewIndex == -1) {
-                    brickRecyclerAdapter.safeNotifyItemInserted(0);
-                } else {
-                    brickRecyclerAdapter.safeNotifyItemInserted(anchorRecyclerViewIndex - 1);
-                }
-            }
+            brickRecyclerAdapter.safeNotifyItemInserted(adapterIndex(item));
             brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
         }
     }
@@ -152,16 +143,7 @@ public class BrickDataManager implements Serializable {
         if (!item.isHidden()) {
             dataHasChanged();
             int refreshStartIndex = computePaddingPosition(item);
-            if (anchorDataManagerIndex == -1) {
-                brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size() - 1);
-            } else {
-                int anchorRecyclerViewIndex = getNextVisibleItem(anchor);
-                if (anchorRecyclerViewIndex == -1) {
-                    brickRecyclerAdapter.safeNotifyItemInserted(getRecyclerViewItems().size());
-                } else {
-                    brickRecyclerAdapter.safeNotifyItemInserted(anchorRecyclerViewIndex + 1);
-                }
-            }
+            brickRecyclerAdapter.safeNotifyItemInserted(adapterIndex(item));
             brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
         }
     }
@@ -200,20 +182,58 @@ public class BrickDataManager implements Serializable {
     }
 
     public void replaceItem(BaseBrick target, BaseBrick replacement) {
-        int index = this.items.indexOf(target);
-        this.items.remove(index);
-        this.items.add(index, replacement);
-        dataHasChanged();
-        int refreshStartIndex = computePaddingPosition(replacement);
-        brickRecyclerAdapter.safeNotifyItemChanged(index);
-        brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+        boolean targetIsHidden = adapterIndex(target) == -1;
+        if (targetIsHidden == replacement.isHidden()) {
+            if (!target.isHidden()) {
+                int index = dataSourceIndex(target);
+                items.remove(index);
+                items.add(index, replacement);
+                dataHasChanged();
+                int refreshStartIndex = computePaddingPosition(replacement);
+                brickRecyclerAdapter.safeNotifyItemChanged(index);
+                brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+            }
+        } else if (!targetIsHidden) {
+            int refreshStartIndex = computePaddingPosition(target);
+            dataHasChanged();
+            int index = dataSourceIndex(target);
+            items.remove(index);
+            items.add(index, replacement);
+            brickRecyclerAdapter.safeNotifyItemRemoved(index);
+            brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+        } else {
+            int index = dataSourceIndex(target);
+            items.remove(index);
+            items.add(index, replacement);
+            dataHasChanged();
+            int refreshStartIndex = computePaddingPosition(replacement);
+            brickRecyclerAdapter.safeNotifyItemInserted(index);
+            brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+        }
     }
 
     public void refreshItem(BaseBrick item) {
-        dataHasChanged();
-        int refreshStartIndex = computePaddingPosition(item);
-        brickRecyclerAdapter.safeNotifyItemChanged(adapterIndex(item));
-        brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+        boolean wasHidden = adapterIndex(item) == -1;
+        if (wasHidden == item.isHidden()) {
+            if (!wasHidden) {
+                int index = dataSourceIndex(item);
+                int refreshStartIndex = computePaddingPosition(item);
+                brickRecyclerAdapter.safeNotifyItemChanged(index);
+                brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+            }
+        } else if (!wasHidden) {
+            int refreshStartIndex = computePaddingPosition(item);
+            dataHasChanged();
+            int index = dataSourceIndex(item);
+            brickRecyclerAdapter.safeNotifyItemRemoved(index);
+            brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+        } else {
+            int index = dataSourceIndex(item);
+            dataHasChanged();
+            int refreshStartIndex = computePaddingPosition(item);
+            brickRecyclerAdapter.safeNotifyItemInserted(index);
+            brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+        }
     }
 
     private void dataHasChanged() {
@@ -243,40 +263,6 @@ public class BrickDataManager implements Serializable {
         removeItems(itemToRemove);
     }
 
-    private int getPreviousVisibleItem(BaseBrick item) {
-        if (!item.isHidden()) {
-            return getRecyclerViewItems().indexOf(item);
-        } else {
-            BaseBrick baseBrick;
-            ListIterator<BaseBrick> listIterator = this.items.listIterator(this.items.indexOf(item));
-            while (listIterator.hasPrevious()) {
-                baseBrick = listIterator.previous();
-                if (!baseBrick.isHidden()) {
-                    return getRecyclerViewItems().indexOf(baseBrick);
-                }
-            }
-        }
-
-        return -1;
-    }
-
-    private int getNextVisibleItem(BaseBrick item) {
-        if (!item.isHidden()) {
-            return getRecyclerViewItems().indexOf(item);
-        } else {
-            BaseBrick baseBrick;
-            ListIterator<BaseBrick> listIterator = this.items.listIterator(this.items.indexOf(item));
-            while (listIterator.hasNext()) {
-                baseBrick = listIterator.next();
-                if (!baseBrick.isHidden()) {
-                    return getRecyclerViewItems().indexOf(baseBrick);
-                }
-            }
-        }
-
-        return -1;
-    }
-
     /**
      * Checks / Determines if the brick is on the left wall, first row, right wall, last row
      *
@@ -286,28 +272,54 @@ public class BrickDataManager implements Serializable {
         int currentRow = 0;
         int startingBrickIndex = getRecyclerViewItems().indexOf(currentBrick);
 
-        if (startingBrickIndex >= 0) {
-            ListIterator<BaseBrick> iterator = getRecyclerViewItems().listIterator(startingBrickIndex);
+        ListIterator<BaseBrick> iterator = getRecyclerViewItems().listIterator(startingBrickIndex);
 
-            if (!currentBrick.isOnLeftWall()) {
-                while (iterator.hasPrevious()) {
-                    currentBrick = iterator.previous();
-                    startingBrickIndex--;
-                    if (currentBrick.isOnLeftWall()) {
-                        break;
-                    }
+        if (!currentBrick.isOnLeftWall()) {
+            while (iterator.hasPrevious()) {
+                currentBrick = iterator.previous();
+                startingBrickIndex--;
+                if (currentBrick.isOnLeftWall()) {
+                    break;
                 }
             }
+        }
 
-            boolean topRow = false;
-            currentBrick.setOnLeftWall(true);
+        boolean topRow = false;
+        currentBrick.setOnLeftWall(true);
+        currentBrick.setInFirstRow(false);
+        currentBrick.setOnRightWall(false);
+        currentBrick.setInLastRow(false);
+
+        if (!iterator.hasPrevious()) {
+            currentBrick.setInFirstRow(true);
+            topRow = true;
+        }
+
+        currentRow += currentBrick.getSpanSize().getSpans(context);
+
+        if (currentRow == maxSpanCount) {
+            currentBrick.setOnRightWall(true);
+        }
+
+        if (currentRow >= maxSpanCount) {
+            currentRow = 0;
+        }
+
+        currentBrick = iterator.next();
+        while (iterator.hasNext()) {
+            currentBrick = iterator.next();
+
+            currentBrick.setOnLeftWall(false);
             currentBrick.setInFirstRow(false);
             currentBrick.setOnRightWall(false);
             currentBrick.setInLastRow(false);
 
-            if (!iterator.hasPrevious()) {
+            if (currentRow == 0) {
+                currentBrick.setOnLeftWall(true);
+            }
+
+            if (topRow) {
                 currentBrick.setInFirstRow(true);
-                topRow = true;
             }
 
             currentRow += currentBrick.getSpanSize().getSpans(context);
@@ -318,43 +330,15 @@ public class BrickDataManager implements Serializable {
 
             if (currentRow >= maxSpanCount) {
                 currentRow = 0;
+                topRow = false;
             }
-
-            currentBrick = iterator.next();
-            while (iterator.hasNext()) {
-                currentBrick = iterator.next();
-
-                currentBrick.setOnLeftWall(false);
-                currentBrick.setInFirstRow(false);
-                currentBrick.setOnRightWall(false);
-                currentBrick.setInLastRow(false);
-
-                if (currentRow == 0) {
-                    currentBrick.setOnLeftWall(true);
-                }
-
-                if (topRow) {
-                    currentBrick.setInFirstRow(true);
-                }
-
-                currentRow += currentBrick.getSpanSize().getSpans(context);
-
-                if (currentRow == maxSpanCount) {
-                    currentBrick.setOnRightWall(true);
-                }
-
-                if (currentRow >= maxSpanCount) {
-                    currentRow = 0;
-                    topRow = false;
-                }
-            }
-            if (!currentBrick.isInLastRow()) {
-                currentBrick.setInLastRow(true);
-            }
-
-            currentBrick = iterator.previous();
-            addBottomToRowEndingWithItem(iterator, currentBrick);
         }
+        if (!currentBrick.isInLastRow()) {
+            currentBrick.setInLastRow(true);
+        }
+
+        currentBrick = iterator.previous();
+        addBottomToRowEndingWithItem(iterator, currentBrick);
 
         return startingBrickIndex;
     }
