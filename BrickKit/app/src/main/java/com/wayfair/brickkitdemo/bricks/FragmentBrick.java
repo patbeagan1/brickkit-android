@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.size.BrickSize;
 import com.wayfair.brickkit.BrickViewHolder;
-import com.wayfair.brickkit.R;
+import com.wayfair.brickkitdemo.R;
 
 /**
  * Brick whose content is a fragment.

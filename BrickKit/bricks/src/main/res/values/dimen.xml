@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="default_brick_inset_padding">2dp</dimen>
     <dimen name="default_brick_content_padding">8dp</dimen>
 </resources>
