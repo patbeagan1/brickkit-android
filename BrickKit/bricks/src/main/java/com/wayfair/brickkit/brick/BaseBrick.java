@@ -1,8 +1,11 @@
 package com.wayfair.brickkit.brick;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
+import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.padding.SimpleBrickPadding;
 import com.wayfair.brickkit.size.BrickSize;
@@ -68,6 +71,22 @@ public abstract class BaseBrick {
      * @return the template string for this brick type
      */
     public abstract String getTemplate();
+
+    /**
+     * Get layout resource id for this brick.
+     *
+     * @return the layout resource id for this brick
+     */
+    @LayoutRes
+    public abstract int getLayout();
+
+    /**
+     * Creates an instance of the {@link BrickViewHolder} for this class.
+     *
+     * @param itemView view to pass into the {@link BrickViewHolder}
+     * @return the {@link BrickViewHolder}
+     */
+    public abstract BrickViewHolder createViewHolder(View itemView);
 
     /**
      * Gets the {@link BrickSize} for this brick.

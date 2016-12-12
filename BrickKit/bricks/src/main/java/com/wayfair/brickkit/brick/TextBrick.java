@@ -2,16 +2,13 @@ package com.wayfair.brickkit.brick;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.size.BrickSize;
 import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.R;
-import com.wayfair.brickkit.ViewHolderRegistry;
 
 /**
  * Simple Brick with a single text view.
@@ -20,17 +17,6 @@ public class TextBrick extends BaseBrick {
     private static final String BRICK_TEMPLATE = "cms/bricks/text_brick";
 
     private final CharSequence text;
-
-    static {
-        ViewHolderRegistry.register(BRICK_TEMPLATE, new ViewHolderRegistry.GenerateViewHolderInterface() {
-            @Override
-            public TextViewHolder generateViewHolder(ViewGroup parent) {
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_brick, parent, false);
-
-                return new TextViewHolder(itemView);
-            }
-        });
-    }
 
     /**
      * Constructor which uses the default padding.
@@ -66,6 +52,16 @@ public class TextBrick extends BaseBrick {
     @Override
     public String getTemplate() {
         return BRICK_TEMPLATE;
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.text_brick;
+    }
+
+    @Override
+    public BrickViewHolder createViewHolder(View itemView) {
+        return new TextViewHolder(itemView);
     }
 
     /**

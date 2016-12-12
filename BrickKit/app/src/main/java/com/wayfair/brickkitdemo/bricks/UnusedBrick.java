@@ -2,15 +2,12 @@ package com.wayfair.brickkitdemo.bricks;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.size.BrickSize;
 import com.wayfair.brickkit.BrickViewHolder;
-import com.wayfair.brickkit.ViewHolderRegistry;
 import com.wayfair.brickkitdemo.R;
 
 /**
@@ -18,17 +15,6 @@ import com.wayfair.brickkitdemo.R;
  */
 public class UnusedBrick extends BaseBrick {
     private static final String BRICK_TEMPLATE = "cms/bricks/unused_brick";
-
-    static {
-        ViewHolderRegistry.register(BRICK_TEMPLATE, new ViewHolderRegistry.GenerateViewHolderInterface() {
-            @Override
-            public BrickViewHolder generateViewHolder(ViewGroup parent) {
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.unused_brick, parent, false);
-
-                return new UnusedBrickHolder(itemView);
-            }
-        });
-    }
 
     /**
      * Constructor for UnusedBrick.
@@ -49,6 +35,16 @@ public class UnusedBrick extends BaseBrick {
     @Override
     public String getTemplate() {
         return BRICK_TEMPLATE;
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.unused_brick;
+    }
+
+    @Override
+    public BrickViewHolder createViewHolder(View itemView) {
+        return new UnusedBrickHolder(itemView);
     }
 
     /**

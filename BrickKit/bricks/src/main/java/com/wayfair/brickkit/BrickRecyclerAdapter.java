@@ -2,6 +2,8 @@ package com.wayfair.brickkit;
 
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.wayfair.brickkit.brick.BaseBrick;
@@ -220,12 +222,13 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
 
     @Override
     public BrickViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return ViewHolderRegistry.mapToRecyclerView(TemplateRegistry.getInstance().get(viewType), parent);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+        return dataManager.brickWithLayout(viewType).createViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(BrickViewHolder holder, int position) {
-        BaseBrick baseBrick = get(holder.getLayoutPosition());
+        BaseBrick baseBrick = dataManager.brickAtPosition(position);
 
         if (baseBrick != null) {
             baseBrick.onBindData(holder);
@@ -247,11 +250,13 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        if (get(position) == null) {
-            return -1;
+        BaseBrick brick = dataManager.brickAtPosition(position);
+
+        if (brick == null) {
+            return 0;
         }
 
-        return TemplateRegistry.getInstance().get(get(position).getTemplate());
+        return brick.getLayout();
     }
 
     /**

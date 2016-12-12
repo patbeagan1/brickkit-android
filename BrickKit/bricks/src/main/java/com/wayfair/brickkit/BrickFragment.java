@@ -1,9 +1,7 @@
 package com.wayfair.brickkit;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,11 +13,6 @@ import android.view.ViewGroup;
  */
 public abstract class BrickFragment extends Fragment {
     public BrickDataManager dataManager;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,13 +29,7 @@ public abstract class BrickFragment extends Fragment {
 
         if (getView() != null) {
             RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
-            dataManager = new BrickDataManager(getContext(), recyclerView, maxSpans());
-
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), maxSpans(), orientation(), reverse());
-            gridLayoutManager.setSpanSizeLookup(new BrickSpanSizeLookup(getContext(), dataManager));
-            recyclerView.setLayoutManager(gridLayoutManager);
-
-            recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(dataManager));
+            dataManager = new BrickDataManager(getContext(), recyclerView, maxSpans(), orientation(), reverse());
 
             addBehaviors();
             createBricks();

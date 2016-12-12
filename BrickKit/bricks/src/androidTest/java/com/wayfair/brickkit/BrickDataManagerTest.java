@@ -2,9 +2,12 @@ package com.wayfair.brickkit;
 
 import android.content.Context;
 import android.os.Looper;
+import android.support.annotation.LayoutRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.wayfair.brickkit.behavior.BrickBehavior;
 import com.wayfair.brickkit.brick.BaseBrick;
@@ -22,6 +25,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
@@ -46,7 +51,7 @@ public class BrickDataManagerTest {
         }
         context = InstrumentationRegistry.getTargetContext();
 
-        manager = new BrickDataManager(context, new RecyclerView(context), MAX_SPANS);
+        manager = new BrickDataManager(context, new RecyclerView(context), MAX_SPANS, GridLayoutManager.VERTICAL, false);
         manager.addLast(generateBrick());
         manager.addLast(generateBrick());
         manager.addLast(generateBrick());
@@ -886,6 +891,35 @@ public class BrickDataManagerTest {
         verify(behavior).detachFromRecyclerView();
     }
 
+    @Test
+    public void testBrickWithLayout() {
+        List<BaseBrick> newItems = new LinkedList<>();
+        newItems.add(generateBrickWithLayoutId(1));
+
+        manager.setItems(newItems);
+
+        @LayoutRes int layoutRes = 1;
+        assertNotNull(manager.brickWithLayout(layoutRes));
+    }
+
+    @Test
+    public void testBrickWithLayoutInvalidLayout() {
+        List<BaseBrick> newItems = new LinkedList<>();
+        newItems.add(generateBrickWithLayoutId(1));
+
+        manager.setItems(newItems);
+
+        @LayoutRes int layoutRes = 2;
+        assertNull(manager.brickWithLayout(layoutRes));
+    }
+
+    @Test
+    public void testBrickAtPosition() {
+        assertNotNull(manager.brickAtPosition(manager.getDataManagerItems().size() - 1));
+        assertNull(manager.brickAtPosition(manager.getDataManagerItems().size()));
+        assertNull(manager.brickAtPosition(-1));
+    }
+
     private static class TestAdapterDataObserver extends RecyclerView.AdapterDataObserver {
         private boolean changed = false;
 
@@ -919,9 +953,11 @@ public class BrickDataManagerTest {
     }
 
     private static final class TestBrick extends BaseBrick {
+        private final int layoutId;
 
-        private TestBrick(Context context, BrickSize spanSize, BrickPadding padding) {
+        private TestBrick(Context context, BrickSize spanSize, BrickPadding padding, int layoutId) {
             super(context, spanSize, padding);
+            this.layoutId = layoutId;
         }
 
         @Override
@@ -931,6 +967,16 @@ public class BrickDataManagerTest {
 
         @Override
         public String getTemplate() {
+            return null;
+        }
+
+        @Override
+        public int getLayout() {
+            return layoutId;
+        }
+
+        @Override
+        public BrickViewHolder createViewHolder(View itemView) {
             return null;
         }
     }
@@ -950,6 +996,16 @@ public class BrickDataManagerTest {
         public String getTemplate() {
             return null;
         }
+
+        @Override
+        public int getLayout() {
+            return 0;
+        }
+
+        @Override
+        public BrickViewHolder createViewHolder(View itemView) {
+            return null;
+        }
     }
 
     private BaseBrick generateHiddenBrick() {
@@ -957,6 +1013,27 @@ public class BrickDataManagerTest {
         brick.setHidden(true);
 
         return brick;
+    }
+
+    private BaseBrick generateBrickWithLayoutId(int layoutId) {
+        return new TestBrick(context, new SimpleBrickSize(manager) {
+            @Override
+            public int getSpans(Context context) {
+                return HALF_SPAN;
+            }
+
+            @Override
+            protected int size() {
+                return HALF_SPAN;
+            }
+        }, new SimpleBrickPadding() {
+
+            @Override
+            protected int padding() {
+                return PADDING;
+            }
+        },
+                layoutId);
     }
 
     private BaseBrick generateBrick() {
@@ -976,7 +1053,8 @@ public class BrickDataManagerTest {
             protected int padding() {
                 return PADDING;
             }
-        });
+        },
+                0);
     }
 
     private BaseBrick generateOtherBrick() {

@@ -3,11 +3,12 @@ package com.wayfair.brickkit.brick;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.size.BrickSize;
-import com.wayfair.brickkit.ViewHolderRegistry;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -53,9 +54,9 @@ public class TextBrickTest {
     public void testOnBindData() {
         TextBrick brick = new TextBrick(context, brickSize, TEXT);
 
-        LinearLayout linearLayout = new LinearLayout(context);
+        View itemView = LayoutInflater.from(context).inflate(brick.getLayout(), new LinearLayout(context), false);
 
-        TextBrick.TextViewHolder holder = (TextBrick.TextViewHolder) ViewHolderRegistry.mapToRecyclerView(TEMPLATE, linearLayout);
+        TextBrick.TextViewHolder holder = (TextBrick.TextViewHolder) brick.createViewHolder(itemView);
 
         brick.onBindData(holder);
 
