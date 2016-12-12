@@ -542,24 +542,6 @@ public class BrickDataManagerTest {
     }
 
     @Test
-    public void testDataSourceIndex() {
-        manager.addLast(generateHiddenBrick());
-        BaseBrick lastBrick = generateBrick();
-        manager.addLast(lastBrick);
-
-        assertEquals(5, manager.dataSourceIndex(lastBrick));
-    }
-
-    @Test
-    public void testAdapterIndex() {
-        manager.addLast(generateHiddenBrick());
-        BaseBrick lastBrick = generateBrick();
-        manager.addLast(lastBrick);
-
-        assertEquals(4, manager.adapterIndex(lastBrick));
-    }
-
-    @Test
     public void testRemoveAllTestBrick() {
         manager.addLast(generateOtherBrick());
 

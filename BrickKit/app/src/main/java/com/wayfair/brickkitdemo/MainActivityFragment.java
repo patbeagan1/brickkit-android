@@ -20,13 +20,14 @@ public class MainActivityFragment extends BrickFragment {
     private static final int ONE_FIFTH = 48;
     private static final int TWO_FIFTH = 96;
 
-    public ArrayList<BaseBrick> usedBricks;
+    private ArrayList<BaseBrick> usedBricks;
 
     @Override
     public int maxSpans() {
         return MAX_SPANS;
     }
 
+    @Override
     public void createBricks() {
         usedBricks = new ArrayList<>();
 

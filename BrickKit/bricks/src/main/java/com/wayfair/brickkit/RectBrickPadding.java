@@ -1,8 +1,10 @@
 package com.wayfair.brickkit;
 
-
 import android.graphics.Rect;
 
+/**
+ * {@link BrickPadding} which uses the {@link Rect} to get padding values.
+ */
 public abstract class RectBrickPadding extends BrickPadding {
 
     @Override
@@ -45,5 +47,10 @@ public abstract class RectBrickPadding extends BrickPadding {
         return padding().bottom;
     }
 
+    /**
+     * Method to return the {@link Rect} to use to get the padding to use for this brick.
+     *
+     * @return {@link Rect} to use to get the padding to use for this brick.
+     */
     protected abstract Rect padding();
 }

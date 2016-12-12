@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
+/**
+ * Fragment which provides a simple interface for adding bricks / behaviors.
+ */
 public abstract class BrickFragment extends Fragment {
     public BrickDataManager dataManager;
 
@@ -60,9 +62,34 @@ public abstract class BrickFragment extends Fragment {
         }
     }
 
+    /**
+     * Get the max spans for this fragment.
+     *
+     * @return the max spans for this fragment.
+     */
     public abstract int maxSpans();
+
+    /**
+     * Method called to create bricks in this fragment.
+     */
     public abstract void createBricks();
+
+    /**
+     * Method called to add behaviors to this fragment.
+     */
     public abstract void addBehaviours();
+
+    /**
+     * Get the orientation to lay out this fragment.
+     *
+     * @return the orientation to lay out this fragment.
+     */
     public abstract int orientation();
+
+    /**
+     * Whether or not to reverse the layout of this fragment.
+     *
+     * @return true if this fragment should be laid out in reverse
+     */
     public abstract boolean reverse();
 }

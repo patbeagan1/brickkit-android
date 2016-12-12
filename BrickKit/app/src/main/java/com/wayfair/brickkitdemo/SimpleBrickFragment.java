@@ -7,6 +7,12 @@ import com.wayfair.brickkit.InnerOuterBrickPadding;
 import com.wayfair.brickkit.OrientationBrickSize;
 import com.wayfair.brickkit.bricks.TextBrick;
 
+/**
+ * Example fragment which shows text bricks.
+ *
+ * In portrait, the bricks are full width.
+ * In landscape the bricks are half width.
+ */
 public class SimpleBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
     private static final int HALF = 120;
@@ -19,7 +25,7 @@ public class SimpleBrickFragment extends BrickFragment {
     @Override
     public void createBricks() {
         for (int i = 0; i < 100; i++) {
-            TextBrick unusedBrick2 = new TextBrick(
+            TextBrick textBrick = new TextBrick(
                     getContext(),
                     new OrientationBrickSize(dataManager) {
                         @Override
@@ -45,14 +51,12 @@ public class SimpleBrickFragment extends BrickFragment {
                     },
                     "Brick: " + i
             );
-            dataManager.addLast(unusedBrick2);
+            dataManager.addLast(textBrick);
         }
     }
 
     @Override
-    public void addBehaviours() {
-
-    }
+    public void addBehaviours() { }
 
     @Override
     public int orientation() {

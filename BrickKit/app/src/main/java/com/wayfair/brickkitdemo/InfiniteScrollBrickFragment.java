@@ -9,6 +9,12 @@ import com.wayfair.brickkit.OnReachedItemAtPosition;
 import com.wayfair.brickkit.OrientationBrickSize;
 import com.wayfair.brickkit.bricks.TextBrick;
 
+/**
+ * Example fragment which loads more bricks when scrolling to the bottom.
+ *
+ * This fragment takes advantage of the {@link OnReachedItemAtPosition} which calls back when
+ * items are bound in the adapter.
+ */
 public class InfiniteScrollBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
     private static final int HALF = 120;
@@ -38,9 +44,7 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
     }
 
     @Override
-    public void addBehaviours() {
-
-    }
+    public void addBehaviours() { }
 
     @Override
     public int orientation() {
@@ -52,7 +56,10 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
         return false;
     }
 
-    public void addNewBricks() {
+    /**
+     * Method to add 100 new text bricks to the data manager.
+     */
+    private void addNewBricks() {
         for (int i = 0; i < 100; i++) {
             BaseBrick unusedBrick2 = new TextBrick(
                     getContext(),

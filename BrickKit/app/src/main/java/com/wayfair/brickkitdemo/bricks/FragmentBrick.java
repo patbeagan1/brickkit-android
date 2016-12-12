@@ -15,6 +15,9 @@ import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.R;
 import com.wayfair.brickkit.ViewHolderRegistry;
 
+/**
+ * Brick whose content is a fragment.
+ */
 public class FragmentBrick extends BaseBrick {
     private static final String BRICK_TEMPLATE = "cms/bricks/fragment_brick";
 
@@ -34,13 +37,16 @@ public class FragmentBrick extends BaseBrick {
     private FragmentManager fragmentManager;
     private String tag;
 
-    public FragmentBrick(
-            Context context,
-            BrickSize spanSize,
-            FragmentManager fragmentManager,
-            Fragment fragment,
-            String tag
-    ) {
+    /**
+     * Constructor.
+     *
+     * @param context context this brick exists in
+     * @param spanSize size information for this brick
+     * @param fragmentManager fragmentManager to add the fragment to
+     * @param fragment fragment to display in this brick
+     * @param tag tag to use in {@link android.support.v4.app.FragmentTransaction}'s on the fragment
+     */
+    public FragmentBrick(Context context, BrickSize spanSize, FragmentManager fragmentManager, Fragment fragment, String tag) {
         super(context, spanSize);
 
         this.fragmentManager = fragmentManager;
@@ -80,9 +86,17 @@ public class FragmentBrick extends BaseBrick {
         return BRICK_TEMPLATE;
     }
 
-    private static class FragmentBrickViewHolder extends BrickViewHolder {
-        FrameLayout frameLayout;
+    /**
+     * {@link BrickViewHolder} for FragmentBrick.
+     */
+    private static final class FragmentBrickViewHolder extends BrickViewHolder {
+        private final FrameLayout frameLayout;
 
+        /**
+         * Constructor for FragmentBrickViewHolder.
+         *
+         * @param itemView view for this brick
+         */
         private FragmentBrickViewHolder(View itemView) {
             super(itemView);
 

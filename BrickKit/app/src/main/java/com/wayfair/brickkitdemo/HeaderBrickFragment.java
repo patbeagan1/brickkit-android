@@ -8,6 +8,12 @@ import com.wayfair.brickkit.OrientationBrickSize;
 import com.wayfair.brickkit.StickyHeaderHelper;
 import com.wayfair.brickkit.bricks.TextBrick;
 
+/**
+ * Fragment which shows the brick header behavior.
+ *
+ * Every tenth brick is a "header" which means it will remain on screen until
+ * another "header" brick is scrolled into the header area.
+ */
 public class HeaderBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
     private static final int HALF = 120;

@@ -24,6 +24,9 @@ import com.wayfair.golleycore.core.GolleyConfig;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Main activity for the app.
+ */
 public class MainActivity extends AppCompatActivity {
     boolean fetchedToken = false;
 
@@ -116,7 +119,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getStatuses(final View view) {
+    /**
+     * Request status from Twitter and raise {@link Snackbar} if successful.
+     *
+     * @param view the view to attach the success {@link Snackbar} to
+     */
+    private void getStatuses(final View view) {
         StatusesUserTimeline statusesUserTimeline = new StatusesUserTimeline();
         statusesUserTimeline.screenName = "wayfair";
 

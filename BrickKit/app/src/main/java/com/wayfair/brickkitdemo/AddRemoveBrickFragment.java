@@ -13,11 +13,14 @@ import com.wayfair.brickkit.StickyHeaderHelper;
 import com.wayfair.brickkitdemo.bricks.ControllerBrick;
 import com.wayfair.brickkit.bricks.TextBrick;
 
+/**
+ * Demo fragment that allows you to add and remove bricks at a given position.
+ */
 public class AddRemoveBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
-    public static final int NUMBER_OF_BRICKS = 20;
-    public static final String FORMAT = "Brick: %d";
-    ControllerBrick controllerBrick;
+    private static final int NUMBER_OF_BRICKS = 20;
+    private static final String FORMAT = "Brick: %d";
+    private ControllerBrick controllerBrick;
 
     @Override
     public int maxSpans() {

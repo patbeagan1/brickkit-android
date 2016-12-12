@@ -3,6 +3,9 @@ package com.wayfair.brickkit;
 
 import android.graphics.Rect;
 
+/**
+ * {@link BrickPadding} which uses the inner and outer {@link Rect}'s to get padding values.
+ */
 public abstract class InnerOuterRectBrickPadding extends BrickPadding {
 
     @Override
@@ -45,7 +48,17 @@ public abstract class InnerOuterRectBrickPadding extends BrickPadding {
         return outerPadding().bottom;
     }
 
+    /**
+     * Method to return the {@link Rect} to use to get the padding to use for inner padding on this brick.
+     *
+     * @return {@link Rect} to use to get the padding to use for inner padding on this brick.
+     */
     protected abstract Rect innerPadding();
 
+    /**
+     * Method to return the {@link Rect} to use to get the padding to use for outer padding on this brick.
+     *
+     * @return {@link Rect} to use to get the padding to use for outer padding on this brick.
+     */
     protected abstract Rect outerPadding();
 }
