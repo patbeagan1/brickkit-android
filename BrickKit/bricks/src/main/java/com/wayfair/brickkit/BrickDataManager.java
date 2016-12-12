@@ -454,11 +454,7 @@ public class BrickDataManager implements Serializable {
                 topRow = false;
             }
         }
-        if (!currentBrick.isInLastRow()) {
-            currentBrick.setInLastRow(true);
-        }
 
-        currentBrick = iterator.previous();
         addBottomToRowEndingWithItem(iterator);
 
         return startingBrickIndex;
@@ -474,24 +470,6 @@ public class BrickDataManager implements Serializable {
             BaseBrick currentBrick = iterator.previous();
 
             currentBrick.setInLastRow(true);
-
-            if (currentBrick.isOnLeftWall()) {
-                removeBottomFromRowBeforeItem(iterator);
-                break;
-            }
-        }
-    }
-
-    /**
-     * Sets all items to not being in the last row from the current brick to the left most brick in that row.
-     *
-     * @param iterator iterator to use to find items in the row
-     */
-    private void removeBottomFromRowBeforeItem(ListIterator<BaseBrick> iterator) {
-        while (iterator.hasPrevious()) {
-            BaseBrick currentBrick = iterator.previous();
-
-            currentBrick.setInLastRow(false);
 
             if (currentBrick.isOnLeftWall()) {
                 break;
@@ -529,7 +507,7 @@ public class BrickDataManager implements Serializable {
     /**
      * Method called to release any related resources.
      */
-    public void onDestroy() {
+    public void onDestroyView() {
         for (BrickBehavior behavior : behaviors) {
             behavior.detachFromRecyclerView();
         }

@@ -2,6 +2,7 @@ package com.wayfair.brickkit;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,30 +17,26 @@ public abstract class BrickFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view;
         if (orientation() == OrientationHelper.VERTICAL) {
-            return inflater.inflate(R.layout.vertical_fragment_brick, container, false);
+            view = inflater.inflate(R.layout.vertical_fragment_brick, container, false);
         } else {
-            return inflater.inflate(R.layout.horizontal_fragment_brick, container, false);
+            view = inflater.inflate(R.layout.horizontal_fragment_brick, container, false);
         }
+
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        dataManager = new BrickDataManager(getContext(), recyclerView, maxSpans(), orientation(), reverse());
+
+        addBehaviors();
+        createBricks();
+
+        return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (getView() != null) {
-            RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
-            dataManager = new BrickDataManager(getContext(), recyclerView, maxSpans(), orientation(), reverse());
-
-            addBehaviors();
-            createBricks();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        dataManager.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
+        dataManager.onDestroyView();
     }
 
     /**
@@ -47,7 +44,9 @@ public abstract class BrickFragment extends Fragment {
      *
      * @return the max spans for this fragment.
      */
-    public abstract int maxSpans();
+    public int maxSpans() {
+        return 240;
+    }
 
     /**
      * Method called to create bricks in this fragment.
@@ -57,19 +56,23 @@ public abstract class BrickFragment extends Fragment {
     /**
      * Method called to add behaviors to this fragment.
      */
-    public abstract void addBehaviors();
+    public void addBehaviors() { }
 
     /**
      * Get the orientation to lay out this fragment.
      *
      * @return the orientation to lay out this fragment.
      */
-    public abstract int orientation();
+    public int orientation() {
+        return GridLayoutManager.VERTICAL;
+    }
 
     /**
      * Whether or not to reverse the layout of this fragment.
      *
      * @return true if this fragment should be laid out in reverse
      */
-    public abstract boolean reverse();
+    public boolean reverse() {
+        return false;
+    }
 }

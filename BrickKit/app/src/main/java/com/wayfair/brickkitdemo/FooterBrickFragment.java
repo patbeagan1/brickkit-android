@@ -1,7 +1,5 @@
 package com.wayfair.brickkitdemo;
 
-import android.support.v7.widget.OrientationHelper;
-
 import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.size.SimpleBrickSize;
@@ -16,13 +14,6 @@ import com.wayfair.brickkit.brick.TextBrick;
  * another "footer" brick is scrolled into the footer area.
  */
 public class FooterBrickFragment extends BrickFragment {
-    private static final int MAX_SPANS = 240;
-
-    @Override
-    public int maxSpans() {
-        return MAX_SPANS;
-    }
-
     @Override
     public void createBricks() {
         for (int i = 0; i < 100; i++) {
@@ -31,7 +22,7 @@ public class FooterBrickFragment extends BrickFragment {
                     new SimpleBrickSize(dataManager) {
                         @Override
                         protected int size() {
-                            return MAX_SPANS;
+                            return dataManager.getMaxSpanCount();
                         }
                     },
                     new InnerOuterBrickPadding() {
@@ -59,15 +50,5 @@ public class FooterBrickFragment extends BrickFragment {
     @Override
     public void addBehaviors() {
         dataManager.addBehavior(new StickyFooterBehavior(dataManager));
-    }
-
-    @Override
-    public int orientation() {
-        return OrientationHelper.VERTICAL;
-    }
-
-    @Override
-    public boolean reverse() {
-        return false;
     }
 }

@@ -1,7 +1,5 @@
 package com.wayfair.brickkitdemo;
 
-import android.support.v7.widget.OrientationHelper;
-
 import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
@@ -16,15 +14,9 @@ import com.wayfair.brickkit.brick.TextBrick;
  * items are bound in the adapter.
  */
 public class InfiniteScrollBrickFragment extends BrickFragment {
-    private static final int MAX_SPANS = 240;
     private static final int HALF = 120;
 
     private int page = 0;
-
-    @Override
-    public int maxSpans() {
-        return MAX_SPANS;
-    }
 
     @Override
     public void createBricks() {
@@ -43,19 +35,6 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
         addNewBricks();
     }
 
-    @Override
-    public void addBehaviors() { }
-
-    @Override
-    public int orientation() {
-        return OrientationHelper.VERTICAL;
-    }
-
-    @Override
-    public boolean reverse() {
-        return false;
-    }
-
     /**
      * Method to add 100 new text bricks to the data manager.
      */
@@ -66,7 +45,7 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
                     new OrientationBrickSize(dataManager) {
                         @Override
                         protected int portrait() {
-                            return MAX_SPANS;
+                            return dataManager.getMaxSpanCount();
                         }
 
                         @Override

@@ -886,7 +886,7 @@ public class BrickDataManagerTest {
 
     @Test
     public void testOnDestroy() {
-        manager.onDestroy();
+        manager.onDestroyView();
 
         verify(behavior).detachFromRecyclerView();
     }

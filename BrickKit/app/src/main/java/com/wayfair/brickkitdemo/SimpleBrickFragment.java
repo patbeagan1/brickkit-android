@@ -1,7 +1,5 @@
 package com.wayfair.brickkitdemo;
 
-import android.support.v7.widget.OrientationHelper;
-
 import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.size.OrientationBrickSize;
@@ -14,13 +12,7 @@ import com.wayfair.brickkit.brick.TextBrick;
  * In landscape the bricks are half width.
  */
 public class SimpleBrickFragment extends BrickFragment {
-    private static final int MAX_SPANS = 240;
     private static final int HALF = 120;
-
-    @Override
-    public int maxSpans() {
-        return MAX_SPANS;
-    }
 
     @Override
     public void createBricks() {
@@ -30,7 +22,7 @@ public class SimpleBrickFragment extends BrickFragment {
                     new OrientationBrickSize(dataManager) {
                         @Override
                         protected int portrait() {
-                            return MAX_SPANS;
+                            return dataManager.getMaxSpanCount();
                         }
 
                         @Override
@@ -53,18 +45,5 @@ public class SimpleBrickFragment extends BrickFragment {
             );
             dataManager.addLast(textBrick);
         }
-    }
-
-    @Override
-    public void addBehaviors() { }
-
-    @Override
-    public int orientation() {
-        return OrientationHelper.VERTICAL;
-    }
-
-    @Override
-    public boolean reverse() {
-        return false;
     }
 }
