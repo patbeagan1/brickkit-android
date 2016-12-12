@@ -9,6 +9,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+/**
+ * Class which maintains a collection of bricks and manages how they are laid out in an provided RecyclerView.
+ *
+ * This class maintains the bricks and handles notifying the underlying adapter when items are updated.
+ */
 public class BrickDataManager implements Serializable {
     public ArrayList<BrickBehaviour> behaviours;
     public BrickRecyclerAdapter brickRecyclerAdapter;
@@ -17,8 +22,14 @@ public class BrickDataManager implements Serializable {
     private LinkedList<BaseBrick> currentlyVisibleItems;
     private boolean dataHasChanged;
     private Context context;
-    private int spanCount;
 
+    /**
+     * Constructor.
+     *
+     * @param context {@link Context} to use
+     * @param recyclerView {@link RecyclerView} to put views in
+     * @param maxSpanCount max spans used when laying out bricks
+     */
     public BrickDataManager(Context context, RecyclerView recyclerView, int maxSpanCount) {
         this.context = context;
         this.maxSpanCount = maxSpanCount;
@@ -31,6 +42,11 @@ public class BrickDataManager implements Serializable {
         recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(this));
     }
 
+    /**
+     * Get the items visible in the {@link RecyclerView}.
+     *
+     * @return LinkedList of visible bricks.
+     */
     public LinkedList<BaseBrick> getRecyclerViewItems() {
         if (dataHasChanged) {
             currentlyVisibleItems = new LinkedList<>();
@@ -47,10 +63,20 @@ public class BrickDataManager implements Serializable {
         return currentlyVisibleItems;
     }
 
+    /**
+     * Get all bricks.
+     *
+     * @return LinkedList of all bricks.
+     */
     public LinkedList<BaseBrick> getDataManagerItems() {
         return items;
     }
 
+    /**
+     * Replace current items with new {@link Collection} of bricks.
+     *
+     * @param items new bricks to be added.
+     */
     public void setItems(Collection<BaseBrick> items) {
         clear();
 
@@ -60,6 +86,11 @@ public class BrickDataManager implements Serializable {
         brickRecyclerAdapter.safeNotifyItemRangeInserted(0, getRecyclerViewItems().size());
     }
 
+    /**
+     * Inserts brick after all other bricks.
+     *
+     * @param item the brick to add
+     */
     public void addLast(BaseBrick item) {
         this.items.addLast(item);
         if (!item.isHidden()) {
@@ -70,6 +101,11 @@ public class BrickDataManager implements Serializable {
         }
     }
 
+    /**
+     * Inserts brick before all other bricks.
+     *
+     * @param item the brick to add
+     */
     public void addFirst(BaseBrick item) {
         this.items.addFirst(item);
         if (!item.isHidden()) {
@@ -80,6 +116,11 @@ public class BrickDataManager implements Serializable {
         }
     }
 
+    /**
+     * Inserts collection of bricks after all other bricks.
+     *
+     * @param items the bricks to add
+     */
     public void addLast(Collection<BaseBrick> items) {
         int index = getRecyclerViewItems().size();
         this.items.addAll(items);
@@ -92,17 +133,11 @@ public class BrickDataManager implements Serializable {
         }
     }
 
-    private int getVisibleCount(Collection<BaseBrick> items) {
-        int visibleCount = 0;
-        for (BaseBrick brick : items) {
-            if (!brick.isHidden()) {
-                visibleCount++;
-            }
-        }
-
-        return visibleCount;
-    }
-
+    /**
+     * Inserts collection of bricks before all other bricks.
+     *
+     * @param items the bricks to add
+     */
     public void addFirst(Collection<BaseBrick> items) {
         this.items.addAll(0, items);
         int visibleCount = getVisibleCount(items);
@@ -114,6 +149,29 @@ public class BrickDataManager implements Serializable {
         }
     }
 
+    /**
+     * Gets count of visible bricks in a collecton of bricks.
+     *
+     * @param items collection of bricks to get visible count from
+     * @return number of visible bricks in the collection
+     */
+    private int getVisibleCount(Collection<BaseBrick> items) {
+        int visibleCount = 0;
+        for (BaseBrick brick : items) {
+            if (!brick.isHidden()) {
+                visibleCount++;
+            }
+        }
+
+        return visibleCount;
+    }
+
+    /**
+     * Inserts brick before the anchor brick.
+     *
+     * @param anchor brick to insert before
+     * @param item the brick to add
+     */
     public void addBeforeItem(BaseBrick anchor, BaseBrick item) {
         int anchorDataManagerIndex = items.indexOf(anchor);
 
@@ -131,6 +189,12 @@ public class BrickDataManager implements Serializable {
         }
     }
 
+    /**
+     * Inserts brick after the anchor brick.
+     *
+     * @param anchor brick to insert after
+     * @param item the brick to add
+     */
     public void addAfterItem(BaseBrick anchor, BaseBrick item) {
         int anchorDataManagerIndex = this.items.indexOf(anchor);
 
@@ -148,6 +212,11 @@ public class BrickDataManager implements Serializable {
         }
     }
 
+    /**
+     * Remove a brick.
+     *
+     * @param item the brick to remove
+     */
     public void removeItem(BaseBrick item) {
         this.items.remove(item);
 
@@ -162,6 +231,11 @@ public class BrickDataManager implements Serializable {
         }
     }
 
+    /**
+     * Remove a collection of bricks.
+     *
+     * @param items the bricks to remove
+     */
     public void removeItems(Collection<BaseBrick> items) {
         this.items.removeAll(items);
         int visibleCount = getVisibleCount(items);
@@ -174,6 +248,9 @@ public class BrickDataManager implements Serializable {
         }
     }
 
+    /**
+     * Remove all bricks.
+     */
     public void clear() {
         int startCount = getRecyclerViewItems().size();
         this.items = new LinkedList<>();
@@ -181,6 +258,12 @@ public class BrickDataManager implements Serializable {
         brickRecyclerAdapter.safeNotifyItemRangeRemoved(0, startCount);
     }
 
+    /**
+     * Replace a target brick with a replacement.
+     *
+     * @param target brick to replace
+     * @param replacement the brick being added
+     */
     public void replaceItem(BaseBrick target, BaseBrick replacement) {
         boolean targetIsHidden = adapterIndex(target) == -1;
         if (targetIsHidden == replacement.isHidden()) {
@@ -212,6 +295,11 @@ public class BrickDataManager implements Serializable {
         }
     }
 
+    /**
+     * Refresh a brick.
+     *
+     * @param item the brick to refresh
+     */
     public void refreshItem(BaseBrick item) {
         boolean wasHidden = adapterIndex(item) == -1;
         if (wasHidden == item.isHidden()) {
@@ -236,6 +324,9 @@ public class BrickDataManager implements Serializable {
         }
     }
 
+    /**
+     * Helper method to tell manager to update the items returned from getRecyclerViewItems().
+     */
     private void dataHasChanged() {
         dataHasChanged = true;
         for (BrickBehaviour behaviour : behaviours) {
@@ -243,14 +334,31 @@ public class BrickDataManager implements Serializable {
         }
     }
 
-    public int dataSourceIndex(BaseBrick item) {
+    /**
+     * Method to get the index of the item in all items.
+     *
+     * @param item item to get the index of
+     * @return index of the item in all items.
+     */
+    private int dataSourceIndex(BaseBrick item) {
         return items.indexOf(item);
     }
 
-    public int adapterIndex(BaseBrick item) {
+    /**
+     * Method to get the index of the item in the visible items.
+     *
+     * @param item item to get the index of
+     * @return index of the item in the visible items.
+     */
+    private int adapterIndex(BaseBrick item) {
         return getRecyclerViewItems().indexOf(item);
     }
 
+    /**
+     * Removes all instances of a given class.
+     *
+     * @param clazz class to remove all instances of
+     */
     public void removeAll(Class clazz) {
         ArrayList<BaseBrick> itemToRemove = new ArrayList<>();
 
@@ -264,9 +372,10 @@ public class BrickDataManager implements Serializable {
     }
 
     /**
-     * Checks / Determines if the brick is on the left wall, first row, right wall, last row
+     * Checks / Determines if the brick is on the left wall, first row, right wall, last row.
      *
      * @param currentBrick BaseBrick item that was changed / added / removed
+     * @return index of first modified item
      */
     private int computePaddingPosition(BaseBrick currentBrick) {
         int currentRow = 0;
@@ -338,27 +447,37 @@ public class BrickDataManager implements Serializable {
         }
 
         currentBrick = iterator.previous();
-        addBottomToRowEndingWithItem(iterator, currentBrick);
+        addBottomToRowEndingWithItem(iterator);
 
         return startingBrickIndex;
     }
 
-    private void addBottomToRowEndingWithItem(ListIterator<BaseBrick> iterator, BaseBrick currentBrick) {
+    /**
+     * Sets all items to being in the last row from the current brick to the left most brick in that row.
+     *
+     * @param iterator iterator to use to find items in the row
+     */
+    private void addBottomToRowEndingWithItem(ListIterator<BaseBrick> iterator) {
         while (iterator.hasPrevious()) {
-            currentBrick = iterator.previous();
+            BaseBrick currentBrick = iterator.previous();
 
             currentBrick.setInLastRow(true);
 
             if (currentBrick.isOnLeftWall()) {
-                removeBottomFromRowBeforeItem(iterator, currentBrick);
+                removeBottomFromRowBeforeItem(iterator);
                 break;
             }
         }
     }
 
-    private void removeBottomFromRowBeforeItem(ListIterator<BaseBrick> iterator, BaseBrick currentBrick) {
+    /**
+     * Sets all items to not being in the last row from the current brick to the left most brick in that row.
+     *
+     * @param iterator iterator to use to find items in the row
+     */
+    private void removeBottomFromRowBeforeItem(ListIterator<BaseBrick> iterator) {
         while (iterator.hasPrevious()) {
-            currentBrick = iterator.previous();
+            BaseBrick currentBrick = iterator.previous();
 
             currentBrick.setInLastRow(false);
 
@@ -368,6 +487,11 @@ public class BrickDataManager implements Serializable {
         }
     }
 
+    /**
+     * Get the max span count.
+     *
+     * @return the max span count
+     */
     public int getMaxSpanCount() {
         return maxSpanCount;
     }

@@ -8,6 +8,13 @@ import com.wayfair.brickkit.SimpleBrickSize;
 import com.wayfair.brickkit.StickyFooterHelper;
 import com.wayfair.brickkit.bricks.TextBrick;
 
+
+/**
+ * Fragment which shows the brick footer behavior.
+ *
+ * Every tenth brick is a "footer" which means it will remain on screen until
+ * another "footer" brick is scrolled into the footer area.
+ */
 public class FooterBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
 

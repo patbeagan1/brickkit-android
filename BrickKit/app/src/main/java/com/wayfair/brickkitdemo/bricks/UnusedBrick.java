@@ -13,6 +13,9 @@ import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.ViewHolderRegistry;
 import com.wayfair.brickkitdemo.R;
 
+/**
+ * Passive brick used {@link com.wayfair.brickkitdemo.MainActivityFragment} to fill screen.
+ */
 public class UnusedBrick extends BaseBrick {
     private static final String BRICK_TEMPLATE = "cms/bricks/unused_brick";
 
@@ -27,10 +30,13 @@ public class UnusedBrick extends BaseBrick {
         });
     }
 
-    public UnusedBrick(Context context, BrickSize spanSize) {
-        super(context, spanSize);
-    }
-
+    /**
+     * Constructor for UnusedBrick.
+     *
+     * @param context context this brick exists in
+     * @param spanSize size information for this brick
+     * @param padding padding for this brick
+     */
     public UnusedBrick(Context context, BrickSize spanSize, BrickPadding padding) {
         super(context, spanSize, padding);
     }
@@ -45,7 +51,16 @@ public class UnusedBrick extends BaseBrick {
         return BRICK_TEMPLATE;
     }
 
+    /**
+     * {@link BrickViewHolder} for UnusedBrick.
+     */
     private static class UnusedBrickHolder extends BrickViewHolder {
+
+        /**
+         * Constructor for UnusedBrickHolder.
+         *
+         * @param itemView view for this brick
+         */
         UnusedBrickHolder(View itemView) {
             super(itemView);
         }

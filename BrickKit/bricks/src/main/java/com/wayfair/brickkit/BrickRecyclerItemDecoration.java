@@ -5,11 +5,20 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+/**
+ * {@link android.support.v7.widget.RecyclerView.ItemDecoration} which applies padding to bricks
+ * based off of their given {@link BrickPadding} and location in on the screen.
+ */
 public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
     private BrickDataManager brickDataManager;
 
-    public BrickRecyclerItemDecoration(BrickDataManager recyclerViewDataManager) {
-        this.brickDataManager = recyclerViewDataManager;
+    /**
+     * Constructor.
+     *
+     * @param dataManager {@link BrickDataManager} to use to get bricks for getting offsets
+     */
+    public BrickRecyclerItemDecoration(BrickDataManager dataManager) {
+        this.brickDataManager = dataManager;
     }
 
     @Override
@@ -18,9 +27,8 @@ public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
             return;
         }
 
-        int adapterPosition = parent.getChildAdapterPosition(view);
-        BaseBrick brick = brickDataManager.getRecyclerViewItems().get(adapterPosition);
-        applyDynamicPadding(view.getContext(), outRect, brick, adapterPosition);
+        BaseBrick brick = brickDataManager.getRecyclerViewItems().get(parent.getChildAdapterPosition(view));
+        applyDynamicPadding(view.getContext(), outRect, brick);
     }
 
     /**
@@ -35,7 +43,7 @@ public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
      * @param outRect           The Rect provided by {@link #getItemOffsets(Rect, View, RecyclerView, RecyclerView.State)}
      * @param brick             The brick
      */
-    private void applyDynamicPadding(Context context, Rect outRect, BaseBrick brick, int adapterPosition) {
+    private void applyDynamicPadding(Context context, Rect outRect, BaseBrick brick) {
         int innerPaddingLeft = brick.getPadding().getInnerLeftPadding();
         int innerPaddingTop = brick.getPadding().getInnerTopPadding();
         int innerPaddingRight = brick.getPadding().getInnerRightPadding();

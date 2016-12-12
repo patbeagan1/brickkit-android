@@ -14,6 +14,9 @@ import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.R;
 import com.wayfair.brickkit.ViewHolderRegistry;
 
+/**
+ * Simple Brick with a single text view.
+ */
 public class TextBrick extends BaseBrick {
     private static final String BRICK_TEMPLATE = "cms/bricks/text_brick";
 
@@ -30,11 +33,26 @@ public class TextBrick extends BaseBrick {
         });
     }
 
+    /**
+     * Constructor which uses the default padding.
+     *
+     * @param context context this brick exists in
+     * @param spanSize size information for this brick
+     * @param text text to display on this brick
+     */
     public TextBrick(Context context, BrickSize spanSize, CharSequence text) {
         super(context, spanSize);
         this.text = text;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param context context this brick exists in
+     * @param spanSize size information for this brick
+     * @param padding padding for this brick
+     * @param text text to display on this brick
+     */
     public TextBrick(Context context, BrickSize spanSize, BrickPadding padding, CharSequence text) {
         super(context, spanSize, padding);
         this.text = text;
@@ -51,9 +69,17 @@ public class TextBrick extends BaseBrick {
         return BRICK_TEMPLATE;
     }
 
+    /**
+     * {@link BrickViewHolder} for TextBrick.
+     */
     static class TextViewHolder extends BrickViewHolder {
         TextView textView;
 
+        /**
+         * Constructor for TextViewHolder.
+         *
+         * @param itemView view for this brick
+         */
         TextViewHolder(View itemView) {
             super(itemView);
 

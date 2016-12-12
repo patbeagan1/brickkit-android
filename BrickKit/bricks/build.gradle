@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'checkstyle'
 
 android {
     compileSdkVersion 24
@@ -49,4 +50,14 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
 
     testCompile 'junit:junit:4.12'
+}
+
+check.dependsOn("checkstyle")
+
+task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/config/quality/checkstyle/checkstyle.xml")
+    configProperties.checkstyleSuppressionsPath = file("${project.rootDir}/config/quality/checkstyle/suppressions.xml").absolutePath
+    source 'src/main'
+    include '**/*.java'
+    classpath = files() as FileCollection
 }

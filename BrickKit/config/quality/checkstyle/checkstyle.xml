@@ -80,6 +80,9 @@
             <property name="max" value="150" />
         </module>
         <module name="InnerTypeLast" />
+        <module name="JavadocMethod" />
+        <module name="JavadocType"/>
+        <module name="JavadocStyle"/>
     </module>
     <module name="NewlineAtEndOfFile">
         <property name="severity" value="ignore" />

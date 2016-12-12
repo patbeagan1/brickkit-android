@@ -7,6 +7,9 @@ import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkitdemo.bricks.FragmentBrick;
 import com.wayfair.brickkit.SimpleBrickSize;
 
+/**
+ * Example of fragment containing {@link FragmentBrick}'s containing {@link SimpleBrickFragment}'s.
+ */
 public class FragmentBrickFragment extends BrickFragment {
     private static final int MAX_SPANS = 240;
     private static final int HALF = 120;

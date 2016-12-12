@@ -1,6 +1,8 @@
 package com.wayfair.brickkit;
 
-
+/**
+ * {@link BrickPadding} which uses the values from innerPadding() and outerPadding().
+ */
 public abstract class InnerOuterBrickPadding extends BrickPadding {
 
     @Override
@@ -43,7 +45,17 @@ public abstract class InnerOuterBrickPadding extends BrickPadding {
         return outerPadding();
     }
 
+    /**
+     * Method to the padding to use for inner padding on this brick.
+     *
+     * @return padding to use for inner padding on this brick.
+     */
     protected abstract int innerPadding();
 
+    /**
+     * Method to the padding to use for outer padding on this brick.
+     *
+     * @return padding to use for outer padding on this brick.
+     */
     protected abstract int outerPadding();
 }

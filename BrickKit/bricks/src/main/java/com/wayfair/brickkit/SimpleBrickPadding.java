@@ -1,5 +1,8 @@
 package com.wayfair.brickkit;
 
+/**
+ * {@link BrickPadding} which returns the result of padding() for all cases.
+ */
 public abstract class SimpleBrickPadding extends BrickPadding {
 
     @Override
@@ -42,5 +45,10 @@ public abstract class SimpleBrickPadding extends BrickPadding {
         return padding();
     }
 
+    /**
+     * Method to return the padding to use for this brick.
+     *
+     * @return padding to use for this brick.
+     */
     protected abstract int padding();
 }
