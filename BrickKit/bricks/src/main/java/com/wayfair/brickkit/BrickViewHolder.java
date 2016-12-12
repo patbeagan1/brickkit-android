@@ -8,7 +8,7 @@ import android.view.View;
  * one additional method that is called when the view holder is detached from the {@link RecyclerView} so
  * that views can be released.
  */
-public abstract class BrickViewHolder extends RecyclerView.ViewHolder {
+public class BrickViewHolder extends RecyclerView.ViewHolder {
     /**
      * Constructor.
      *

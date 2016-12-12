@@ -3,9 +3,9 @@ package com.wayfair.brickkitdemo;
 import android.support.v7.widget.OrientationHelper;
 
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.InnerOuterBrickPadding;
-import com.wayfair.brickkit.OrientationBrickSize;
-import com.wayfair.brickkit.bricks.TextBrick;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
+import com.wayfair.brickkit.size.OrientationBrickSize;
+import com.wayfair.brickkit.brick.TextBrick;
 
 /**
  * Example fragment which shows text bricks.
@@ -56,7 +56,7 @@ public class SimpleBrickFragment extends BrickFragment {
     }
 
     @Override
-    public void addBehaviours() { }
+    public void addBehaviors() { }
 
     @Override
     public int orientation() {

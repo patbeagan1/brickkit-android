@@ -3,10 +3,10 @@ package com.wayfair.brickkitdemo;
 import android.support.v7.widget.OrientationHelper;
 import android.view.View;
 
-import com.wayfair.brickkit.BaseBrick;
+import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.InnerOuterBrickPadding;
-import com.wayfair.brickkit.SimpleBrickSize;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
+import com.wayfair.brickkit.size.SimpleBrickSize;
 import com.wayfair.brickkitdemo.bricks.UnusedBrick;
 import com.wayfair.brickkitdemo.bricks.UsedBrick;
 
@@ -317,7 +317,7 @@ public class MainActivityFragment extends BrickFragment {
     }
 
     @Override
-    public void addBehaviours() {
+    public void addBehaviors() {
 
     }
 

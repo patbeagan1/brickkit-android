@@ -2,12 +2,12 @@ package com.wayfair.brickkitdemo;
 
 import android.support.v7.widget.OrientationHelper;
 
-import com.wayfair.brickkit.BaseBrick;
+import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.InnerOuterBrickPadding;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.OnReachedItemAtPosition;
-import com.wayfair.brickkit.OrientationBrickSize;
-import com.wayfair.brickkit.bricks.TextBrick;
+import com.wayfair.brickkit.size.OrientationBrickSize;
+import com.wayfair.brickkit.brick.TextBrick;
 
 /**
  * Example fragment which loads more bricks when scrolling to the bottom.
@@ -28,7 +28,7 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
 
     @Override
     public void createBricks() {
-        dataManager.brickRecyclerAdapter.setOnReachedItemAtPosition(
+        dataManager.getBrickRecyclerAdapter().setOnReachedItemAtPosition(
                 new OnReachedItemAtPosition() {
                     @Override
                     public void bindingItemAtPosition(int position) {
@@ -44,7 +44,7 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
     }
 
     @Override
-    public void addBehaviours() { }
+    public void addBehaviors() { }
 
     @Override
     public int orientation() {

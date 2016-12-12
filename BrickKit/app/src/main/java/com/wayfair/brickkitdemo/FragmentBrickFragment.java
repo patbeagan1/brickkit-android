@@ -2,10 +2,10 @@ package com.wayfair.brickkitdemo;
 
 import android.support.v7.widget.OrientationHelper;
 
-import com.wayfair.brickkit.BaseBrick;
+import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkitdemo.bricks.FragmentBrick;
-import com.wayfair.brickkit.SimpleBrickSize;
+import com.wayfair.brickkit.size.SimpleBrickSize;
 
 /**
  * Example of fragment containing {@link FragmentBrick}'s containing {@link SimpleBrickFragment}'s.
@@ -39,7 +39,7 @@ public class FragmentBrickFragment extends BrickFragment {
     }
 
     @Override
-    public void addBehaviours() {
+    public void addBehaviors() {
 
     }
 

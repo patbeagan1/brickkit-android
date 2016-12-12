@@ -3,10 +3,10 @@ package com.wayfair.brickkitdemo;
 import android.support.v7.widget.OrientationHelper;
 
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.InnerOuterBrickPadding;
-import com.wayfair.brickkit.OrientationBrickSize;
-import com.wayfair.brickkit.StickyHeaderHelper;
-import com.wayfair.brickkit.bricks.TextBrick;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
+import com.wayfair.brickkit.size.OrientationBrickSize;
+import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
+import com.wayfair.brickkit.brick.TextBrick;
 
 /**
  * Fragment which shows the brick header behavior.
@@ -62,8 +62,8 @@ public class HeaderBrickFragment extends BrickFragment {
     }
 
     @Override
-    public void addBehaviours() {
-        dataManager.behaviours.add(new StickyHeaderHelper(dataManager));
+    public void addBehaviors() {
+        dataManager.addBehavior(new StickyHeaderBehavior(dataManager));
     }
 
     @Override

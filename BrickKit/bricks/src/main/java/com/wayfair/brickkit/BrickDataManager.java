@@ -3,6 +3,9 @@ package com.wayfair.brickkit;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
+import com.wayfair.brickkit.behavior.BrickBehavior;
+import com.wayfair.brickkit.brick.BaseBrick;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,8 +18,8 @@ import java.util.ListIterator;
  * This class maintains the bricks and handles notifying the underlying adapter when items are updated.
  */
 public class BrickDataManager implements Serializable {
-    public ArrayList<BrickBehaviour> behaviours;
-    public BrickRecyclerAdapter brickRecyclerAdapter;
+    private ArrayList<BrickBehavior> behaviors;
+    private BrickRecyclerAdapter brickRecyclerAdapter;
     private final int maxSpanCount;
     private LinkedList<BaseBrick> items;
     private LinkedList<BaseBrick> currentlyVisibleItems;
@@ -34,7 +37,7 @@ public class BrickDataManager implements Serializable {
         this.context = context;
         this.maxSpanCount = maxSpanCount;
         this.items = new LinkedList<>();
-        this.behaviours = new ArrayList<>();
+        this.behaviors = new ArrayList<>();
         this.currentlyVisibleItems = new LinkedList<>();
         this.brickRecyclerAdapter = new BrickRecyclerAdapter(this, recyclerView);
 
@@ -244,6 +247,7 @@ public class BrickDataManager implements Serializable {
             if (getRecyclerViewItems().size() > 0) {
                 computePaddingPosition(getRecyclerViewItems().getFirst());
             }
+
             brickRecyclerAdapter.safeNotifyDataSetChanged();
         }
     }
@@ -301,7 +305,7 @@ public class BrickDataManager implements Serializable {
      * @param item the brick to refresh
      */
     public void refreshItem(BaseBrick item) {
-        boolean wasHidden = adapterIndex(item) == -1;
+        boolean wasHidden = currentlyVisibleItems.indexOf(item) == -1;
         if (wasHidden == item.isHidden()) {
             if (!wasHidden) {
                 int index = dataSourceIndex(item);
@@ -329,8 +333,8 @@ public class BrickDataManager implements Serializable {
      */
     private void dataHasChanged() {
         dataHasChanged = true;
-        for (BrickBehaviour behaviour : behaviours) {
-            behaviour.onDataSetChanged();
+        for (BrickBehavior behavior : behaviors) {
+            behavior.onDataSetChanged();
         }
     }
 
@@ -494,5 +498,32 @@ public class BrickDataManager implements Serializable {
      */
     public int getMaxSpanCount() {
         return maxSpanCount;
+    }
+
+    /**
+     * Add a {@link BrickBehavior}.
+     *
+     * @param behavior {@link BrickBehavior} to add
+     */
+    public void addBehavior(BrickBehavior behavior) {
+        behaviors.add(behavior);
+    }
+
+    /**
+     * Get the {@link BrickRecyclerAdapter} for this instance.
+     *
+     * @return the {@link BrickRecyclerAdapter}.
+     */
+    public BrickRecyclerAdapter getBrickRecyclerAdapter() {
+        return brickRecyclerAdapter;
+    }
+
+    /**
+     * Method called to release any related resources.
+     */
+    public void onDestroy() {
+        for (BrickBehavior behavior : behaviors) {
+            behavior.detachFromRecyclerView();
+        }
     }
 }

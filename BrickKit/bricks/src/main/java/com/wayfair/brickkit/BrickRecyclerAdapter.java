@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.wayfair.brickkit.brick.BaseBrick;
+
 /**
  * Extension of {@link android.support.v7.widget.RecyclerView.Adapter} which combines a given
  * {@link BrickDataManager} to a given {@link RecyclerView}.
@@ -11,7 +13,7 @@ import android.view.ViewGroup;
 public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> {
     private final BrickDataManager dataManager;
     private OnReachedItemAtPosition onReachedItemAtPosition;
-    public RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private Handler handler;
 
     /**
@@ -314,5 +316,13 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void setOnReachedItemAtPosition(OnReachedItemAtPosition onReachedItemAtPosition) {
         this.onReachedItemAtPosition = onReachedItemAtPosition;
+    }
+
+    /**
+     * Get the {@link RecyclerView} for this adapter.
+     * @return the {@link RecyclerView} for this adapter
+     */
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 }

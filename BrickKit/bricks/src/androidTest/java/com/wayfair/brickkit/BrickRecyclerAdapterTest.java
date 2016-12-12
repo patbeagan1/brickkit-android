@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.wayfair.brickkit.brick.BaseBrick;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,6 +76,11 @@ public class BrickRecyclerAdapterTest {
                 return mock(BrickViewHolder.class);
             }
         });
+    }
+
+    @Test
+    public void testGetRecyclerView() {
+        assertEquals(recyclerView, adapter.getRecyclerView());
     }
 
     @Test(expected = IllegalArgumentException.class)

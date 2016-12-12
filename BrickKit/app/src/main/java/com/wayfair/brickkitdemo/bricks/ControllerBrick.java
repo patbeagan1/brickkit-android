@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.wayfair.brickkitdemo.R;
-import com.wayfair.brickkit.BaseBrick;
-import com.wayfair.brickkit.BrickPadding;
-import com.wayfair.brickkit.BrickSize;
+import com.wayfair.brickkit.brick.BaseBrick;
+import com.wayfair.brickkit.padding.BrickPadding;
+import com.wayfair.brickkit.size.BrickSize;
 import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.ViewHolderRegistry;
 

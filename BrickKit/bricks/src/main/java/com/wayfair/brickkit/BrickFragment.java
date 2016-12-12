@@ -3,6 +3,7 @@ package com.wayfair.brickkit;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,19 +38,13 @@ public abstract class BrickFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
             dataManager = new BrickDataManager(getContext(), recyclerView, maxSpans());
 
-            recyclerView.setLayoutManager(
-                    new BrickGridLayoutManager(
-                            getContext(),
-                            maxSpans(),
-                            dataManager,
-                            orientation(),
-                            reverse()
-                    )
-            );
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), maxSpans(), orientation(), reverse());
+            gridLayoutManager.setSpanSizeLookup(new BrickSpanSizeLookup(getContext(), dataManager));
+            recyclerView.setLayoutManager(gridLayoutManager);
 
             recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(dataManager));
 
-            addBehaviours();
+            addBehaviors();
             createBricks();
         }
     }
@@ -57,9 +52,7 @@ public abstract class BrickFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        for (BrickBehaviour behaviour : dataManager.behaviours) {
-            behaviour.detachFromRecyclerView();
-        }
+        dataManager.onDestroy();
     }
 
     /**
@@ -77,7 +70,7 @@ public abstract class BrickFragment extends Fragment {
     /**
      * Method called to add behaviors to this fragment.
      */
-    public abstract void addBehaviours();
+    public abstract void addBehaviors();
 
     /**
      * Get the orientation to lay out this fragment.

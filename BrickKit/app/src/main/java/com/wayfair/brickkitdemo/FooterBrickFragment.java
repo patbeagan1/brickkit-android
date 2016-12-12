@@ -3,10 +3,10 @@ package com.wayfair.brickkitdemo;
 import android.support.v7.widget.OrientationHelper;
 
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.InnerOuterBrickPadding;
-import com.wayfair.brickkit.SimpleBrickSize;
-import com.wayfair.brickkit.StickyFooterHelper;
-import com.wayfair.brickkit.bricks.TextBrick;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
+import com.wayfair.brickkit.size.SimpleBrickSize;
+import com.wayfair.brickkit.behavior.StickyFooterBehavior;
+import com.wayfair.brickkit.brick.TextBrick;
 
 
 /**
@@ -57,8 +57,8 @@ public class FooterBrickFragment extends BrickFragment {
     }
 
     @Override
-    public void addBehaviours() {
-        dataManager.behaviours.add(new StickyFooterHelper(dataManager));
+    public void addBehaviors() {
+        dataManager.addBehavior(new StickyFooterBehavior(dataManager));
     }
 
     @Override

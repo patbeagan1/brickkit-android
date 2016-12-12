@@ -6,6 +6,13 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 
+import com.wayfair.brickkit.behavior.BrickBehavior;
+import com.wayfair.brickkit.brick.BaseBrick;
+import com.wayfair.brickkit.padding.BrickPadding;
+import com.wayfair.brickkit.padding.SimpleBrickPadding;
+import com.wayfair.brickkit.size.BrickSize;
+import com.wayfair.brickkit.size.SimpleBrickSize;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +23,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
 public class BrickDataManagerTest {
@@ -27,6 +37,7 @@ public class BrickDataManagerTest {
     private Context context;
     private BrickDataManager manager;
     private TestAdapterDataObserver observer;
+    private BrickBehavior behavior;
 
     @Before
     public void setup() {
@@ -41,10 +52,12 @@ public class BrickDataManagerTest {
         manager.addLast(generateBrick());
         manager.addLast(generateBrick());
 
-        manager.behaviours.add(mock(BrickBehaviour.class));
+        behavior = mock(BrickBehavior.class);
+
+        manager.addBehavior(behavior);
 
         observer = new TestAdapterDataObserver();
-        manager.brickRecyclerAdapter.registerAdapterDataObserver(observer);
+        manager.getBrickRecyclerAdapter().registerAdapterDataObserver(observer);
     }
 
     @Test
@@ -71,6 +84,8 @@ public class BrickDataManagerTest {
 
         assertEquals(0, observer.itemRangeInsertedPositionStart);
         assertEquals(3, observer.itemRangeInsertedItemCount);
+
+        verify(behavior, atLeastOnce()).onDataSetChanged();
     }
 
     @Test
@@ -85,6 +100,8 @@ public class BrickDataManagerTest {
 
         assertEquals(2, observer.itemRangeChangedPositionStart);
         assertEquals(2, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -99,6 +116,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeChangedPositionStart);
         assertEquals(-1, observer.itemRangeChangedItemCount);
+
+        verify(behavior, never()).onDataSetChanged();
     }
 
     @Test
@@ -120,6 +139,8 @@ public class BrickDataManagerTest {
 
         assertEquals(2, observer.itemRangeChangedPositionStart);
         assertEquals(2, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -141,6 +162,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeChangedPositionStart);
         assertEquals(-1, observer.itemRangeChangedItemCount);
+
+        verify(behavior, never()).onDataSetChanged();
     }
 
     @Test
@@ -158,6 +181,8 @@ public class BrickDataManagerTest {
         assertEquals(4, observer.itemRangeChangedItemCount);
 
         assertEquals(newBrick, manager.getDataManagerItems().get(0));
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -172,6 +197,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeChangedPositionStart);
         assertEquals(-1, observer.itemRangeChangedItemCount);
+
+        verify(behavior, never()).onDataSetChanged();
     }
 
     @Test
@@ -193,6 +220,8 @@ public class BrickDataManagerTest {
 
         assertEquals(3, observer.itemRangeChangedPositionStart);
         assertEquals(4, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -214,6 +243,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeChangedPositionStart);
         assertEquals(-1, observer.itemRangeChangedItemCount);
+
+        verify(behavior, never()).onDataSetChanged();
     }
 
     @Test
@@ -228,6 +259,8 @@ public class BrickDataManagerTest {
 
         assertEquals(0, observer.itemRangeChangedPositionStart);
         assertEquals(5, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -242,6 +275,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeChangedPositionStart);
         assertEquals(-1, observer.itemRangeChangedItemCount);
+
+        verify(behavior, never()).onDataSetChanged();
     }
 
     @Test
@@ -259,6 +294,8 @@ public class BrickDataManagerTest {
 
         assertEquals(2, observer.itemRangeChangedPositionStart);
         assertEquals(3, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -277,6 +314,8 @@ public class BrickDataManagerTest {
 
         assertEquals(0, observer.itemRangeChangedPositionStart);
         assertEquals(5, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -295,6 +334,8 @@ public class BrickDataManagerTest {
 
         assertEquals(0, observer.itemRangeChangedPositionStart);
         assertEquals(5, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -309,6 +350,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeChangedPositionStart);
         assertEquals(-1, observer.itemRangeChangedItemCount);
+
+        verify(behavior, never()).onDataSetChanged();
     }
 
     @Test
@@ -326,6 +369,8 @@ public class BrickDataManagerTest {
 
         assertEquals(2, observer.itemRangeChangedPositionStart);
         assertEquals(3, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -344,6 +389,8 @@ public class BrickDataManagerTest {
 
         assertEquals(0, observer.itemRangeChangedPositionStart);
         assertEquals(5, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -362,6 +409,8 @@ public class BrickDataManagerTest {
 
         assertEquals(0, observer.itemRangeChangedPositionStart);
         assertEquals(5, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -376,6 +425,8 @@ public class BrickDataManagerTest {
 
         assertEquals(2, observer.itemRangeChangedPositionStart);
         assertEquals(3, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -390,6 +441,8 @@ public class BrickDataManagerTest {
 
         assertEquals(0, observer.itemRangeChangedPositionStart);
         assertEquals(5, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -404,6 +457,8 @@ public class BrickDataManagerTest {
 
         assertEquals(0, observer.itemRangeChangedPositionStart);
         assertEquals(5, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -418,6 +473,8 @@ public class BrickDataManagerTest {
 
         assertEquals(2, observer.itemRangeChangedPositionStart);
         assertEquals(3, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -433,6 +490,8 @@ public class BrickDataManagerTest {
 
         assertEquals(2, observer.itemRangeChangedPositionStart);
         assertEquals(3, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -447,6 +506,8 @@ public class BrickDataManagerTest {
 
         assertEquals(2, observer.itemRangeChangedPositionStart);
         assertEquals(3, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -461,6 +522,8 @@ public class BrickDataManagerTest {
 
         assertEquals(0, observer.itemRangeChangedPositionStart);
         assertEquals(3, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -475,6 +538,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeChangedPositionStart);
         assertEquals(-1, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -489,6 +554,8 @@ public class BrickDataManagerTest {
 
         assertEquals(1, observer.itemRangeChangedPositionStart);
         assertEquals(2, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -509,6 +576,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeChangedPositionStart);
         assertEquals(-1, observer.itemRangeChangedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -523,6 +592,8 @@ public class BrickDataManagerTest {
         assertEquals(2, manager.getDataManagerItems().size());
 
         assertTrue(observer.changed);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -539,6 +610,8 @@ public class BrickDataManagerTest {
         assertEquals(0, manager.getDataManagerItems().size());
 
         assertTrue(observer.changed);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -551,6 +624,8 @@ public class BrickDataManagerTest {
         assertEquals(1, manager.getDataManagerItems().size());
 
         assertTrue(observer.changed);
+
+        verify(behavior, atLeastOnce()).onDataSetChanged();
     }
 
     @Test
@@ -569,6 +644,8 @@ public class BrickDataManagerTest {
         assertEquals(5, manager.getDataManagerItems().size());
 
         assertFalse(observer.changed);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -580,6 +657,8 @@ public class BrickDataManagerTest {
 
         assertEquals(0, observer.itemRangeRemovedPositionStart);
         assertEquals(4, observer.itemRangeRemovedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -605,6 +684,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeRemovedPositionStart);
         assertEquals(-1, observer.itemRangeRemovedItemCount);
+
+        verify(behavior, never()).onDataSetChanged();
     }
 
     @Test
@@ -630,6 +711,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeRemovedPositionStart);
         assertEquals(-1, observer.itemRangeRemovedItemCount);
+
+        verify(behavior, atLeastOnce()).onDataSetChanged();
     }
 
     @Test
@@ -655,6 +738,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeRemovedPositionStart);
         assertEquals(-1, observer.itemRangeRemovedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -680,6 +765,8 @@ public class BrickDataManagerTest {
 
         assertEquals(1, observer.itemRangeRemovedPositionStart);
         assertEquals(1, observer.itemRangeRemovedItemCount);
+
+        verify(behavior, atLeastOnce()).onDataSetChanged();
     }
 
     @Test
@@ -705,6 +792,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeRemovedPositionStart);
         assertEquals(-1, observer.itemRangeRemovedItemCount);
+
+        verify(behavior, never()).onDataSetChanged();
     }
 
     @Test
@@ -730,6 +819,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeRemovedPositionStart);
         assertEquals(-1, observer.itemRangeRemovedItemCount);
+
+        verify(behavior).onDataSetChanged();
     }
 
     @Test
@@ -756,6 +847,8 @@ public class BrickDataManagerTest {
 
         assertEquals(-1, observer.itemRangeRemovedPositionStart);
         assertEquals(-1, observer.itemRangeRemovedItemCount);
+
+        verify(behavior, atLeastOnce()).onDataSetChanged();
     }
 
     @Test
@@ -782,6 +875,15 @@ public class BrickDataManagerTest {
 
         assertEquals(1, observer.itemRangeRemovedPositionStart);
         assertEquals(1, observer.itemRangeRemovedItemCount);
+
+        verify(behavior, atLeastOnce()).onDataSetChanged();
+    }
+
+    @Test
+    public void testOnDestroy() {
+        manager.onDestroy();
+
+        verify(behavior).detachFromRecyclerView();
     }
 
     private static class TestAdapterDataObserver extends RecyclerView.AdapterDataObserver {
