@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.wayfair.brickkit.brick.BaseBrick;
 
+import java.util.ListIterator;
+
 /**
  * Extension of {@link android.support.v7.widget.RecyclerView.Adapter} which combines a given
  * {@link BrickDataManager} to a given {@link RecyclerView}.
@@ -285,10 +287,17 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public BaseBrick getSectionHeader(int position) {
         if (position >= 0) {
-            for (int i = position; i >= 0; i--) {
-                BaseBrick baseBrick = get(i);
-                if (baseBrick != null && baseBrick.isHeader()) {
-                    return baseBrick;
+            BaseBrick brick = dataManager.getRecyclerViewItems().get(position);
+            if (brick != null && brick.isHeader()) {
+                return brick;
+            }
+
+            ListIterator<BaseBrick> iterator = dataManager.getRecyclerViewItems().listIterator(position);
+
+            while (iterator.hasPrevious()) {
+                brick = iterator.previous();
+                if (brick != null && brick.isHeader()) {
+                    return brick;
                 }
             }
         }
@@ -303,10 +312,17 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public BaseBrick getSectionFooter(int position) {
         if (position >= 0) {
-            for (int i = position; i < dataManager.getRecyclerViewItems().size(); i++) {
-                BaseBrick baseBrick = get(i);
-                if (baseBrick != null && baseBrick.isFooter()) {
-                    return baseBrick;
+            BaseBrick brick = dataManager.getRecyclerViewItems().get(position);
+            if (brick != null && brick.isFooter()) {
+                return brick;
+            }
+
+            ListIterator<BaseBrick> iterator = dataManager.getRecyclerViewItems().listIterator(position);
+
+            while (iterator.hasNext()) {
+                brick = iterator.next();
+                if (brick != null && brick.isFooter()) {
+                    return brick;
                 }
             }
         }

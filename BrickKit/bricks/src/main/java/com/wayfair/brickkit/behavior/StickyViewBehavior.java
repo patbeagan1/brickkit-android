@@ -18,6 +18,7 @@ import com.wayfair.brickkit.BrickViewHolder;
  * the logic for managing the sticky view and updating it when appropriate.
  */
 abstract class StickyViewBehavior extends BrickBehavior {
+    private boolean dataSetChanged;
     BrickRecyclerAdapter adapter;
     private ViewGroup stickyHolderLayout;
     int stickyPosition = RecyclerView.NO_POSITION;
@@ -54,7 +55,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
 
     @Override
     public void onDataSetChanged() {
-        updateOrClearStickyView(true);
+        dataSetChanged = true;
     }
 
     @Override
@@ -69,7 +70,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
                         new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 //TODO: Animate Layout change when attach and detach
             }
-            updateOrClearStickyView(false);
+            updateOrClearStickyView(dataSetChanged);
         } else {
             Log.w(this.getClass().getSimpleName(), "WARNING! ViewGroup for Sticky View unspecified! You must include " + stickyLayoutName
                     + " or implement FlexibleAdapter.getStickySectionHolder() method");
@@ -97,7 +98,9 @@ abstract class StickyViewBehavior extends BrickBehavior {
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        updateOrClearStickyView(false);
+        if (Math.abs(dx) + Math.abs(dy) != 0) {
+            updateOrClearStickyView(dataSetChanged);
+        }
     }
 
     /**
@@ -195,6 +198,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
         } else {
             clearStickyView();
         }
+        dataSetChanged = false;
     }
 
     /**

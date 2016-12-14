@@ -455,6 +455,7 @@ public class BrickDataManager implements Serializable {
             }
         }
 
+        currentBrick.setInLastRow(true);
         addBottomToRowEndingWithItem(iterator);
 
         return startingBrickIndex;

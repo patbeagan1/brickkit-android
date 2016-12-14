@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,7 +36,6 @@ public class BrickRecyclerAdapterTest {
     private static final int COUNT = 3;
     private static final Object PAYLOAD = new Object();
     private static final int BRICK_COUNT = 3;
-    private static final int INDEX = 5;
     private static final int LAYOUT = 7;
     private BrickRecyclerAdapter adapter;
     private TestAdapterDataObserver observer;
@@ -50,12 +50,7 @@ public class BrickRecyclerAdapterTest {
         }
         dataManager = mock(BrickDataManager.class);
 
-        BaseBrick brick = mock(BaseBrick.class);
-
-        bricks = mock(LinkedList.class);
-        when(bricks.size()).thenReturn(BRICK_COUNT);
-        when(bricks.get(anyInt())).thenReturn(brick);
-        when(bricks.indexOf(any(BaseBrick.class))).thenReturn(INDEX);
+        bricks = new LinkedList<>();
 
         when(dataManager.getRecyclerViewItems()).thenReturn(bricks);
 
@@ -324,6 +319,10 @@ public class BrickRecyclerAdapterTest {
 
     @Test
     public void testGetItemCount() {
+        for (int i = 0; i < BRICK_COUNT; i++) {
+            bricks.addFirst(mock(BaseBrick.class));
+        }
+
         assertEquals(BRICK_COUNT, adapter.getItemCount());
     }
 
@@ -346,20 +345,26 @@ public class BrickRecyclerAdapterTest {
 
     @Test
     public void testGet() {
+        bricks.addFirst(mock(BaseBrick.class));
+
         assertNotNull(adapter.get(0));
     }
 
     @Test
     public void testIndexOf() {
-        assertEquals(INDEX, adapter.indexOf(mock(BaseBrick.class)));
+        BaseBrick brick = mock(BaseBrick.class);
+
+        bricks.addFirst(brick);
+
+        assertEquals(0, adapter.indexOf(brick));
     }
 
     @Test
     public void testGetSectionHeaderNoHeader() {
         BaseBrick brick = mock(BaseBrick.class);
 
-        when(bricks.get(0)).thenReturn(brick);
-        when(bricks.get(1)).thenReturn(null);
+        bricks.addFirst(brick);
+        bricks.addFirst(null);
 
         assertNull(adapter.getSectionHeader(1));
     }
@@ -371,9 +376,9 @@ public class BrickRecyclerAdapterTest {
 
         BaseBrick brick = mock(BaseBrick.class);
 
-        when(bricks.get(0)).thenReturn(headerBrick);
-        when(bricks.get(1)).thenReturn(brick);
-        when(bricks.get(2)).thenReturn(null);
+        bricks.addFirst(headerBrick);
+        bricks.addFirst(brick);
+        bricks.addFirst(null);
 
         assertEquals(headerBrick, adapter.getSectionHeader(2));
     }
@@ -387,8 +392,8 @@ public class BrickRecyclerAdapterTest {
     public void testGetSectionFooterNoFooter() {
         BaseBrick brick = mock(BaseBrick.class);
 
-        when(bricks.get(0)).thenReturn(null);
-        when(bricks.get(1)).thenReturn(brick);
+        bricks.addLast(null);
+        bricks.addLast(brick);
 
         assertNull(adapter.getSectionFooter(0));
     }
@@ -400,9 +405,9 @@ public class BrickRecyclerAdapterTest {
 
         BaseBrick brick = mock(BaseBrick.class);
 
-        when(bricks.get(0)).thenReturn(null);
-        when(bricks.get(1)).thenReturn(brick);
-        when(bricks.get(2)).thenReturn(footerBrick);
+        bricks.addLast(null);
+        bricks.addLast(brick);
+        bricks.addLast(footerBrick);
 
         assertEquals(footerBrick, adapter.getSectionFooter(0));
     }
