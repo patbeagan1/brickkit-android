@@ -14,9 +14,23 @@ import com.wayfair.brickkit.brick.TextBrick;
 public class SimpleBrickFragment extends BrickFragment {
     private static final int HALF = 120;
 
+    private int numberOfBricks = 0;
+
+    /**
+     * Create a new instance of a SimpleBrickFragment.
+     *
+     * @param numberOfBricks The number of bricks you want in the sub-{@link com.wayfair.brickkit.BrickDataManager}
+     * @return The SimpleBrickFragment your created
+     */
+    public static SimpleBrickFragment newInstance(int numberOfBricks) {
+        SimpleBrickFragment fragment = new SimpleBrickFragment();
+        fragment.numberOfBricks = numberOfBricks;
+        return fragment;
+    }
+
     @Override
     public void createBricks() {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < numberOfBricks; i++) {
             TextBrick textBrick = new TextBrick(
                     getContext(),
                     new OrientationBrickSize(dataManager) {

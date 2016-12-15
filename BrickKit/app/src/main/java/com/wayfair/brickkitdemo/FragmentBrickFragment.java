@@ -11,17 +11,17 @@ import com.wayfair.brickkit.size.SimpleBrickSize;
 public class FragmentBrickFragment extends BrickFragment {
     @Override
     public void createBricks() {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 2; i++) {
             BaseBrick brick = new FragmentBrick(
                     getContext(),
                     new SimpleBrickSize(dataManager) {
                         @Override
                         protected int size() {
-                            return dataManager.getMaxSpanCount();
+                            return dataManager.getMaxSpanCount() / 2;
                         }
                     },
                     getChildFragmentManager(),
-                    new SimpleBrickFragment(),
+                    SimpleBrickFragment.newInstance(50 * (i + 1)),
                     "simple" + i
             );
             dataManager.addLast(brick);
