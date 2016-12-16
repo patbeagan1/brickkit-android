@@ -161,7 +161,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
     @Override
     public void addBehaviors() {
         dataManager.addBehavior(new StickyHeaderBehavior(dataManager,
-                (ViewGroup) getActivity().findViewById(com.wayfair.brickkit.R.id.sticky_footer_container)));
+                (ViewGroup) getActivity().findViewById(com.wayfair.brickkit.R.id.sticky_header_container)));
         dataManager.addBehavior(new StickyFooterBehavior(dataManager,
                 (ViewGroup) getActivity().findViewById(com.wayfair.brickkit.R.id.sticky_footer_container)));
     }
