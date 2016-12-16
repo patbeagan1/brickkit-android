@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.wayfair.brickkit.brick.BaseBrick;
-import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.R;
 
 import org.junit.Before;
@@ -41,12 +40,9 @@ public class BrickSizeTest {
         context = mock(Context.class);
         when(context.getResources()).thenReturn(resources);
 
-        BrickDataManager manager = mock(BrickDataManager.class);
-        when(manager.getMaxSpanCount()).thenReturn(MAX_SPANS);
-
         brick = mock(BaseBrick.class);
 
-        brickSize = new TestBrickSize(manager);
+        brickSize = new TestBrickSize();
         brickSize.setBaseBrick(brick);
     }
 
@@ -97,8 +93,8 @@ public class BrickSizeTest {
     }
 
     private static final class TestBrickSize extends BrickSize {
-        private TestBrickSize(BrickDataManager dataManager) {
-            super(dataManager);
+        private TestBrickSize() {
+            super(MAX_SPANS);
         }
 
         @Override

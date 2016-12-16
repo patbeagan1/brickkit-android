@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.util.Log;
 
 import com.wayfair.brickkit.brick.BaseBrick;
-import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.R;
 
 /**
@@ -24,10 +23,10 @@ public abstract class BrickSize {
     /**
      * Constructor.
      *
-     * @param dataManager {@link BrickDataManager} whose max span count we should use
+     * @param maxSpanCount span count to use
      */
-    public BrickSize(BrickDataManager dataManager) {
-        this.maxSpan = dataManager.getMaxSpanCount();
+    public BrickSize(int maxSpanCount) {
+        this.maxSpan = maxSpanCount;
     }
 
     /**

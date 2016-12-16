@@ -1,7 +1,6 @@
 package com.wayfair.brickkit.brick;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,8 +13,6 @@ import com.wayfair.brickkit.R;
  * Simple Brick with a single text view.
  */
 public class TextBrick extends BaseBrick {
-    private static final String BRICK_TEMPLATE = "cms/bricks/text_brick";
-
     private final CharSequence text;
 
     /**
@@ -44,14 +41,9 @@ public class TextBrick extends BaseBrick {
     }
 
     @Override
-    public void onBindData(RecyclerView.ViewHolder viewHolder) {
+    public void onBindData(BrickViewHolder viewHolder) {
         TextViewHolder editTextViewHolder = (TextViewHolder) viewHolder;
         editTextViewHolder.textView.setText(text);
-    }
-
-    @Override
-    public String getTemplate() {
-        return BRICK_TEMPLATE;
     }
 
     @Override

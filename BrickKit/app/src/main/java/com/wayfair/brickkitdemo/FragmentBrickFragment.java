@@ -14,7 +14,7 @@ public class FragmentBrickFragment extends BrickFragment {
         for (int i = 0; i < 2; i++) {
             BaseBrick brick = new FragmentBrick(
                     getContext(),
-                    new SimpleBrickSize(dataManager) {
+                    new SimpleBrickSize(maxSpans()) {
                         @Override
                         protected int size() {
                             return dataManager.getMaxSpanCount() / 2;

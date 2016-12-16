@@ -33,7 +33,7 @@ public class SimpleBrickFragment extends BrickFragment {
         for (int i = 0; i < numberOfBricks; i++) {
             TextBrick textBrick = new TextBrick(
                     getContext(),
-                    new OrientationBrickSize(dataManager) {
+                    new OrientationBrickSize(maxSpans()) {
                         @Override
                         protected int portrait() {
                             return dataManager.getMaxSpanCount();

@@ -25,7 +25,7 @@ public class MainActivityFragment extends BrickFragment {
         usedBricks.add(
                 new UsedBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
@@ -57,7 +57,7 @@ public class MainActivityFragment extends BrickFragment {
         usedBricks.add(
                 new UsedBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
@@ -89,7 +89,7 @@ public class MainActivityFragment extends BrickFragment {
         usedBricks.add(
                 new UsedBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
@@ -121,7 +121,7 @@ public class MainActivityFragment extends BrickFragment {
         usedBricks.add(
                 new UsedBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
@@ -153,7 +153,7 @@ public class MainActivityFragment extends BrickFragment {
         usedBricks.add(
                 new UsedBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
@@ -185,7 +185,7 @@ public class MainActivityFragment extends BrickFragment {
         usedBricks.add(
                 new UsedBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
@@ -221,14 +221,14 @@ public class MainActivityFragment extends BrickFragment {
 
             if (i % 2 == 0) {
                 first =
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return ONE_FIFTH;
                             }
                         };
                 last =
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
@@ -236,14 +236,14 @@ public class MainActivityFragment extends BrickFragment {
                         };
             } else {
                 first =
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
                             }
                         };
                 last =
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return ONE_FIFTH;
@@ -267,7 +267,7 @@ public class MainActivityFragment extends BrickFragment {
             if (i == 0 || i == usedBricks.size() + 1) {
                 UnusedBrick usedBrick = new UnusedBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return TWO_FIFTH;
