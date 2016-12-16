@@ -27,7 +27,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
             if (i == 0) {
                 controllerBrick = new ControllerBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return dataManager.getMaxSpanCount();
@@ -72,7 +72,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                     dataManager.addLast(
                                             new TextBrick(
                                                     getContext(),
-                                                    new SimpleBrickSize(dataManager) {
+                                                    new SimpleBrickSize(maxSpans()) {
                                                         @Override
                                                         protected int size() {
                                                             return dataManager.getMaxSpanCount();
@@ -97,7 +97,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                             dataManager.getRecyclerViewItems().get(index),
                                             new TextBrick(
                                                     getContext(),
-                                                    new SimpleBrickSize(dataManager) {
+                                                    new SimpleBrickSize(maxSpans()) {
                                                         @Override
                                                         protected int size() {
                                                             return dataManager.getMaxSpanCount();
@@ -132,7 +132,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
             } else {
                 @SuppressLint("DefaultLocale") BaseBrick brick = new TextBrick(
                         getContext(),
-                        new SimpleBrickSize(dataManager) {
+                        new SimpleBrickSize(maxSpans()) {
                             @Override
                             protected int size() {
                                 return dataManager.getMaxSpanCount();

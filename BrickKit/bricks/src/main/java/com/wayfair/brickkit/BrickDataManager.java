@@ -314,6 +314,7 @@ public class BrickDataManager implements Serializable {
      */
     public void refreshItem(BaseBrick item) {
         boolean wasHidden = currentlyVisibleItems.indexOf(item) == -1;
+
         if (wasHidden == item.isHidden()) {
             if (!wasHidden) {
                 int index = dataSourceIndex(item);
@@ -538,8 +539,8 @@ public class BrickDataManager implements Serializable {
      * @return          An instance of BaseBrick or null
      */
     public BaseBrick brickAtPosition(int position) {
-        if (position >= 0 && position < getDataManagerItems().size()) {
-            return getDataManagerItems().get(position);
+        if (position >= 0 && position < getRecyclerViewItems().size()) {
+            return getRecyclerViewItems().get(position);
         }
         return null;
     }

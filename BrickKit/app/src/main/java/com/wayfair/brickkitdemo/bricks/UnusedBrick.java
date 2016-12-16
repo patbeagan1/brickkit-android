@@ -1,7 +1,6 @@
 package com.wayfair.brickkitdemo.bricks;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.wayfair.brickkit.brick.BaseBrick;
@@ -14,8 +13,6 @@ import com.wayfair.brickkitdemo.R;
  * Passive brick used {@link com.wayfair.brickkitdemo.MainActivityFragment} to fill screen.
  */
 public class UnusedBrick extends BaseBrick {
-    private static final String BRICK_TEMPLATE = "cms/bricks/unused_brick";
-
     /**
      * Constructor for UnusedBrick.
      *
@@ -29,12 +26,7 @@ public class UnusedBrick extends BaseBrick {
 
 
     @Override
-    public void onBindData(RecyclerView.ViewHolder holder) {
-    }
-
-    @Override
-    public String getTemplate() {
-        return BRICK_TEMPLATE;
+    public void onBindData(BrickViewHolder holder) {
     }
 
     @Override

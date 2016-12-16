@@ -2,7 +2,6 @@ package com.wayfair.brickkit.brick;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.wayfair.brickkit.BrickViewHolder;
@@ -61,16 +60,9 @@ public abstract class BaseBrick {
     /**
      * Called by the BrickRecyclerAdapter to display the information in this brick to the specified ViewHolder.
      *
-     * @param holder ViewHolder which should be updated.
+     * @param holder BrickViewHolder which should be updated.
      */
-    public abstract void onBindData(RecyclerView.ViewHolder holder);
-
-    /**
-     * Gets the template string for this brick type.
-     *
-     * @return the template string for this brick type
-     */
-    public abstract String getTemplate();
+    public abstract void onBindData(BrickViewHolder holder);
 
     /**
      * Get layout resource id for this brick.

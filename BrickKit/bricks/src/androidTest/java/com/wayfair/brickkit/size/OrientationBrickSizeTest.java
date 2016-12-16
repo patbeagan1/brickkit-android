@@ -2,17 +2,15 @@ package com.wayfair.brickkit.size;
 
 import android.support.test.runner.AndroidJUnit4;
 
-import com.wayfair.brickkit.BrickDataManager;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @RunWith(AndroidJUnit4.class)
 public class OrientationBrickSizeTest {
+    private static final int MAX_SPAN_COUNT = 8;
     private static final int LANDSCAPE_SIZE = 7;
     private static final int PORTRAIT_SIZE = 3;
 
@@ -20,8 +18,7 @@ public class OrientationBrickSizeTest {
 
     @Before
     public void setup() {
-        BrickDataManager manager = mock(BrickDataManager.class);
-        brickSize = new TestOrientationBrickSize(manager);
+        brickSize = new TestOrientationBrickSize(MAX_SPAN_COUNT);
     }
 
     @Test
@@ -45,8 +42,8 @@ public class OrientationBrickSizeTest {
     }
 
     private static final class TestOrientationBrickSize extends OrientationBrickSize {
-        private TestOrientationBrickSize(BrickDataManager manager) {
-            super(manager);
+        private TestOrientationBrickSize(int maxSpanCount) {
+            super(maxSpanCount);
         }
 
         @Override
