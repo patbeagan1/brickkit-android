@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 public class StickyFooterBehaviorTest {
 
     private BrickDataManager dataManager;
-    private BrickTestHelper BrickTestHelper;
+    private BrickTestHelper brickTestHelper;
     private TestStickyFooterBehavior footerBehavior;
     private RecyclerView recyclerView;
     private BrickRecyclerAdapter adapter;
@@ -93,7 +93,7 @@ public class StickyFooterBehaviorTest {
         when(adapter.onCreateViewHolder(recyclerView, R.layout.text_brick)).thenReturn(holder);
         when(adapter.createViewHolder(recyclerView, R.layout.text_brick)).thenReturn(holder);
 
-        BrickTestHelper = new BrickTestHelper(context);
+        brickTestHelper = new BrickTestHelper(context);
 
         footerBehavior = new TestStickyFooterBehavior(dataManager, stickyHolderLayout);
     }
@@ -101,9 +101,9 @@ public class StickyFooterBehaviorTest {
     @Test
     public void testGetStickyViewPosition() {
         for (int i = 0; i < 10; i++) {
-            dataManager.addLast(BrickTestHelper.generateBrick());
+            dataManager.addLast(brickTestHelper.generateBrick());
         }
-        BaseBrick brick = BrickTestHelper.generateBrick();
+        BaseBrick brick = brickTestHelper.generateBrick();
         brick.setFooter(true);
         dataManager.addLast(brick);
         int position = footerBehavior.getStickyViewPosition(RecyclerView.NO_POSITION);
@@ -118,9 +118,9 @@ public class StickyFooterBehaviorTest {
         footerBehavior.translateStickyView();
 
         for (int i = 0; i < 30; i++) {
-            dataManager.addLast(BrickTestHelper.generateBrick());
+            dataManager.addLast(brickTestHelper.generateBrick());
         }
-        BaseBrick brick = BrickTestHelper.generateBrick();
+        BaseBrick brick = brickTestHelper.generateBrick();
         brick.setFooter(true);
         dataManager.addLast(brick);
         DummyLayoutManager layoutManager = new DummyLayoutManager(context);
@@ -146,7 +146,7 @@ public class StickyFooterBehaviorTest {
     @Test
     public void testOnScrolledForNullHolderLayout() {
         for (int i = 0; i < 10; i++) {
-            dataManager.addLast(BrickTestHelper.generateBrick());
+            dataManager.addLast(brickTestHelper.generateBrick());
         }
 
         footerBehavior = new TestStickyFooterBehavior(dataManager, null);
@@ -158,9 +158,9 @@ public class StickyFooterBehaviorTest {
     @Test
     public void testOnDestroy() {
         for (int i = 0; i < 30; i++) {
-            dataManager.addLast(BrickTestHelper.generateBrick());
+            dataManager.addLast(brickTestHelper.generateBrick());
         }
-        BaseBrick brick = BrickTestHelper.generateBrick();
+        BaseBrick brick = brickTestHelper.generateBrick();
         brick.setFooter(true);
         dataManager.addLast(brick);
         DummyLayoutManager layoutManager = new DummyLayoutManager(context);
