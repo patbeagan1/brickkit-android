@@ -5,11 +5,14 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.wayfair.brickkit.brick.BaseBrick;
+import com.wayfair.brickkit.padding.BrickPadding;
+
 /**
  * {@link android.support.v7.widget.RecyclerView.ItemDecoration} which applies padding to bricks
  * based off of their given {@link BrickPadding} and location in on the screen.
  */
-public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
+class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
     private BrickDataManager brickDataManager;
 
     /**
@@ -17,7 +20,7 @@ public class BrickRecyclerItemDecoration extends RecyclerView.ItemDecoration {
      *
      * @param dataManager {@link BrickDataManager} to use to get bricks for getting offsets
      */
-    public BrickRecyclerItemDecoration(BrickDataManager dataManager) {
+    BrickRecyclerItemDecoration(BrickDataManager dataManager) {
         this.brickDataManager = dataManager;
     }
 

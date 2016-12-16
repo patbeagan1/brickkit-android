@@ -9,11 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.wayfair.brickkit.BaseBrick;
-import com.wayfair.brickkit.BrickSize;
+import com.wayfair.brickkit.brick.BaseBrick;
+import com.wayfair.brickkit.size.BrickSize;
 import com.wayfair.brickkit.BrickViewHolder;
-import com.wayfair.brickkit.R;
-import com.wayfair.brickkit.ViewHolderRegistry;
+import com.wayfair.brickkitdemo.R;
 
 /**
  * Brick whose content is a fragment.
@@ -21,19 +20,7 @@ import com.wayfair.brickkit.ViewHolderRegistry;
 public class FragmentBrick extends BaseBrick {
     private static final String BRICK_TEMPLATE = "cms/bricks/fragment_brick";
 
-    static {
-        ViewHolderRegistry.register(BRICK_TEMPLATE, new ViewHolderRegistry.GenerateViewHolderInterface() {
-            @Override
-            public BrickViewHolder generateViewHolder(ViewGroup parent) {
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_brick, parent, false);
-
-                return new FragmentBrickViewHolder(itemView);
-            }
-        });
-    }
-
     private Fragment fragment;
-
     private FragmentManager fragmentManager;
     private String tag;
 
@@ -84,6 +71,16 @@ public class FragmentBrick extends BaseBrick {
     @Override
     public String getTemplate() {
         return BRICK_TEMPLATE;
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.fragment_brick;
+    }
+
+    @Override
+    public BrickViewHolder createViewHolder(View itemView) {
+        return new FragmentBrickViewHolder(itemView);
     }
 
     /**

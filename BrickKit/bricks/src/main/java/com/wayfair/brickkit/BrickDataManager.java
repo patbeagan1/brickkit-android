@@ -1,12 +1,18 @@
 package com.wayfair.brickkit;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import com.wayfair.brickkit.behavior.BrickBehavior;
+import com.wayfair.brickkit.brick.BaseBrick;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 /**
@@ -15,8 +21,8 @@ import java.util.ListIterator;
  * This class maintains the bricks and handles notifying the underlying adapter when items are updated.
  */
 public class BrickDataManager implements Serializable {
-    public ArrayList<BrickBehaviour> behaviours;
-    public BrickRecyclerAdapter brickRecyclerAdapter;
+    private ArrayList<BrickBehavior> behaviors;
+    private BrickRecyclerAdapter brickRecyclerAdapter;
     private final int maxSpanCount;
     private LinkedList<BaseBrick> items;
     private LinkedList<BaseBrick> currentlyVisibleItems;
@@ -25,21 +31,26 @@ public class BrickDataManager implements Serializable {
 
     /**
      * Constructor.
-     *
-     * @param context {@link Context} to use
+     *  @param context {@link Context} to use
      * @param recyclerView {@link RecyclerView} to put views in
      * @param maxSpanCount max spans used when laying out bricks
+     * @param orientation Layout orientation. Should be {@link GridLayoutManager#HORIZONTAL} or {@link GridLayoutManager#VERTICAL}.
+     * @param reverse When set to true, layouts from end to start.
      */
-    public BrickDataManager(Context context, RecyclerView recyclerView, int maxSpanCount) {
+    public BrickDataManager(Context context, RecyclerView recyclerView, int maxSpanCount, int orientation, boolean reverse) {
         this.context = context;
         this.maxSpanCount = maxSpanCount;
         this.items = new LinkedList<>();
-        this.behaviours = new ArrayList<>();
+        this.behaviors = new ArrayList<>();
         this.currentlyVisibleItems = new LinkedList<>();
         this.brickRecyclerAdapter = new BrickRecyclerAdapter(this, recyclerView);
 
         recyclerView.setAdapter(brickRecyclerAdapter);
         recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(this));
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, maxSpanCount, orientation, reverse);
+        gridLayoutManager.setSpanSizeLookup(new BrickSpanSizeLookup(context, this));
+        recyclerView.setLayoutManager(gridLayoutManager);
     }
 
     /**
@@ -244,6 +255,7 @@ public class BrickDataManager implements Serializable {
             if (getRecyclerViewItems().size() > 0) {
                 computePaddingPosition(getRecyclerViewItems().getFirst());
             }
+
             brickRecyclerAdapter.safeNotifyDataSetChanged();
         }
     }
@@ -301,7 +313,7 @@ public class BrickDataManager implements Serializable {
      * @param item the brick to refresh
      */
     public void refreshItem(BaseBrick item) {
-        boolean wasHidden = adapterIndex(item) == -1;
+        boolean wasHidden = currentlyVisibleItems.indexOf(item) == -1;
         if (wasHidden == item.isHidden()) {
             if (!wasHidden) {
                 int index = dataSourceIndex(item);
@@ -329,8 +341,8 @@ public class BrickDataManager implements Serializable {
      */
     private void dataHasChanged() {
         dataHasChanged = true;
-        for (BrickBehaviour behaviour : behaviours) {
-            behaviour.onDataSetChanged();
+        for (BrickBehavior behavior : behaviors) {
+            behavior.onDataSetChanged();
         }
     }
 
@@ -442,11 +454,8 @@ public class BrickDataManager implements Serializable {
                 topRow = false;
             }
         }
-        if (!currentBrick.isInLastRow()) {
-            currentBrick.setInLastRow(true);
-        }
 
-        currentBrick = iterator.previous();
+        currentBrick.setInLastRow(true);
         addBottomToRowEndingWithItem(iterator);
 
         return startingBrickIndex;
@@ -464,24 +473,6 @@ public class BrickDataManager implements Serializable {
             currentBrick.setInLastRow(true);
 
             if (currentBrick.isOnLeftWall()) {
-                removeBottomFromRowBeforeItem(iterator);
-                break;
-            }
-        }
-    }
-
-    /**
-     * Sets all items to not being in the last row from the current brick to the left most brick in that row.
-     *
-     * @param iterator iterator to use to find items in the row
-     */
-    private void removeBottomFromRowBeforeItem(ListIterator<BaseBrick> iterator) {
-        while (iterator.hasPrevious()) {
-            BaseBrick currentBrick = iterator.previous();
-
-            currentBrick.setInLastRow(false);
-
-            if (currentBrick.isOnLeftWall()) {
                 break;
             }
         }
@@ -494,5 +485,62 @@ public class BrickDataManager implements Serializable {
      */
     public int getMaxSpanCount() {
         return maxSpanCount;
+    }
+
+    /**
+     * Add a {@link BrickBehavior}.
+     *
+     * @param behavior {@link BrickBehavior} to add
+     */
+    public void addBehavior(BrickBehavior behavior) {
+        behaviors.add(behavior);
+    }
+
+    /**
+     * Get the {@link BrickRecyclerAdapter} for this instance.
+     *
+     * @return the {@link BrickRecyclerAdapter}.
+     */
+    public BrickRecyclerAdapter getBrickRecyclerAdapter() {
+        return brickRecyclerAdapter;
+    }
+
+    /**
+     * Method called to release any related resources.
+     */
+    public void onDestroyView() {
+        for (BrickBehavior behavior : behaviors) {
+            behavior.detachFromRecyclerView();
+        }
+    }
+
+    /**
+     * Retrieves a brick who's associated layout resource ID matches that of the parameter.
+     *
+     * @param layoutResId   Layout resource ID
+     * @return              An instance of BaseBrick or null
+     */
+    public BaseBrick brickWithLayout(@LayoutRes int layoutResId) {
+        List<BaseBrick> visibleItems = getRecyclerViewItems();
+        for (int i = 0; i < visibleItems.size(); i++) {
+            if (visibleItems.get(i).getLayout() == layoutResId) {
+                return visibleItems.get(i);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieves a brick at a specific position.
+     *
+     * @param position  Position of the brick within the data set
+     * @return          An instance of BaseBrick or null
+     */
+    public BaseBrick brickAtPosition(int position) {
+        if (position >= 0 && position < getDataManagerItems().size()) {
+            return getDataManagerItems().get(position);
+        }
+        return null;
     }
 }

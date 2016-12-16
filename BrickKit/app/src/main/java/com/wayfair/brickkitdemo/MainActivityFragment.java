@@ -1,12 +1,11 @@
 package com.wayfair.brickkitdemo;
 
-import android.support.v7.widget.OrientationHelper;
 import android.view.View;
 
-import com.wayfair.brickkit.BaseBrick;
+import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.InnerOuterBrickPadding;
-import com.wayfair.brickkit.SimpleBrickSize;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
+import com.wayfair.brickkit.size.SimpleBrickSize;
 import com.wayfair.brickkitdemo.bricks.UnusedBrick;
 import com.wayfair.brickkitdemo.bricks.UsedBrick;
 
@@ -16,20 +15,12 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends BrickFragment {
-    private static final int MAX_SPANS = 240;
     private static final int ONE_FIFTH = 48;
     private static final int TWO_FIFTH = 96;
 
-    private ArrayList<BaseBrick> usedBricks;
-
-    @Override
-    public int maxSpans() {
-        return MAX_SPANS;
-    }
-
     @Override
     public void createBricks() {
-        usedBricks = new ArrayList<>();
+        ArrayList<BaseBrick> usedBricks = new ArrayList<>();
 
         usedBricks.add(
                 new UsedBrick(
@@ -314,20 +305,5 @@ public class MainActivityFragment extends BrickFragment {
 
         }
 
-    }
-
-    @Override
-    public void addBehaviours() {
-
-    }
-
-    @Override
-    public int orientation() {
-        return OrientationHelper.VERTICAL;
-    }
-
-    @Override
-    public boolean reverse() {
-        return false;
     }
 }

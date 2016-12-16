@@ -1,31 +1,24 @@
 package com.wayfair.brickkitdemo;
 
 import android.annotation.SuppressLint;
-import android.support.v7.widget.OrientationHelper;
 import android.view.View;
 
-import com.wayfair.brickkit.BaseBrick;
+import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.InnerOuterBrickPadding;
-import com.wayfair.brickkit.SimpleBrickSize;
-import com.wayfair.brickkit.StickyFooterHelper;
-import com.wayfair.brickkit.StickyHeaderHelper;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
+import com.wayfair.brickkit.size.SimpleBrickSize;
+import com.wayfair.brickkit.behavior.StickyFooterBehavior;
+import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
 import com.wayfair.brickkitdemo.bricks.ControllerBrick;
-import com.wayfair.brickkit.bricks.TextBrick;
+import com.wayfair.brickkit.brick.TextBrick;
 
 /**
  * Demo fragment that allows you to add and remove bricks at a given position.
  */
 public class AddRemoveBrickFragment extends BrickFragment {
-    private static final int MAX_SPANS = 240;
     private static final int NUMBER_OF_BRICKS = 20;
     private static final String FORMAT = "Brick: %d";
     private ControllerBrick controllerBrick;
-
-    @Override
-    public int maxSpans() {
-        return MAX_SPANS;
-    }
 
     @Override
     public void createBricks() {
@@ -37,7 +30,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                         new SimpleBrickSize(dataManager) {
                             @Override
                             protected int size() {
-                                return MAX_SPANS;
+                                return dataManager.getMaxSpanCount();
                             }
                         },
                         new InnerOuterBrickPadding() {
@@ -82,7 +75,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                                     new SimpleBrickSize(dataManager) {
                                                         @Override
                                                         protected int size() {
-                                                            return MAX_SPANS;
+                                                            return dataManager.getMaxSpanCount();
                                                         }
                                                     },
                                                     new InnerOuterBrickPadding() {
@@ -107,7 +100,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                                     new SimpleBrickSize(dataManager) {
                                                         @Override
                                                         protected int size() {
-                                                            return MAX_SPANS;
+                                                            return dataManager.getMaxSpanCount();
                                                         }
                                                     },
                                                     new InnerOuterBrickPadding() {
@@ -142,7 +135,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                         new SimpleBrickSize(dataManager) {
                             @Override
                             protected int size() {
-                                return MAX_SPANS;
+                                return dataManager.getMaxSpanCount();
                             }
                         },
                         new InnerOuterBrickPadding() {
@@ -165,18 +158,8 @@ public class AddRemoveBrickFragment extends BrickFragment {
     }
 
     @Override
-    public void addBehaviours() {
-        dataManager.behaviours.add(new StickyHeaderHelper(dataManager));
-        dataManager.behaviours.add(new StickyFooterHelper(dataManager));
-    }
-
-    @Override
-    public int orientation() {
-        return OrientationHelper.VERTICAL;
-    }
-
-    @Override
-    public boolean reverse() {
-        return false;
+    public void addBehaviors() {
+        dataManager.addBehavior(new StickyHeaderBehavior(dataManager));
+        dataManager.addBehavior(new StickyFooterBehavior(dataManager));
     }
 }

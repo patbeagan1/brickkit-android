@@ -1,12 +1,10 @@
 package com.wayfair.brickkitdemo;
 
-import android.support.v7.widget.OrientationHelper;
-
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.InnerOuterBrickPadding;
-import com.wayfair.brickkit.OrientationBrickSize;
-import com.wayfair.brickkit.StickyHeaderHelper;
-import com.wayfair.brickkit.bricks.TextBrick;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
+import com.wayfair.brickkit.size.OrientationBrickSize;
+import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
+import com.wayfair.brickkit.brick.TextBrick;
 
 /**
  * Fragment which shows the brick header behavior.
@@ -15,13 +13,7 @@ import com.wayfair.brickkit.bricks.TextBrick;
  * another "header" brick is scrolled into the header area.
  */
 public class HeaderBrickFragment extends BrickFragment {
-    private static final int MAX_SPANS = 240;
     private static final int HALF = 120;
-
-    @Override
-    public int maxSpans() {
-        return MAX_SPANS;
-    }
 
     @Override
     public void createBricks() {
@@ -31,7 +23,7 @@ public class HeaderBrickFragment extends BrickFragment {
                     new OrientationBrickSize(dataManager) {
                         @Override
                         protected int portrait() {
-                            return MAX_SPANS;
+                            return dataManager.getMaxSpanCount();
                         }
 
                         @Override
@@ -62,17 +54,7 @@ public class HeaderBrickFragment extends BrickFragment {
     }
 
     @Override
-    public void addBehaviours() {
-        dataManager.behaviours.add(new StickyHeaderHelper(dataManager));
-    }
-
-    @Override
-    public int orientation() {
-        return OrientationHelper.VERTICAL;
-    }
-
-    @Override
-    public boolean reverse() {
-        return false;
+    public void addBehaviors() {
+        dataManager.addBehavior(new StickyHeaderBehavior(dataManager));
     }
 }

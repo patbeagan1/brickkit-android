@@ -4,14 +4,17 @@ import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
+import android.view.View;
 import android.widget.LinearLayout;
+
+import com.wayfair.brickkit.brick.BaseBrick;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -33,26 +36,21 @@ public class BrickRecyclerAdapterTest {
     private static final int COUNT = 3;
     private static final Object PAYLOAD = new Object();
     private static final int BRICK_COUNT = 3;
-    private static final String TEMPLATE = "template";
-    private static final int INDEX = 5;
+    private static final int LAYOUT = 7;
     private BrickRecyclerAdapter adapter;
     private TestAdapterDataObserver observer;
     private LinkedList<BaseBrick> bricks;
     private RecyclerView recyclerView;
+    private BrickDataManager dataManager;
 
     @Before
     public void setup() {
         if (Looper.myLooper() == null) {
             Looper.prepare();
         }
-        BrickDataManager dataManager = mock(BrickDataManager.class);
+        dataManager = mock(BrickDataManager.class);
 
-        BaseBrick brick = mock(BaseBrick.class);
-
-        bricks = mock(LinkedList.class);
-        when(bricks.size()).thenReturn(BRICK_COUNT);
-        when(bricks.get(anyInt())).thenReturn(brick);
-        when(bricks.indexOf(any(BaseBrick.class))).thenReturn(INDEX);
+        bricks = new LinkedList<>();
 
         when(dataManager.getRecyclerViewItems()).thenReturn(bricks);
 
@@ -63,17 +61,11 @@ public class BrickRecyclerAdapterTest {
 
         adapter = new BrickRecyclerAdapter(dataManager, recyclerView);
         adapter.registerAdapterDataObserver(observer);
+    }
 
-        TemplateRegistry.getInstance().reset();
-        TemplateRegistry.getInstance().get(TEMPLATE);
-
-        ViewHolderRegistry.register(TEMPLATE, new ViewHolderRegistry.GenerateViewHolderInterface() {
-
-            @Override
-            public BrickViewHolder generateViewHolder(ViewGroup parent) {
-                return mock(BrickViewHolder.class);
-            }
-        });
+    @Test
+    public void testGetRecyclerView() {
+        assertEquals(recyclerView, adapter.getRecyclerView());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -262,7 +254,14 @@ public class BrickRecyclerAdapterTest {
 
     @Test
     public void testOnCreateViewHolder() {
-        assertNotNull(adapter.onCreateViewHolder(new LinearLayout(InstrumentationRegistry.getTargetContext()), 0));
+        BaseBrick brick = mock(BaseBrick.class);
+        when(brick.getLayout()).thenReturn(R.layout.text_brick);
+
+        when(dataManager.brickWithLayout(anyInt())).thenReturn(brick);
+
+        adapter.onCreateViewHolder(new LinearLayout(InstrumentationRegistry.getTargetContext()), brick.getLayout());
+
+        verify(brick).createViewHolder(any(View.class));
     }
 
     @Test
@@ -270,7 +269,7 @@ public class BrickRecyclerAdapterTest {
         OnReachedItemAtPosition listener = mock(OnReachedItemAtPosition.class);
         adapter.setOnReachedItemAtPosition(listener);
 
-        when(bricks.get(0)).thenReturn(null);
+        when(dataManager.brickAtPosition(0)).thenReturn(null);
 
         BrickViewHolder holder = mock(BrickViewHolder.class);
 
@@ -283,7 +282,7 @@ public class BrickRecyclerAdapterTest {
     public void testOnBindViewHolderNullBindListener() {
         BaseBrick brick = mock(BaseBrick.class);
 
-        when(bricks.get(0)).thenReturn(brick);
+        when(dataManager.brickAtPosition(0)).thenReturn(brick);
 
         BrickViewHolder holder = mock(BrickViewHolder.class);
 
@@ -299,7 +298,7 @@ public class BrickRecyclerAdapterTest {
         OnReachedItemAtPosition listener = mock(OnReachedItemAtPosition.class);
         adapter.setOnReachedItemAtPosition(listener);
 
-        when(bricks.get(0)).thenReturn(brick);
+        when(dataManager.brickAtPosition(0)).thenReturn(brick);
 
         BrickViewHolder holder = mock(BrickViewHolder.class);
 
@@ -320,37 +319,52 @@ public class BrickRecyclerAdapterTest {
 
     @Test
     public void testGetItemCount() {
+        for (int i = 0; i < BRICK_COUNT; i++) {
+            bricks.addFirst(mock(BaseBrick.class));
+        }
+
         assertEquals(BRICK_COUNT, adapter.getItemCount());
     }
 
     @Test
     public void testGetItemViewType() {
         BaseBrick brick = mock(BaseBrick.class);
-        when(brick.getTemplate()).thenReturn(TEMPLATE);
+        when(brick.getLayout()).thenReturn(LAYOUT);
 
-        when(bricks.get(0)).thenReturn(null);
-        when(bricks.get(1)).thenReturn(brick);
+        when(dataManager.brickAtPosition(0)).thenReturn(brick);
 
-        assertEquals(-1, adapter.getItemViewType(0));
-        assertEquals(0, adapter.getItemViewType(1));
+        assertEquals(LAYOUT, adapter.getItemViewType(0));
+    }
+
+    @Test
+    public void testGetItemViewTypeInvalidPosition() {
+        when(dataManager.brickAtPosition(0)).thenReturn(null);
+
+        assertEquals(0, adapter.getItemViewType(0));
     }
 
     @Test
     public void testGet() {
+        bricks.addFirst(mock(BaseBrick.class));
+
         assertNotNull(adapter.get(0));
     }
 
     @Test
     public void testIndexOf() {
-        assertEquals(INDEX, adapter.indexOf(mock(BaseBrick.class)));
+        BaseBrick brick = mock(BaseBrick.class);
+
+        bricks.addFirst(brick);
+
+        assertEquals(0, adapter.indexOf(brick));
     }
 
     @Test
     public void testGetSectionHeaderNoHeader() {
         BaseBrick brick = mock(BaseBrick.class);
 
-        when(bricks.get(0)).thenReturn(brick);
-        when(bricks.get(1)).thenReturn(null);
+        bricks.addFirst(brick);
+        bricks.addFirst(null);
 
         assertNull(adapter.getSectionHeader(1));
     }
@@ -362,9 +376,9 @@ public class BrickRecyclerAdapterTest {
 
         BaseBrick brick = mock(BaseBrick.class);
 
-        when(bricks.get(0)).thenReturn(headerBrick);
-        when(bricks.get(1)).thenReturn(brick);
-        when(bricks.get(2)).thenReturn(null);
+        bricks.addFirst(headerBrick);
+        bricks.addFirst(brick);
+        bricks.addFirst(null);
 
         assertEquals(headerBrick, adapter.getSectionHeader(2));
     }
@@ -378,8 +392,8 @@ public class BrickRecyclerAdapterTest {
     public void testGetSectionFooterNoFooter() {
         BaseBrick brick = mock(BaseBrick.class);
 
-        when(bricks.get(0)).thenReturn(null);
-        when(bricks.get(1)).thenReturn(brick);
+        bricks.addLast(null);
+        bricks.addLast(brick);
 
         assertNull(adapter.getSectionFooter(0));
     }
@@ -391,9 +405,9 @@ public class BrickRecyclerAdapterTest {
 
         BaseBrick brick = mock(BaseBrick.class);
 
-        when(bricks.get(0)).thenReturn(null);
-        when(bricks.get(1)).thenReturn(brick);
-        when(bricks.get(2)).thenReturn(footerBrick);
+        bricks.addLast(null);
+        bricks.addLast(brick);
+        bricks.addLast(footerBrick);
 
         assertEquals(footerBrick, adapter.getSectionFooter(0));
     }
