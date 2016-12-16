@@ -1,5 +1,7 @@
 package com.wayfair.brickkitdemo;
 
+import android.view.ViewGroup;
+
 import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.size.OrientationBrickSize;
@@ -55,6 +57,7 @@ public class HeaderBrickFragment extends BrickFragment {
 
     @Override
     public void addBehaviors() {
-        dataManager.addBehavior(new StickyHeaderBehavior(dataManager));
+        dataManager.addBehavior(new StickyHeaderBehavior(dataManager,
+                (ViewGroup) getActivity().findViewById(com.wayfair.brickkit.R.id.sticky_header_container)));
     }
 }

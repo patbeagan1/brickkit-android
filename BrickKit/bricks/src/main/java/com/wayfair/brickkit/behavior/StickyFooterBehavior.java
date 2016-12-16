@@ -3,10 +3,10 @@ package com.wayfair.brickkit.behavior;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 
-import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickDataManager;
-import com.wayfair.brickkit.R;
+import com.wayfair.brickkit.brick.BaseBrick;
 
 /**
  * {@link BrickBehavior} that will provide a sticky footer view. Sticky footer views will remain
@@ -16,10 +16,11 @@ public class StickyFooterBehavior extends StickyViewBehavior {
     /**
      * Constructor.
      *
-     * @param brickDataManager {@link BrickDataManager} whose adapter is used for finding bricks
+     * @param brickDataManager   {@link BrickDataManager} whose adapter is used for finding bricks
+     * @param stickyHolderLayout sticky layout needed for the behavior
      */
-    public StickyFooterBehavior(BrickDataManager brickDataManager) {
-        super(brickDataManager, R.id.sticky_footer_container, "@layout/sticky_footer_layout");
+    public StickyFooterBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderLayout) {
+        super(brickDataManager, "@layout/sticky_footer_layout", stickyHolderLayout);
     }
 
     @Override

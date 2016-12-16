@@ -1,5 +1,7 @@
 package com.wayfair.brickkitdemo;
 
+import android.view.ViewGroup;
+
 import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.size.SimpleBrickSize;
@@ -49,6 +51,7 @@ public class FooterBrickFragment extends BrickFragment {
 
     @Override
     public void addBehaviors() {
-        dataManager.addBehavior(new StickyFooterBehavior(dataManager));
+        dataManager.addBehavior(new StickyFooterBehavior(dataManager,
+                (ViewGroup) getActivity().findViewById(com.wayfair.brickkit.R.id.sticky_footer_container)));
     }
 }
