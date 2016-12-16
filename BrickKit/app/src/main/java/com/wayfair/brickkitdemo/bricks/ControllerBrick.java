@@ -3,7 +3,6 @@ package com.wayfair.brickkitdemo.bricks;
 import android.content.Context;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -19,8 +18,6 @@ import com.wayfair.brickkit.BrickViewHolder;
  * Brick that provides add / remove click events and maintains an integer value.
  */
 public class ControllerBrick extends BaseBrick {
-    private static final String BRICK_TEMPLATE = "cms/bricks/controller_brick";
-
     public String value;
     private String hint;
     private View.OnClickListener removeClick;
@@ -48,7 +45,7 @@ public class ControllerBrick extends BaseBrick {
     }
 
     @Override
-    public void onBindData(RecyclerView.ViewHolder holder) {
+    public void onBindData(BrickViewHolder holder) {
         if (holder instanceof ControllerBrickHolder) {
             ControllerBrickHolder controllerBrickHolder = (ControllerBrickHolder) holder;
             controllerBrickHolder.textInputLayout.setHint(hint);
@@ -74,11 +71,6 @@ public class ControllerBrick extends BaseBrick {
             controllerBrickHolder.downButton.setOnClickListener(removeClick);
             controllerBrickHolder.upButton.setOnClickListener(addClick);
         }
-    }
-
-    @Override
-    public String getTemplate() {
-        return BRICK_TEMPLATE;
     }
 
     @Override

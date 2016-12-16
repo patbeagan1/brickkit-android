@@ -961,13 +961,8 @@ public class BrickDataManagerTest {
         }
 
         @Override
-        public void onBindData(RecyclerView.ViewHolder holder) {
+        public void onBindData(BrickViewHolder holder) {
 
-        }
-
-        @Override
-        public String getTemplate() {
-            return null;
         }
 
         @Override
@@ -988,13 +983,8 @@ public class BrickDataManagerTest {
         }
 
         @Override
-        public void onBindData(RecyclerView.ViewHolder holder) {
+        public void onBindData(BrickViewHolder holder) {
 
-        }
-
-        @Override
-        public String getTemplate() {
-            return null;
         }
 
         @Override
@@ -1016,7 +1006,7 @@ public class BrickDataManagerTest {
     }
 
     private BaseBrick generateBrickWithLayoutId(int layoutId) {
-        return new TestBrick(context, new SimpleBrickSize(manager) {
+        return new TestBrick(context, new SimpleBrickSize(MAX_SPANS) {
             @Override
             public int getSpans(Context context) {
                 return HALF_SPAN;
@@ -1037,7 +1027,7 @@ public class BrickDataManagerTest {
     }
 
     private BaseBrick generateBrick() {
-        return new TestBrick(context, new SimpleBrickSize(manager) {
+        return new TestBrick(context, new SimpleBrickSize(MAX_SPANS) {
             @Override
             public int getSpans(Context context) {
                 return HALF_SPAN;
@@ -1058,7 +1048,7 @@ public class BrickDataManagerTest {
     }
 
     private BaseBrick generateOtherBrick() {
-        return new TestBrick2(context, new SimpleBrickSize(manager) {
+        return new TestBrick2(context, new SimpleBrickSize(MAX_SPANS) {
             @Override
             public int getSpans(Context context) {
                 return HALF_SPAN;

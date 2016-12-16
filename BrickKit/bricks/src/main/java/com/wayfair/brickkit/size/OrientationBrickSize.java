@@ -1,7 +1,5 @@
 package com.wayfair.brickkit.size;
 
-import com.wayfair.brickkit.BrickDataManager;
-
 /**
  * Simple {@link BrickSize} which returns size based off of device orientation.
  */
@@ -9,10 +7,10 @@ public abstract class OrientationBrickSize extends BrickSize {
     /**
      * Constructor.
      *
-     * @param brickDataManager {@link BrickDataManager} whose max span count we should use
+     * @param maxSpanCount span count to use
      */
-    protected OrientationBrickSize(BrickDataManager brickDataManager) {
-        super(brickDataManager);
+    protected OrientationBrickSize(int maxSpanCount) {
+        super(maxSpanCount);
     }
 
     @Override

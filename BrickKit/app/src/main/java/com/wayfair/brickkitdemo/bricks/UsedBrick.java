@@ -1,7 +1,6 @@
 package com.wayfair.brickkitdemo.bricks;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,8 +14,6 @@ import com.wayfair.brickkitdemo.R;
  * {@link TouchableBrick} used in {@link com.wayfair.brickkitdemo.MainActivityFragment} to link to other fragments.
  */
 public class UsedBrick extends BaseBrick implements TouchableBrick {
-    private static final String BRICK_TEMPLATE = "cms/bricks/used_brick";
-
     public CharSequence text;
     private View.OnClickListener onTouch;
 
@@ -36,17 +33,12 @@ public class UsedBrick extends BaseBrick implements TouchableBrick {
     }
 
     @Override
-    public void onBindData(RecyclerView.ViewHolder viewHolder) {
+    public void onBindData(BrickViewHolder viewHolder) {
         UsedBrickHolder holder = (UsedBrickHolder) viewHolder;
         holder.textView.setText(text);
         if (isEnabled()) {
             holder.itemView.setOnClickListener(onTouch());
         }
-    }
-
-    @Override
-    public String getTemplate() {
-        return BRICK_TEMPLATE;
     }
 
     @Override

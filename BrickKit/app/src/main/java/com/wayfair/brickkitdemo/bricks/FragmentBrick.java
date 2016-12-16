@@ -3,7 +3,6 @@ package com.wayfair.brickkitdemo.bricks;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,6 @@ import com.wayfair.brickkitdemo.R;
  * Brick whose content is a fragment.
  */
 public class FragmentBrick extends BaseBrick {
-    private static final String BRICK_TEMPLATE = "cms/bricks/fragment_brick";
-
     private Fragment fragment;
     private FragmentManager fragmentManager;
     private String tag;
@@ -42,7 +39,7 @@ public class FragmentBrick extends BaseBrick {
     }
 
     @Override
-    public void onBindData(RecyclerView.ViewHolder holder) {
+    public void onBindData(BrickViewHolder holder) {
         if (holder instanceof FragmentBrickViewHolder) {
             View view;
 
@@ -66,11 +63,6 @@ public class FragmentBrick extends BaseBrick {
 
             ((FragmentBrickViewHolder) holder).frameLayout.addView(view);
         }
-    }
-
-    @Override
-    public String getTemplate() {
-        return BRICK_TEMPLATE;
     }
 
     @Override

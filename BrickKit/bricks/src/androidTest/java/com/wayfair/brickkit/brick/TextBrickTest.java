@@ -44,13 +44,6 @@ public class TextBrickTest {
     }
 
     @Test
-    public void testGetTemplate() {
-        TextBrick textBrick = new TextBrick(context, brickSize, TEXT);
-
-        assertEquals(TEMPLATE, textBrick.getTemplate());
-    }
-
-    @Test
     public void testOnBindData() {
         TextBrick brick = new TextBrick(context, brickSize, TEXT);
 

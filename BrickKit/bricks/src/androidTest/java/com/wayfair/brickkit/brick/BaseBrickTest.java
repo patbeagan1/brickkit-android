@@ -3,7 +3,6 @@ package com.wayfair.brickkit.brick;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.wayfair.brickkit.BrickViewHolder;
@@ -132,13 +131,8 @@ public class BaseBrickTest {
         }
 
         @Override
-        public void onBindData(RecyclerView.ViewHolder holder) {
+        public void onBindData(BrickViewHolder holder) {
 
-        }
-
-        @Override
-        public String getTemplate() {
-            return null;
         }
 
         @Override

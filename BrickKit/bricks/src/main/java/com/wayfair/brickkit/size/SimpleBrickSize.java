@@ -1,7 +1,5 @@
 package com.wayfair.brickkit.size;
 
-import com.wayfair.brickkit.BrickDataManager;
-
 /**
  * {@link BrickSize} which returns the result of size() for all cases.
  */
@@ -9,10 +7,10 @@ public abstract class SimpleBrickSize extends BrickSize {
     /**
      * Constructor.
      *
-     * @param brickDataManager {@link BrickDataManager} whose max span count we should use
+     * @param maxSpanCount span count to use
      */
-    protected SimpleBrickSize(BrickDataManager brickDataManager) {
-        super(brickDataManager);
+    protected SimpleBrickSize(int maxSpanCount) {
+        super(maxSpanCount);
     }
 
     @Override
