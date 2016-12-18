@@ -5,6 +5,7 @@ import android.support.annotation.LayoutRes;
 import android.view.View;
 
 import com.wayfair.brickkit.BrickViewHolder;
+import com.wayfair.brickkit.StickyScrollMode;
 import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.padding.SimpleBrickPadding;
 import com.wayfair.brickkit.size.BrickSize;
@@ -24,6 +25,8 @@ public abstract class BaseBrick {
     private boolean isInLastRow;
     private boolean isOnLeftWall;
     private boolean isOnRightWall;
+    @StickyScrollMode
+    private int stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
 
     /**
      * Constructor.
@@ -150,6 +153,25 @@ public abstract class BaseBrick {
      */
     public void setFooter(boolean footer) {
         this.footer = footer;
+    }
+
+    /**
+     * Set stickyScrollMode {@link com.wayfair.brickkit.StickyScrollMode}.
+     *
+     * @param stickyScrollMode whether the brick show header/footer on scrolling up/down
+     */
+    public void setStickyScrollMode(@StickyScrollMode int stickyScrollMode) {
+        this.stickyScrollMode = stickyScrollMode;
+    }
+
+    /**
+     * Get stickyScrollMode {@link com.wayfair.brickkit.StickyScrollMode}.
+     *
+     * @return stickyScrollMode whether the brick show header/footer on scrolling up/down
+     */
+    @StickyScrollMode
+    public int getStickScrollMode() {
+        return stickyScrollMode;
     }
 
     /**

@@ -5,6 +5,7 @@ import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.size.SimpleBrickSize;
 import com.wayfair.brickkit.behavior.StickyFooterBehavior;
 import com.wayfair.brickkit.brick.TextBrick;
+import com.wayfair.brickkit.StickyScrollMode;
 
 
 /**
@@ -41,6 +42,7 @@ public class FooterBrickFragment extends BrickFragment {
 
             if (i % 10 == 0) {
                 unusedBrick2.setFooter(true);
+                unusedBrick2.setStickyScrollMode(StickyScrollMode.SHOW_ON_SCROLL_DOWN);
             }
 
             dataManager.addLast(unusedBrick2);
