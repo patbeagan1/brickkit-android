@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wayfair.brickkit.BrickDataManager;
+import com.wayfair.brickkit.R;
 import com.wayfair.brickkit.brick.BaseBrick;
 
 /**
@@ -15,6 +16,15 @@ import com.wayfair.brickkit.brick.BaseBrick;
 public class StickyFooterBehavior extends StickyViewBehavior {
     /**
      * Constructor.
+     *
+     * @param brickDataManager {@link BrickDataManager} whose adapter is used for finding bricks
+     */
+    public StickyFooterBehavior(BrickDataManager brickDataManager) {
+        super(brickDataManager, R.id.sticky_footer_container, "@layout/sticky_footer_layout");
+    }
+
+    /**
+     * Constructor for Unit Tests.
      *
      * @param brickDataManager   {@link BrickDataManager} whose adapter is used for finding bricks
      * @param stickyHolderLayout sticky layout needed for the behavior

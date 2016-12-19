@@ -93,6 +93,7 @@ public class StickyHeaderBehaviorTest {
 
         brickHelper = new BrickTestHelper(context);
 
+        headerBehavior = new TestStickyHeaderBehavior(dataManager);
         headerBehavior = new TestStickyHeaderBehavior(dataManager, stickyHolderLayout);
     }
 
@@ -142,6 +143,10 @@ public class StickyHeaderBehaviorTest {
     }
 
     public static final class TestStickyHeaderBehavior extends StickyHeaderBehavior {
+        TestStickyHeaderBehavior(BrickDataManager brickDataManager) {
+            super(brickDataManager);
+        }
+
         TestStickyHeaderBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderLayout) {
             super(brickDataManager, stickyHolderLayout);
         }

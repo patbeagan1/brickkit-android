@@ -1,5 +1,6 @@
 package com.wayfair.brickkit.behavior;
 
+import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,14 +21,27 @@ abstract class StickyViewBehavior extends BrickBehavior {
     private boolean dataSetChanged;
     BrickRecyclerAdapter adapter;
     private ViewGroup stickyHolderLayout;
-
     int stickyPosition = RecyclerView.NO_POSITION;
-
     BrickViewHolder stickyViewHolder;
+    private int stickyViewContainerId;
     private final String stickyLayoutName;
 
     /**
      * Constructor.
+     *
+     * @param brickDataManager      {@link BrickDataManager} whose adapter is used for finding bricks
+     * @param stickyViewContainerId id of the container id which will be container for the sticky view
+     * @param stickyLayoutName      layout name for the sticky layout needed for the behavior
+     */
+    StickyViewBehavior(BrickDataManager brickDataManager, int stickyViewContainerId, String stickyLayoutName) {
+        this.adapter = brickDataManager.getBrickRecyclerAdapter();
+        this.stickyViewContainerId = stickyViewContainerId;
+        this.stickyLayoutName = stickyLayoutName;
+        attachToRecyclerView();
+    }
+
+    /**
+     * Constructor for Unit Tests.
      *
      * @param brickDataManager   {@link BrickDataManager} whose adapter is used for finding bricks
      * @param stickyLayoutName   layout name for the sticky layout needed for the behavior
@@ -60,6 +74,11 @@ abstract class StickyViewBehavior extends BrickBehavior {
 
     @Override
     public void onScroll() {
+        //Initialize Holder Layout and show sticky view if exists already, the null condition for holder layout is for the unit tests.
+        if(stickyHolderLayout == null && (adapter.getRecyclerView() != null && adapter.getRecyclerView().getContext() != null)){
+            stickyHolderLayout = (ViewGroup) ((Activity) adapter.getRecyclerView().getContext()).findViewById(stickyViewContainerId);
+        }
+
         if (stickyHolderLayout != null) {
             if (stickyHolderLayout.getLayoutParams() == null) {
                 stickyHolderLayout.setLayoutParams(

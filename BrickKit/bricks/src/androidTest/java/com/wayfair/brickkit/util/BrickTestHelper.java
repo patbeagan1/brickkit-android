@@ -89,14 +89,13 @@ public class BrickTestHelper {
             protected int size() {
                 return HALF_SPAN;
             }
-        }, new SimpleBrickPadding() {
 
+        }, new SimpleBrickPadding() {
             @Override
             protected int padding() {
                 return PADDING;
             }
-        },
-                layoutId);
+        }, layoutId);
     }
 
     public BaseBrick generateBrick() {
@@ -110,14 +109,13 @@ public class BrickTestHelper {
             protected int size() {
                 return HALF_SPAN;
             }
-        }, new SimpleBrickPadding() {
 
+        }, new SimpleBrickPadding() {
             @Override
             protected int padding() {
                 return PADDING;
             }
-        },
-                0);
+        }, 0);
     }
 
     public BaseBrick generateOtherBrick() {

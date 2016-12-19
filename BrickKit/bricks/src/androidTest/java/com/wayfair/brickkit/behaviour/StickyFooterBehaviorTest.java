@@ -95,6 +95,7 @@ public class StickyFooterBehaviorTest {
 
         brickTestHelper = new BrickTestHelper(context);
 
+        footerBehavior = new TestStickyFooterBehavior(dataManager);
         footerBehavior = new TestStickyFooterBehavior(dataManager, stickyHolderLayout);
     }
 
@@ -197,6 +198,10 @@ public class StickyFooterBehaviorTest {
     }
 
     public static final class TestStickyFooterBehavior extends StickyFooterBehavior {
+        TestStickyFooterBehavior(BrickDataManager brickDataManager) {
+            super(brickDataManager);
+        }
+
         TestStickyFooterBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderLayout) {
             super(brickDataManager, stickyHolderLayout);
         }

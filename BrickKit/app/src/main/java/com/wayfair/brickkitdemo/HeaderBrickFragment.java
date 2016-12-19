@@ -1,16 +1,14 @@
 package com.wayfair.brickkitdemo;
 
-import android.view.ViewGroup;
-
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
-import com.wayfair.brickkit.size.OrientationBrickSize;
 import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
 import com.wayfair.brickkit.brick.TextBrick;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
+import com.wayfair.brickkit.size.OrientationBrickSize;
 
 /**
  * Fragment which shows the brick header behavior.
- *
+ * <p>
  * Every tenth brick is a "header" which means it will remain on screen until
  * another "header" brick is scrolled into the header area.
  */
@@ -57,7 +55,6 @@ public class HeaderBrickFragment extends BrickFragment {
 
     @Override
     public void addBehaviors() {
-        dataManager.addBehavior(new StickyHeaderBehavior(dataManager,
-                (ViewGroup) getActivity().findViewById(com.wayfair.brickkit.R.id.sticky_header_container)));
+        dataManager.addBehavior(new StickyHeaderBehavior(dataManager));
     }
 }

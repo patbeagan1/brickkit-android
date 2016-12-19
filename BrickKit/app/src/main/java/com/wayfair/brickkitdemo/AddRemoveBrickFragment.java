@@ -2,16 +2,15 @@ package com.wayfair.brickkitdemo;
 
 import android.annotation.SuppressLint;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
-import com.wayfair.brickkit.size.SimpleBrickSize;
 import com.wayfair.brickkit.behavior.StickyFooterBehavior;
 import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
-import com.wayfair.brickkitdemo.bricks.ControllerBrick;
+import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.brick.TextBrick;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
+import com.wayfair.brickkit.size.SimpleBrickSize;
+import com.wayfair.brickkitdemo.bricks.ControllerBrick;
 
 /**
  * Demo fragment that allows you to add and remove bricks at a given position.
@@ -160,9 +159,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
 
     @Override
     public void addBehaviors() {
-        dataManager.addBehavior(new StickyHeaderBehavior(dataManager,
-                (ViewGroup) getActivity().findViewById(com.wayfair.brickkit.R.id.sticky_header_container)));
-        dataManager.addBehavior(new StickyFooterBehavior(dataManager,
-                (ViewGroup) getActivity().findViewById(com.wayfair.brickkit.R.id.sticky_footer_container)));
+        dataManager.addBehavior(new StickyHeaderBehavior(dataManager));
+        dataManager.addBehavior(new StickyFooterBehavior(dataManager));
     }
 }
