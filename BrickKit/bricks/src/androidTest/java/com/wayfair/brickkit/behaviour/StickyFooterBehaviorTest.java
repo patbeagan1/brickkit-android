@@ -19,6 +19,7 @@ import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.R;
 import com.wayfair.brickkit.behavior.StickyFooterBehavior;
 import com.wayfair.brickkit.brick.BaseBrick;
+import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.util.BrickTestHelper;
 
 import org.junit.Before;
@@ -42,6 +43,15 @@ public class StickyFooterBehaviorTest {
     private Context context;
     private View view;
     private View textBrickView;
+
+    private static final int INNER_LEFT = 1;
+    private static final int INNER_TOP = 2;
+    private static final int INNER_RIGHT = 3;
+    private static final int INNER_BOTTOM = 4;
+    private static final int OUTER_LEFT = 5;
+    private static final int OUTER_TOP = 6;
+    private static final int OUTER_RIGHT = 7;
+    private static final int OUTER_BOTTOM = 8;
 
     @Before
     public void setup() {
@@ -76,6 +86,7 @@ public class StickyFooterBehaviorTest {
         dataManager = mock(BrickDataManager.class);
         when(dataManager.getBrickRecyclerAdapter()).thenReturn(adapter);
         when(dataManager.brickAtPosition(9)).thenReturn(footer);
+        when(dataManager.brickAtPosition(0)).thenReturn(footer);
 
         LayoutInflater inflater = LayoutInflater.from(context);
         final ViewGroup nullParent = null;
@@ -94,6 +105,18 @@ public class StickyFooterBehaviorTest {
         when(adapter.createViewHolder(recyclerView, R.layout.text_brick)).thenReturn(holder);
 
         brickTestHelper = new BrickTestHelper(context);
+
+        BrickPadding brickPadding = mock(BrickPadding.class);
+        when(brickPadding.getInnerLeftPadding()).thenReturn(INNER_LEFT);
+        when(brickPadding.getInnerTopPadding()).thenReturn(INNER_TOP);
+        when(brickPadding.getInnerRightPadding()).thenReturn(INNER_RIGHT);
+        when(brickPadding.getInnerBottomPadding()).thenReturn(INNER_BOTTOM);
+        when(brickPadding.getOuterLeftPadding()).thenReturn(OUTER_LEFT);
+        when(brickPadding.getOuterTopPadding()).thenReturn(OUTER_TOP);
+        when(brickPadding.getOuterRightPadding()).thenReturn(OUTER_RIGHT);
+        when(brickPadding.getOuterBottomPadding()).thenReturn(OUTER_BOTTOM);
+        when(dataManager.brickAtPosition(0).getPadding()).thenReturn(brickPadding);
+        when(dataManager.brickAtPosition(9).getPadding()).thenReturn(brickPadding);
 
         footerBehavior = new TestStickyFooterBehavior(dataManager);
         footerBehavior = new TestStickyFooterBehavior(dataManager, stickyHolderLayout);
@@ -132,6 +155,7 @@ public class StickyFooterBehaviorTest {
         for (int i = 0; i < 30; i++) {
             when(adapter.getRecyclerView().getChildAt(i)).thenReturn(textBrickView);
         }
+
         footerBehavior.onScroll();
         footerBehavior.onDataSetChanged();
 

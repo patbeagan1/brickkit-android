@@ -57,6 +57,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
         this.adapter = brickDataManager.getBrickRecyclerAdapter();
         this.stickyLayoutName = stickyLayoutName;
         this.stickyHolderLayout = stickyHolderLayout;
+        this.brickDataManager = brickDataManager;
         attachToRecyclerView();
     }
 

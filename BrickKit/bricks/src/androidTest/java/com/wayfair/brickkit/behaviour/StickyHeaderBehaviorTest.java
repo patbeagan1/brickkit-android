@@ -19,6 +19,7 @@ import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.R;
 import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
 import com.wayfair.brickkit.brick.BaseBrick;
+import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.util.BrickTestHelper;
 
 import org.junit.Before;
@@ -26,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,16 +36,26 @@ public class StickyHeaderBehaviorTest {
 
     private TestStickyHeaderBehavior headerBehavior;
     private BrickDataManager dataManager;
-    private BrickTestHelper brickHelper;
+    private BrickTestHelper brickTestHelper;
     private RecyclerView recyclerView;
     private BrickRecyclerAdapter adapter;
     private Context context;
     private View view;
     private View textBrickView;
+    private ViewGroup stickyHolderLayout;
+
+    private static final int INNER_LEFT = 1;
+    private static final int INNER_TOP = 2;
+    private static final int INNER_RIGHT = 3;
+    private static final int INNER_BOTTOM = 4;
+    private static final int OUTER_LEFT = 5;
+    private static final int OUTER_TOP = 6;
+    private static final int OUTER_RIGHT = 7;
+    private static final int OUTER_BOTTOM = 8;
 
     @Before
     public void setup() {
-        ViewGroup stickyHolderLayout;
+
         BaseBrick header;
         if (Looper.myLooper() == null) {
             Looper.prepare();
@@ -74,6 +86,7 @@ public class StickyHeaderBehaviorTest {
         dataManager = mock(BrickDataManager.class);
         when(dataManager.getBrickRecyclerAdapter()).thenReturn(adapter);
         when(dataManager.brickAtPosition(0)).thenReturn(header);
+        when(dataManager.brickAtPosition(9)).thenReturn(header);
 
         LayoutInflater inflater = LayoutInflater.from(context);
         final ViewGroup nullParent = null;
@@ -91,7 +104,19 @@ public class StickyHeaderBehaviorTest {
         when(adapter.onCreateViewHolder(recyclerView, R.layout.text_brick)).thenReturn(holder);
         when(adapter.createViewHolder(recyclerView, R.layout.text_brick)).thenReturn(holder);
 
-        brickHelper = new BrickTestHelper(context);
+        brickTestHelper = new BrickTestHelper(context);
+
+        BrickPadding brickPadding = mock(BrickPadding.class);
+        when(brickPadding.getInnerLeftPadding()).thenReturn(INNER_LEFT);
+        when(brickPadding.getInnerTopPadding()).thenReturn(INNER_TOP);
+        when(brickPadding.getInnerRightPadding()).thenReturn(INNER_RIGHT);
+        when(brickPadding.getInnerBottomPadding()).thenReturn(INNER_BOTTOM);
+        when(brickPadding.getOuterLeftPadding()).thenReturn(OUTER_LEFT);
+        when(brickPadding.getOuterTopPadding()).thenReturn(OUTER_TOP);
+        when(brickPadding.getOuterRightPadding()).thenReturn(OUTER_RIGHT);
+        when(brickPadding.getOuterBottomPadding()).thenReturn(OUTER_BOTTOM);
+        when(dataManager.brickAtPosition(0).getPadding()).thenReturn(brickPadding);
+        when(dataManager.brickAtPosition(9).getPadding()).thenReturn(brickPadding);
 
         headerBehavior = new TestStickyHeaderBehavior(dataManager);
         headerBehavior = new TestStickyHeaderBehavior(dataManager, stickyHolderLayout);
@@ -99,11 +124,11 @@ public class StickyHeaderBehaviorTest {
 
     @Test
     public void testGetStickyViewPosition() {
-        BaseBrick brick = brickHelper.generateBrick();
+        BaseBrick brick = brickTestHelper.generateBrick();
         brick.setHeader(true);
         dataManager.addLast(brick);
         for (int i = 0; i < 10; i++) {
-            dataManager.addLast(brickHelper.generateBrick());
+            dataManager.addLast(brickTestHelper.generateBrick());
         }
 
         int position = headerBehavior.getStickyViewPosition(RecyclerView.NO_POSITION);
@@ -117,9 +142,9 @@ public class StickyHeaderBehaviorTest {
         headerBehavior.translateStickyView();
 
         for (int i = 0; i < 30; i++) {
-            dataManager.addLast(brickHelper.generateBrick());
+            dataManager.addLast(brickTestHelper.generateBrick());
         }
-        BaseBrick brick = brickHelper.generateBrick();
+        BaseBrick brick = brickTestHelper.generateBrick();
         brick.setHeader(true);
         dataManager.addLast(brick);
         DummyLayoutManager layoutManager = new DummyLayoutManager(context);
@@ -142,6 +167,27 @@ public class StickyHeaderBehaviorTest {
         headerBehavior.translateStickyView();
     }
 
+    @Test
+    public void testOnScrolledForNullHolderLayout() {
+        for (int i = 0; i < 10; i++) {
+            dataManager.addLast(brickTestHelper.generateBrick());
+        }
+
+        headerBehavior = new TestStickyHeaderBehavior(dataManager, null);
+        headerBehavior.onScrolled(recyclerView, 10, 10);
+        headerBehavior.onScroll();
+        assertNull(headerBehavior.getStickyViewHolder());
+    }
+
+    @Test
+    public void testStickyViewFadeTranslate() {
+        for (int i = 0; i < 10; i++) {
+            dataManager.addLast(brickTestHelper.generateBrick());
+        }
+        headerBehavior = new TestStickyHeaderBehavior(dataManager, stickyHolderLayout);
+        headerBehavior.stickyViewFadeTranslate(1);
+    }
+
     public static final class TestStickyHeaderBehavior extends StickyHeaderBehavior {
         TestStickyHeaderBehavior(BrickDataManager brickDataManager) {
             super(brickDataManager);
@@ -159,6 +205,11 @@ public class StickyHeaderBehaviorTest {
         @Override
         protected void translateStickyView() {
             super.translateStickyView();
+        }
+
+        @Override
+        protected void stickyViewFadeTranslate(int dy) {
+            super.stickyViewFadeTranslate(dy);
         }
     }
 
