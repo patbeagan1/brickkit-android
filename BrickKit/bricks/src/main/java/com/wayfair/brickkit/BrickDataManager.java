@@ -32,8 +32,8 @@ public class BrickDataManager implements Serializable {
     private boolean dataHasChanged;
     private Context context;
     private ItemTouchHelper itemTouchHelper;
-    boolean dragAndDrop;
-    boolean swipeToDismiss;
+    private boolean dragAndDrop;
+    private boolean swipeToDismiss;
     private boolean vertical;
 
     /**
@@ -41,7 +41,7 @@ public class BrickDataManager implements Serializable {
      *  @param context {@link Context} to use
      * @param recyclerView {@link RecyclerView} to put views in
      * @param maxSpanCount max spans used when laying out bricks
-     * @param orientation Layout vertical. Should be {@link GridLayoutManager#HORIZONTAL} or {@link GridLayoutManager#VERTICAL}.
+     * @param orientation Layout orientation. Should be {@link GridLayoutManager#HORIZONTAL} or {@link GridLayoutManager#VERTICAL}.
      * @param reverse When set to true, layouts from end to start.
      */
     public BrickDataManager(Context context, RecyclerView recyclerView, int maxSpanCount, int orientation, boolean reverse) {
