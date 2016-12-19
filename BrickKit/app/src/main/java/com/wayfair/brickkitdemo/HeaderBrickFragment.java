@@ -1,14 +1,15 @@
 package com.wayfair.brickkitdemo;
 
 import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
-import com.wayfair.brickkit.brick.TextBrick;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.size.OrientationBrickSize;
+import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
+import com.wayfair.brickkit.brick.TextBrick;
+import com.wayfair.brickkit.StickyScrollMode;
 
 /**
  * Fragment which shows the brick header behavior.
- * <p>
+ *
  * Every tenth brick is a "header" which means it will remain on screen until
  * another "header" brick is scrolled into the header area.
  */
@@ -47,6 +48,7 @@ public class HeaderBrickFragment extends BrickFragment {
 
             if (i % 10 == 0) {
                 unusedBrick2.setHeader(true);
+                unusedBrick2.setStickyScrollMode(StickyScrollMode.SHOW_ON_SCROLL_DOWN);
             }
 
             dataManager.addLast(unusedBrick2);

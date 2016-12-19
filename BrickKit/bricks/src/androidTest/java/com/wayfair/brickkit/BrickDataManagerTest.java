@@ -914,4 +914,5 @@ public class BrickDataManagerTest {
         assertNull(manager.brickAtPosition(manager.getDataManagerItems().size()));
         assertNull(manager.brickAtPosition(-1));
     }
+
 }

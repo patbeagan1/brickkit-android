@@ -5,9 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wayfair.brickkit.StickyScrollMode;
+import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.R;
-import com.wayfair.brickkit.brick.BaseBrick;
 
 /**
  * {@link BrickBehavior} that will provide a sticky header view. Sticky header views will remain
@@ -42,7 +43,10 @@ public class StickyHeaderBehavior extends StickyViewBehavior {
         BaseBrick header = adapter.getSectionHeader(adapterPosHere);
         //Header cannot be sticky if it's also an Expandable in collapsed status, RV will raise an exception
         if (header == null) {
+            stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
             return RecyclerView.NO_POSITION;
+        } else {
+            stickyScrollMode = header.getStickyScrollMode();
         }
         return adapter.indexOf(header);
     }
@@ -85,5 +89,26 @@ public class StickyHeaderBehavior extends StickyViewBehavior {
         //Apply translation
         stickyViewHolder.itemView.setTranslationX(headerOffsetX);
         stickyViewHolder.itemView.setTranslationY(headerOffsetY);
+    }
+
+    @Override
+    protected void stickyViewFadeTranslate(int dy) {
+        if (stickyHolderLayout != null && stickyHolderLayout.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_UP) {
+            float headerY = stickyHolderLayout.getY();
+            if (dy > 0 && headerY <= 0) {
+                stickyHolderLayout.setTranslationY(Math.min(headerY + dy, 0));
+            } else if (dy < 0) {
+                stickyHolderLayout.setTranslationY(Math.max(headerY + dy, -stickyHolderLayout.getHeight()));
+            }
+        }
+
+        if (stickyHolderLayout != null && stickyHolderLayout.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_DOWN) {
+            float headerY = stickyHolderLayout.getY();
+            if (dy > 0) {
+                stickyHolderLayout.setTranslationY(Math.max(headerY - dy, -stickyHolderLayout.getHeight()));
+            } else if (dy < 0) {
+                stickyHolderLayout.setTranslationY(Math.min(headerY - dy, 0));
+            }
+        }
     }
 }

@@ -3,14 +3,14 @@ package com.wayfair.brickkitdemo;
 import android.annotation.SuppressLint;
 import android.view.View;
 
-import com.wayfair.brickkit.BrickFragment;
-import com.wayfair.brickkit.behavior.StickyFooterBehavior;
-import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
 import com.wayfair.brickkit.brick.BaseBrick;
-import com.wayfair.brickkit.brick.TextBrick;
+import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.size.SimpleBrickSize;
+import com.wayfair.brickkit.behavior.StickyFooterBehavior;
+import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
 import com.wayfair.brickkitdemo.bricks.ControllerBrick;
+import com.wayfair.brickkit.brick.TextBrick;
 
 /**
  * Demo fragment that allows you to add and remove bricks at a given position.

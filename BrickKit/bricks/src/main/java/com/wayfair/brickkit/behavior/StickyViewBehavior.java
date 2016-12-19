@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.BrickRecyclerAdapter;
 import com.wayfair.brickkit.BrickViewHolder;
+import com.wayfair.brickkit.padding.BrickPadding;
+import com.wayfair.brickkit.StickyScrollMode;
 
 /**
  * Abstract parent for {@link StickyHeaderBehavior} and {@link StickyFooterBehavior}. This class contains
@@ -19,12 +21,15 @@ import com.wayfair.brickkit.BrickViewHolder;
  */
 abstract class StickyViewBehavior extends BrickBehavior {
     private boolean dataSetChanged;
+    private BrickDataManager brickDataManager;
     BrickRecyclerAdapter adapter;
-    private ViewGroup stickyHolderLayout;
+    ViewGroup stickyHolderLayout;
     int stickyPosition = RecyclerView.NO_POSITION;
     BrickViewHolder stickyViewHolder;
     private int stickyViewContainerId;
     private final String stickyLayoutName;
+    @StickyScrollMode
+    int stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
 
     /**
      * Constructor.
@@ -37,6 +42,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
         this.adapter = brickDataManager.getBrickRecyclerAdapter();
         this.stickyViewContainerId = stickyViewContainerId;
         this.stickyLayoutName = stickyLayoutName;
+        this.brickDataManager = brickDataManager;
         attachToRecyclerView();
     }
 
@@ -111,11 +117,19 @@ abstract class StickyViewBehavior extends BrickBehavior {
         }
     }
 
+    /**
+     * Fade in/out the stickyView based on stickScrollMode{@link com.wayfair.brickkit.StickyScrollMode}.
+     *
+     * @param dy scrolled distance on axis y
+     */
+    protected abstract void stickyViewFadeTranslate(int dy);
+
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         if (Math.abs(dx) + Math.abs(dy) != 0) {
             updateOrClearStickyView(dataSetChanged);
         }
+        stickyViewFadeTranslate(dy);
     }
 
     /**
@@ -285,6 +299,8 @@ abstract class StickyViewBehavior extends BrickBehavior {
 
             //Measure and Layout the itemView
             final View stickyView = holder.itemView;
+            BrickPadding brickPadding = brickDataManager.brickAtPosition(position).getPadding();
+            stickyView.setPadding(brickPadding.getOuterLeftPadding(), 0, brickPadding.getOuterRightPadding(), 0);
             int childWidth = ViewGroup.getChildMeasureSpec(widthSpec,
                     adapter.getRecyclerView().getPaddingLeft() + adapter.getRecyclerView().getPaddingRight(),
                     stickyView.getLayoutParams().width);
