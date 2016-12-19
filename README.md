@@ -1,6 +1,6 @@
 
 <div align="center">
-<span><img src="Docs/SampleImage/BrickKit.PNG" alt="BrickKit" title="BrickKit" ></span>
+<span><img src="Docs/SampleImage/BrickKit.png" alt="BrickKit" title="BrickKit" ></span>
 <span style="font-size:60px; writing-mode: tb-rl;">BrickKit</span>
 </div>
 
@@ -27,59 +27,57 @@ BrickKit is a tool developed with the Android RecyclerView and GridLayout. With 
 
 ### BasicFragment
 
-![SimpleFragment](Docs/SampleImage/SimpleFragment.PNG)
+![SimpleFragment](Docs/SampleImage/SimpleFragment.png)
 ```java
 public class SimpleBrickFragment extends BrickFragment {
-    private static final int MAX_SPANS = 240;
-    private static final int HALF = 120;
+      private static final int HALF = 120;  //maxSpans == 240
+      private int numberOfBricks = 20;
 
-    @Override
-    public int maxSpans() {
-        return MAX_SPANS;
+      public static SimpleBrickFragment newInstance(int numberOfBricks) {
+          SimpleBrickFragment fragment = new SimpleBrickFragment();
+          fragment.numberOfBricks = numberOfBricks;
+          return fragment;
+      }
+
+      @Override
+      public void createBricks() {
+          for (int i = 0; i < numberOfBricks; i++) {
+              TextBrick textBrick = new TextBrick(
+                      getContext(),
+                      new OrientationBrickSize(maxSpans()) {
+                          @Override
+                          protected int portrait() {
+                              return dataManager.getMaxSpanCount();
+                          }
+
+                          @Override
+                          protected int landscape() {
+                              return HALF;
+                          }
+                      },
+                      new InnerOuterBrickPadding() {
+                          @Override
+                          protected int innerPadding() {
+                              return 5;
+                          }
+
+                          @Override
+                          protected int outerPadding() {
+                              return 10;
+                          }
+                      },
+                      "Brick: " + i
+              );
+              dataManager.addLast(textBrick);
+          }
     }
 
-    @Override
-    public void createBricks() {
-        for (int i = 0; i < 100; i++) {
-            TextBrick textBrick = new TextBrick(
-                    getContext(),
-                    new OrientationBrickSize(dataManager) {
-                        @Override
-                        protected int portrait() {
-                            return MAX_SPANS;
-                        }
-
-                        @Override
-                        protected int landscape() {
-                            return HALF;
-                        }
-                    },
-                    new InnerOuterBrickPadding() {
-                        @Override
-                        protected int innerPadding() {
-                            return 5;
-                        }
-
-                        @Override
-                        protected int outerPadding() {
-                            return 10;
-                        }
-                    },
-                    "Brick: " + i
-            );
-            dataManager.addLast(textBrick);
-        }
-    }
-
-    @Override
     public void addBehaviors() { }
 
-    @Override
     public int orientation() {
         return OrientationHelper.VERTICAL;
     }
 
-    @Override
     public boolean reverse() {
         return false;
     }
@@ -89,108 +87,107 @@ public class SimpleBrickFragment extends BrickFragment {
 
 | Method   |      Description  |
 |----------|:-------------:|
-| maxSpans |  Allows to specify the maxSpans size of screen.
 | createBricks |  Allows to constitute the different types of 'bricks' to the View.
-| addBehaviors |  Adds complex layout interactions to View.  
-| orientation |   Allows the 'bricks' displayed at two orientations (OrientationHelper.VERTICAL/OrientationHelper.HORIZONTAL)
+| addBehaviors |  Adds complex layout interactions to the View.  
+| orientation |   Allows the 'bricks' displayed at two orientations (GridLayoutManager.VERTICAL/GridLayoutManager.HORIZONTAL)
 | reverse |  While reverse is false, the bricks will be added from the top of screen, otherwise it will be added from the bottom.
 
 
 ### Bricks with different spans
 
-![Span Example](Docs/SampleImage/SpanExample.PNG)
+![Span Example](Docs/SampleImage/SpanExample.png)
 
 ```java
 @Override
 public void createBricks() {
-  for (int i = 0; i < MAX_SPANS / HALF; i++) {
-      TextBrick textBrick = new TextBrick(
-              getContext(),
-              new OrientationBrickSize(dataManager) {
-                  @Override
-                  protected int portrait() {
-                      return HALF;
-                  }
+    for (int i = 0; i < dataManager.getMaxSpanCount() / HALF; i++) {   // HALF == 120
+        TextBrick textBrick = new TextBrick(
+                getContext(),
+                new OrientationBrickSize(maxSpans()) {
+                    @Override
+                    protected int portrait() {
+                        return HALF;
+                    }
 
-                  @Override
-                  protected int landscape() {
-                      return HALF;
-                  }
-              },
-              new InnerOuterBrickPadding() {
-                  @Override
-                  protected int innerPadding() {
-                      return 5;
-                  }
+                    @Override
+                    protected int landscape() {
+                        return HALF;
+                    }
+                },
+                new InnerOuterBrickPadding() {
+                    @Override
+                    protected int innerPadding() {
+                        return 5;
+                    }
 
-                  @Override
-                  protected int outerPadding() {
-                      return 10;
-                  }
-              },
-              "Brick: " + 0
-      );
-      dataManager.addLast(textBrick);
-  }
+                    @Override
+                    protected int outerPadding() {
+                        return 10;
+                    }
+                },
+                "Brick: " + i
+        );
+        dataManager.addLast(textBrick);
+    }
 
-  for (int i = 0; i < MAX_SPANS / ONE_THIRD; i++) {
-      TextBrick textBrick = new TextBrick(
-              getContext(),
-              new OrientationBrickSize(dataManager) {
-                  @Override
-                  protected int portrait() {
-                      return ONE_THIRD;
-                  }
+    for (int i = 0; i < dataManager.getMaxSpanCount() / ONE_THIRD; i++) { //ONE_THIRD == 80
+        TextBrick textBrick = new TextBrick(
+                getContext(),
+                new OrientationBrickSize(maxSpans()) {
+                    @Override
+                    protected int portrait() {
+                        return ONE_THIRD;
+                    }
 
-                  @Override
-                  protected int landscape() {
-                      return ONE_THIRD;
-                  }
-              },
-              new InnerOuterBrickPadding() {
-                  @Override
-                  protected int innerPadding() {
-                      return 5;
-                  }
+                    @Override
+                    protected int landscape() {
+                        return HALF;
+                    }
+                },
+                new InnerOuterBrickPadding() {
+                    @Override
+                    protected int innerPadding() {
+                        return 5;
+                    }
 
-                  @Override
-                  protected int outerPadding() {
-                      return 10;
-                  }
-              },
-              "Brick: " + 0
-      );
-      dataManager.addLast(textBrick);
-  }
+                    @Override
+                    protected int outerPadding() {
+                        return 10;
+                    }
+                },
+                "Brick: " + i
+        );
+        dataManager.addLast(textBrick);
+    }
 
-  for (int i = 0; i < MAX_SPANS / QUARTER; i++) {
-      TextBrick textBrick = new TextBrick(
-              getContext(),
-              new OrientationBrickSize(dataManager) {
-                  @Override
-                  protected int portrait() {
-                      return QUARTER;
-                  }
+    for (int i = 0; i < dataManager.getMaxSpanCount() / QUARTER; i++) { //QUARTER == 60
+        TextBrick textBrick = new TextBrick(
+                getContext(),
+                new OrientationBrickSize(maxSpans()) {
+                    @Override
+                    protected int portrait() {
+                        return QUARTER;
+                    }
 
-                  @Override
-                  protected int landscape() {
-                      return QUARTER;
-                  }
-              },
-              new InnerOuterBrickPadding() {
-                  @Override
-                  protected int innerPadding() {
-                      return 5;
-                  }
+                    @Override
+                    protected int landscape() {
+                        return HALF;
+                    }
+                },
+                new InnerOuterBrickPadding() {
+                    @Override
+                    protected int innerPadding() {
+                        return 5;
+                    }
 
-                  @Override
-                  protected int outerPadding() {
-                      return 10;
-                  }
-              },
-              "Brick: " + 0
-      );
-      dataManager.addLast(textBrick);
+                    @Override
+                    protected int outerPadding() {
+                        return 10;
+                    }
+                },
+                "Brick: " + i
+        );
+        dataManager.addLast(textBrick);
     }
 }
 ```
@@ -198,7 +195,7 @@ public void createBricks() {
 ### Bricks with different behaviors
 
 #### StickyHeader layout
-![StickyHeader Example](Docs/SampleImage/StickyHeader.PNG)
+![StickyHeader Example](Docs/SampleImage/StickyHeader.png)
 
 ```java
 @Override
@@ -210,22 +207,22 @@ public void addBehaviors() {
 public void createBricks() {
         BaseBrick brick = new TextBrick(
                 getContext(),
-                new SimpleBrickSize(dataManager) {
+                new SimpleBrickSize(maxSpans()) {
                     @Override
                     protected int size() {
-                        return MAX_SPANS;
+                        return dataManager.getMaxSpanCount();
                     }
                 },
                 "simple" + i
         );
-        brick.setFooter(true);
+        brick.setHeader(true);
         dataManager.addLast(brick);
     }
-}Â
+}
 ```
 
 #### StickyFooter layout
-![StickyFooter Example](Docs/SampleImage/StickyFooter.PNG)
+![StickyFooter Example](Docs/SampleImage/StickyFooter.png)
 
 ```java
 @Override
@@ -237,7 +234,7 @@ public void addBehaviors() {
 public void createBricks() {
         BaseBrick brick = new TextBrick(
                 getContext(),
-                new SimpleBrickSize(dataManager) {
+                new SimpleBrickSize(maxSpans()) {
                     @Override
                     protected int size() {
                         return MAX_SPANS;
@@ -252,7 +249,7 @@ public void createBricks() {
 ```
 
 #### Reverse layout
-![Reverse Example](Docs/SampleImage/Reverse.PNG)
+![Reverse Example](Docs/SampleImage/Reverse.png)
 ```java
 @Override
 public boolean reverse() {
@@ -279,6 +276,33 @@ public void createBricks() {
     addNewBricks();
 }
 ```
+
+
+#### Section layout
+```java
+public class FragmentBrickFragment extends BrickFragment {
+    @Override
+    public void createBricks() {
+        for (int i = 0; i < 2; i++) {
+            BaseBrick brick = new FragmentBrick(
+                    getContext(),
+                    new SimpleBrickSize(maxSpans()) {
+                        @Override
+                        protected int size() {
+                            return dataManager.getMaxSpanCount() / 2;
+                        }
+                    },
+                    getChildFragmentManager(),
+                    SimpleBrickFragment.newInstance(50 * (i + 1)),
+                    "simple" + i
+            );
+            dataManager.addLast(brick);
+        }
+    }
+}
+```
+> FragmentBrick enables us to nest the brickFragment within the another one in which we could brick the simple bricks in the nested brickFragment and arrange the outer brickFragment as well.
+
 
 ## Customize your own brick
 ```java
@@ -336,8 +360,12 @@ public class CustomizedBrick extends BaseBrick {
 }
 ```
 
+>- Configure layout xml file, template's name and bind the child view by your own.
+>- Set customized innerPadding/outerPadding, portrait/landscape spanSize by extending BrickSize and BrickPadding.
+>- Define different brick behaviors satisfying your needs.
 
-## Manager your bricks with BaseDataManager
+
+## Manager your bricks with BrickDataManager
 
 The 'BaseDataManager' manages the RecyclerView's adapter and manipulate the each bricks. You could add/remove 'bricks' at different positions, get/replace certain 'bricks' at the certain position.
 
