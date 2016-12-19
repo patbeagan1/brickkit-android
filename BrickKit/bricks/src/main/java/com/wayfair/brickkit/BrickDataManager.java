@@ -86,6 +86,24 @@ public class BrickDataManager implements Serializable {
     }
 
     /**
+     * Is drag and drop enabled.
+     *
+     * @return Is drag and drop enabled.
+     */
+    public boolean getDragAndDrop() {
+        return dragAndDrop;
+    }
+
+    /**
+     * Is swipe to dismiss enabled.
+     *
+     * @return Is swipe to dismiss enabled.
+     */
+    public boolean getSwipeToDismiss() {
+        return swipeToDismiss;
+    }
+
+    /**
      * This attaches the touch helper to the recycler view if swipe or drag and drop are enabled.
      */
     private void attachTouchHelper() {

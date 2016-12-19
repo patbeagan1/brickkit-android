@@ -24,7 +24,7 @@ class BrickItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        if (dataManager.dragAndDrop || dataManager.swipeToDismiss) {
+        if (dataManager.getDragAndDrop() || dataManager.getSwipeToDismiss()) {
             if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
                 BaseBrick brick = dataManager.brickAtPosition(viewHolder.getAdapterPosition());
 
@@ -32,20 +32,20 @@ class BrickItemTouchHelperCallback extends ItemTouchHelper.Callback {
                     final int dragFlags;
                     final int swipeFlags;
 
-                    if (dataManager.dragAndDrop) {
+                    if (dataManager.getDragAndDrop()) {
                         dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                     } else {
                         dragFlags = 0;
                     }
 
-                    if (dataManager.swipeToDismiss) {
+                    if (dataManager.getSwipeToDismiss()) {
                         swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
                     } else {
                         swipeFlags = 0;
                     }
 
                     return makeMovementFlags(dragFlags, swipeFlags);
-                } else if (dataManager.dragAndDrop) {
+                } else if (dataManager.getDragAndDrop()) {
                     final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
                     final int swipeFlags = 0;
                     return makeMovementFlags(dragFlags, swipeFlags);
