@@ -14,6 +14,7 @@ import com.wayfair.brickkit.R;
  */
 public class TextBrick extends BaseBrick {
     private final CharSequence text;
+    private Runnable onDismiss;
 
     /**
      * Constructor which uses the default padding.
@@ -54,6 +55,31 @@ public class TextBrick extends BaseBrick {
     @Override
     public BrickViewHolder createViewHolder(View itemView) {
         return new TextViewHolder(itemView);
+    }
+
+    @Override
+    public void dismissed() {
+        if (onDismiss != null) {
+            onDismiss.run();
+        }
+    }
+
+    /**
+     * This sets the runnable that will be executed by swiping the brick away.
+     *
+     * @param onDismiss The runnable to be run.
+     */
+    public void setOnDismiss(Runnable onDismiss) {
+        this.onDismiss = onDismiss;
+    }
+
+    /**
+     * Get the current text in the brick.
+     *
+     * @return The current text in the brick.
+     */
+    public CharSequence getText() {
+        return text;
     }
 
     /**
