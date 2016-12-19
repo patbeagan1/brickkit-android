@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.BrickRecyclerAdapter;
 import com.wayfair.brickkit.BrickViewHolder;
+import com.wayfair.brickkit.padding.BrickPadding;
 
 /**
  * Abstract parent for {@link StickyHeaderBehavior} and {@link StickyFooterBehavior}. This class contains
@@ -19,6 +20,7 @@ import com.wayfair.brickkit.BrickViewHolder;
  */
 abstract class StickyViewBehavior extends BrickBehavior {
     private boolean dataSetChanged;
+    private final BrickDataManager brickDataManager;
     BrickRecyclerAdapter adapter;
     private ViewGroup stickyHolderLayout;
     int stickyPosition = RecyclerView.NO_POSITION;
@@ -37,6 +39,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
         this.adapter = brickDataManager.getBrickRecyclerAdapter();
         this.stickyViewContainerId = stickyViewContainerId;
         this.stickyLayoutName = stickyLayoutName;
+        this.brickDataManager = brickDataManager;
         attachToRecyclerView();
     }
 
@@ -251,6 +254,8 @@ abstract class StickyViewBehavior extends BrickBehavior {
 
             //Measure and Layout the itemView
             final View stickyView = holder.itemView;
+            BrickPadding brickPadding = brickDataManager.brickAtPosition(position).getPadding();
+            stickyView.setPadding(brickPadding.getOuterLeftPadding(), 0, brickPadding.getOuterRightPadding(), 0);
             int childWidth = ViewGroup.getChildMeasureSpec(widthSpec,
                     adapter.getRecyclerView().getPaddingLeft() + adapter.getRecyclerView().getPaddingRight(),
                     stickyView.getLayoutParams().width);
