@@ -1,5 +1,7 @@
 package com.wayfair.brickkitdemo;
 
+import android.support.design.widget.Snackbar;
+
 import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.size.OrientationBrickSize;
@@ -14,7 +16,7 @@ import com.wayfair.brickkit.brick.TextBrick;
 public class SimpleBrickFragment extends BrickFragment {
     private static final int HALF = 120;
 
-    private int numberOfBricks = 0;
+    private int numberOfBricks = 100;
 
     /**
      * Create a new instance of a SimpleBrickFragment.
@@ -31,7 +33,7 @@ public class SimpleBrickFragment extends BrickFragment {
     @Override
     public void createBricks() {
         for (int i = 0; i < numberOfBricks; i++) {
-            TextBrick textBrick = new TextBrick(
+            final TextBrick textBrick = new TextBrick(
                     getContext(),
                     new OrientationBrickSize(maxSpans()) {
                         @Override
@@ -56,6 +58,18 @@ public class SimpleBrickFragment extends BrickFragment {
                         }
                     },
                     "Brick: " + i
+            );
+            textBrick.setOnDismiss(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            Snackbar.make(
+                                    dataManager.getBrickRecyclerAdapter().getRecyclerView(),
+                                    "Deleted " + textBrick.getText(),
+                                    Snackbar.LENGTH_SHORT
+                            ).show();
+                        }
+                    }
             );
             dataManager.addLast(textBrick);
         }

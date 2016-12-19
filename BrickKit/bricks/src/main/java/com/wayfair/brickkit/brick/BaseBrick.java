@@ -4,10 +4,13 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 
+import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.padding.SimpleBrickPadding;
 import com.wayfair.brickkit.size.BrickSize;
+
+import java.util.Locale;
 
 /**
  * Abstract class which defines Bricks.
@@ -222,5 +225,83 @@ public abstract class BaseBrick {
      */
     public void setOnRightWall(boolean onRightWall) {
         isOnRightWall = onRightWall;
+    }
+
+    /**
+     * Called when the brick was moved via drag'n'drop.
+     *
+     * @param position The position the brick was moved to.
+     */
+    public void movedTo(final int position) {
+    }
+
+    /**
+     * Called when an item is swiped-to-dismiss.
+     */
+    public void dismissed() {
+    }
+
+    /**
+     * Print out the brick's adapter position, width (in spans), and padding.
+     *
+     * @param dataManager The data manager the brick is in.
+     * @return A string representation of the brick.
+     */
+    public String toString(BrickDataManager dataManager) {
+        int position = dataManager.getRecyclerViewItems().indexOf(this);
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("--");
+        if (isInFirstRow) {
+            sb.append(padding.getOuterTopPadding());
+        } else {
+            sb.append(padding.getInnerTopPadding());
+        }
+        sb.append("--\n");
+
+
+        String positionFormat = "|%d|\n";
+        if (position < 100) {
+            positionFormat = "| %d|\n";
+            if (position < 10) {
+                positionFormat = "| %d |\n";
+            }
+        }
+        sb.append(String.format(Locale.getDefault(), positionFormat, position));
+
+        if (isOnLeftWall) {
+            sb.append(padding.getOuterLeftPadding());
+        } else {
+            sb.append(padding.getInnerLeftPadding());
+        }
+
+        String widthFormat = "%d";
+        if (spanSize.getSpans(context) < 100) {
+            widthFormat = " %d";
+            if (spanSize.getSpans(context) < 10) {
+                widthFormat = " %d ";
+            }
+        }
+        sb.append(String.format(Locale.getDefault(), widthFormat, spanSize.getSpans(context)));
+
+        if (isOnRightWall) {
+            sb.append(padding.getOuterRightPadding());
+            sb.append("\n");
+        } else {
+            sb.append(padding.getInnerRightPadding());
+            sb.append("\n");
+        }
+
+        sb.append("|   |\n");
+
+        sb.append("--");
+        if (isInLastRow) {
+            sb.append(padding.getOuterBottomPadding());
+        } else {
+            sb.append(padding.getInnerBottomPadding());
+        }
+        sb.append("--");
+
+        return sb.toString();
     }
 }
