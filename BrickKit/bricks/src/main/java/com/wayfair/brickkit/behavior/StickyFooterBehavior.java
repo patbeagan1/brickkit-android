@@ -3,6 +3,7 @@ package com.wayfair.brickkit.behavior;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.wayfair.brickkit.StickyScrollMode;
 import com.wayfair.brickkit.brick.BaseBrick;
@@ -21,6 +22,16 @@ public class StickyFooterBehavior extends StickyViewBehavior {
      */
     public StickyFooterBehavior(BrickDataManager brickDataManager) {
         super(brickDataManager, R.id.sticky_footer_container, "@layout/sticky_footer_layout");
+    }
+
+    /**
+     * Constructor for Unit Tests.
+     *
+     * @param brickDataManager   {@link BrickDataManager} whose adapter is used for finding bricks
+     * @param stickyHolderLayout sticky layout needed for the behavior
+     */
+    public StickyFooterBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderLayout) {
+        super(brickDataManager, "@layout/sticky_footer_layout", stickyHolderLayout);
     }
 
     @Override
