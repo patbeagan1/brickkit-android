@@ -170,7 +170,7 @@ public abstract class BaseBrick {
      * @return stickyScrollMode whether the brick show header/footer on scrolling up/down
      */
     @StickyScrollMode
-    public int getStickScrollMode() {
+    public int getStickyScrollMode() {
         return stickyScrollMode;
     }
 

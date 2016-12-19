@@ -35,7 +35,7 @@ public class StickyHeaderBehavior extends StickyViewBehavior {
             stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
             return RecyclerView.NO_POSITION;
         } else {
-            stickyScrollMode = header.getStickScrollMode();
+            stickyScrollMode = header.getStickyScrollMode();
         }
         return adapter.indexOf(header);
     }

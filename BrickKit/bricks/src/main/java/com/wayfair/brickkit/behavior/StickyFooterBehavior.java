@@ -57,7 +57,7 @@ public class StickyFooterBehavior extends StickyViewBehavior {
             stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
             return RecyclerView.NO_POSITION;
         } else {
-            stickyScrollMode = footer.getStickScrollMode();
+            stickyScrollMode = footer.getStickyScrollMode();
         }
         return adapter.indexOf(footer);
     }
