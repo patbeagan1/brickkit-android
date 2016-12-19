@@ -75,7 +75,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
     @Override
     public void onScroll() {
         //Initialize Holder Layout and show sticky view if exists already, the null condition for holder layout is for the unit tests.
-        if(stickyHolderLayout == null && (adapter.getRecyclerView() != null && adapter.getRecyclerView().getContext() != null)){
+        if (stickyHolderLayout == null && (adapter.getRecyclerView() != null && adapter.getRecyclerView().getContext() != null)) {
             stickyHolderLayout = (ViewGroup) ((Activity) adapter.getRecyclerView().getContext()).findViewById(stickyViewContainerId);
         }
 
