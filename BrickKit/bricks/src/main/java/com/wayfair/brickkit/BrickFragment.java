@@ -13,7 +13,17 @@ import android.view.ViewGroup;
  * Fragment which provides a simple interface for adding bricks / behaviors.
  */
 public abstract class BrickFragment extends Fragment {
-    public BrickDataManager dataManager;
+    public BrickDataManager dataManager = new BrickDataManager(maxSpans());
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dataManager.setDragAndDrop(true);
+        dataManager.setSwipeToDismiss(true);
+
+        addBehaviors();
+        createBricks();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -24,13 +34,7 @@ public abstract class BrickFragment extends Fragment {
             view = inflater.inflate(R.layout.horizontal_fragment_brick, container, false);
         }
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        dataManager = new BrickDataManager(getContext(), recyclerView, maxSpans(), orientation(), reverse());
-        dataManager.setDragAndDrop(true);
-        dataManager.setSwipeToDismiss(true);
-
-        addBehaviors();
-        createBricks();
+        dataManager.setRecyclerView(getContext(), (RecyclerView) view.findViewById(R.id.recycler_view), orientation(), reverse());
 
         return view;
     }
