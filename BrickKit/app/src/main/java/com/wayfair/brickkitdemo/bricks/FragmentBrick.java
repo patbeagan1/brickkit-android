@@ -1,6 +1,7 @@
 package com.wayfair.brickkitdemo.bricks;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -17,9 +18,12 @@ import com.wayfair.brickkitdemo.R;
  * Brick whose content is a fragment.
  */
 public class FragmentBrick extends BaseBrick {
+    public static final int NO_BG_COLOR = -1;
+
     private Fragment fragment;
     private FragmentManager fragmentManager;
     private String tag;
+    @ColorInt private int backgroundColor = NO_BG_COLOR;
 
     /**
      * Constructor.
@@ -30,7 +34,9 @@ public class FragmentBrick extends BaseBrick {
      * @param fragment fragment to display in this brick
      * @param tag tag to use in {@link android.support.v4.app.FragmentTransaction}'s on the fragment
      */
-    public FragmentBrick(Context context, BrickSize spanSize, FragmentManager fragmentManager, Fragment fragment, String tag) {
+    public FragmentBrick(
+            Context context, BrickSize spanSize, FragmentManager fragmentManager, Fragment fragment, String tag
+    ) {
         super(context, spanSize);
 
         this.fragmentManager = fragmentManager;
@@ -41,6 +47,10 @@ public class FragmentBrick extends BaseBrick {
     @Override
     public void onBindData(BrickViewHolder holder) {
         if (holder instanceof FragmentBrickViewHolder) {
+            if (backgroundColor != NO_BG_COLOR) {
+                holder.itemView.setBackgroundColor(backgroundColor);
+            }
+
             View view;
 
             if (!fragment.isAdded()) {
@@ -73,6 +83,15 @@ public class FragmentBrick extends BaseBrick {
     @Override
     public BrickViewHolder createViewHolder(View itemView) {
         return new FragmentBrickViewHolder(itemView);
+    }
+
+    /**
+     * Set the background color of the nested brick view.
+     *
+     * @param backgroundColor The color int for the background.
+     */
+    public void setBackgroundColor(@ColorInt int backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 
     /**

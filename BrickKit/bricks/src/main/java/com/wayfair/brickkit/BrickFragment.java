@@ -26,6 +26,8 @@ public abstract class BrickFragment extends Fragment {
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         dataManager = new BrickDataManager(getContext(), recyclerView, maxSpans(), orientation(), reverse());
+        dataManager.setDragAndDrop(true);
+        dataManager.setSwipeToDismiss(true);
 
         addBehaviors();
         createBricks();
