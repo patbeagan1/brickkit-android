@@ -4,6 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.wayfair.brickkit.StickyScrollMode;
 import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.R;
@@ -23,6 +24,28 @@ public class StickyFooterBehavior extends StickyViewBehavior {
     }
 
     @Override
+    protected void stickyViewFadeTranslate(int dy) {
+        if (stickyHolderLayout != null && stickyHolderLayout.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_UP) {
+            float headerY = stickyHolderLayout.getY();
+            if (dy > 0 && headerY > adapter.getRecyclerView().getTop()) {
+                stickyHolderLayout.setTranslationY(Math.max(headerY - dy - stickyHolderLayout.getTop(), 0));
+            } else if (dy < 0) {
+                stickyHolderLayout.setTranslationY(Math.min(headerY - dy - stickyHolderLayout.getTop(), stickyHolderLayout.getHeight()));
+            }
+
+        }
+
+        if (stickyHolderLayout != null && stickyHolderLayout.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_DOWN) {
+            float headerY = stickyHolderLayout.getY();
+            if (dy > 0) {
+                stickyHolderLayout.setTranslationY(Math.min(headerY + dy - stickyHolderLayout.getTop(), stickyHolderLayout.getHeight()));
+            } else if (dy < 0) {
+                stickyHolderLayout.setTranslationY(Math.max(headerY + dy - stickyHolderLayout.getTop(), 0));
+            }
+        }
+    }
+
+    @Override
     protected int getStickyViewPosition(int adapterPosHere) {
         if (adapterPosHere == RecyclerView.NO_POSITION) {
             View lastChild = adapter.getRecyclerView().getChildAt(adapter.getRecyclerView().getChildCount() - 1);
@@ -31,7 +54,10 @@ public class StickyFooterBehavior extends StickyViewBehavior {
         BaseBrick footer = adapter.getSectionFooter(adapterPosHere);
         //Footer cannot be sticky if it's also an Expandable in collapsed status, RV will raise an exception
         if (footer == null) {
+            stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
             return RecyclerView.NO_POSITION;
+        } else {
+            stickyScrollMode = footer.getStickyScrollMode();
         }
         return adapter.indexOf(footer);
     }

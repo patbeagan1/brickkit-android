@@ -13,6 +13,7 @@ import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.BrickRecyclerAdapter;
 import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.padding.BrickPadding;
+import com.wayfair.brickkit.StickyScrollMode;
 
 /**
  * Abstract parent for {@link StickyHeaderBehavior} and {@link StickyFooterBehavior}. This class contains
@@ -22,11 +23,13 @@ abstract class StickyViewBehavior extends BrickBehavior {
     private boolean dataSetChanged;
     private final BrickDataManager brickDataManager;
     BrickRecyclerAdapter adapter;
-    private ViewGroup stickyHolderLayout;
+    protected ViewGroup stickyHolderLayout;
     int stickyPosition = RecyclerView.NO_POSITION;
     BrickViewHolder stickyViewHolder;
     private final int stickyViewContainerId;
     private final String stickyLayoutName;
+    @StickyScrollMode
+    protected int stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
 
     /**
      * Constructor.
@@ -99,11 +102,19 @@ abstract class StickyViewBehavior extends BrickBehavior {
         }
     }
 
+    /**
+     * Fade in/out the stickyView based on stickScrollMode{@link com.wayfair.brickkit.StickyScrollMode}.
+     *
+     * @param dy scrolled distance on axis y
+     */
+    protected abstract void stickyViewFadeTranslate(int dy);
+
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         if (Math.abs(dx) + Math.abs(dy) != 0) {
             updateOrClearStickyView(dataSetChanged);
         }
+        stickyViewFadeTranslate(dy);
     }
 
     /**
