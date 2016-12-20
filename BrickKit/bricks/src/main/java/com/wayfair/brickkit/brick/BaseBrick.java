@@ -53,12 +53,7 @@ public abstract class BaseBrick {
         this.context = context;
         this.spanSize = spanSize;
         this.spanSize.setBaseBrick(this);
-        this.padding = new SimpleBrickPadding() {
-            @Override
-            protected int padding() {
-                return 0;
-            }
-        };
+        this.padding = new SimpleBrickPadding(0);
     }
 
     /**

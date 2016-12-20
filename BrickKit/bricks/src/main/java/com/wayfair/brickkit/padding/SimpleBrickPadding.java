@@ -1,54 +1,20 @@
 package com.wayfair.brickkit.padding;
 
+import android.graphics.Rect;
+
 /**
  * {@link BrickPadding} which returns the result of padding() for all cases.
  */
-public abstract class SimpleBrickPadding extends BrickPadding {
-
-    @Override
-    protected int innerLeftPadding() {
-        return padding();
-    }
-
-    @Override
-    protected int innerTopPadding() {
-        return padding();
-    }
-
-    @Override
-    protected int innerRightPadding() {
-        return padding();
-    }
-
-    @Override
-    protected int innerBottomPadding() {
-        return padding();
-    }
-
-    @Override
-    protected int outerLeftPadding() {
-        return padding();
-    }
-
-    @Override
-    protected int outerTopPadding() {
-        return padding();
-    }
-
-    @Override
-    protected int outerRightPadding() {
-        return padding();
-    }
-
-    @Override
-    protected int outerBottomPadding() {
-        return padding();
-    }
-
+public class SimpleBrickPadding extends BrickPadding {
     /**
-     * Method to return the padding to use for this brick.
+     * Constructor for a simple int for all padding, inner/outer, on all sides.
      *
-     * @return padding to use for this brick.
+     * @param padding The value for padding.
      */
-    protected abstract int padding();
+    public SimpleBrickPadding(int padding) {
+        super(
+                new Rect(padding, padding, padding, padding),
+                new Rect(padding, padding, padding, padding)
+        );
+    }
 }
