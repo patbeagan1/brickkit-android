@@ -45,6 +45,8 @@ public class BrickDataManagerTest {
         }
         Context context = InstrumentationRegistry.getTargetContext();
         manager = new BrickDataManager(MAX_SPANS);
+        manager.addBehavior(mock(BrickBehavior.class));
+
         manager.setRecyclerView(context, new RecyclerView(context), GridLayoutManager.VERTICAL, false);
         brickTestHelper = new BrickTestHelper(context);
 
@@ -60,6 +62,28 @@ public class BrickDataManagerTest {
 
         observer = new BrickTestHelper.TestAdapterDataObserver();
         manager.getBrickRecyclerAdapter().registerAdapterDataObserver(observer);
+    }
+
+    @Test
+    public void testGetDragAndDrop() {
+        manager.setDragAndDrop(false);
+
+        assertFalse(manager.getDragAndDrop());
+
+        manager.setDragAndDrop(true);
+
+        assertTrue(manager.getDragAndDrop());
+    }
+
+    @Test
+    public void testGetSwipeToDismiss() {
+        manager.setSwipeToDismiss(false);
+
+        assertFalse(manager.getSwipeToDismiss());
+
+        manager.setSwipeToDismiss(true);
+
+        assertTrue(manager.getSwipeToDismiss());
     }
 
     @Test
@@ -583,6 +607,32 @@ public class BrickDataManagerTest {
     }
 
     @Test
+    public void testMoveThirdItemToBeginning() {
+        BaseBrick toMove = manager.getRecyclerViewItems().get(2);
+        BaseBrick positionBrick = manager.getRecyclerViewItems().get(0);
+        manager.moveItem(toMove, positionBrick);
+
+        assertEquals(0, observer.getItemRangeChangedPositionStart());
+        assertEquals(4, observer.getItemRangeChangedItemCount());
+
+        assertEquals(0, manager.getRecyclerViewItems().indexOf(toMove));
+        assertEquals(1, manager.getRecyclerViewItems().indexOf(positionBrick));
+    }
+
+    @Test
+    public void testMoveFirstItemToEnd() {
+        BaseBrick toMove = manager.getRecyclerViewItems().get(0);
+        BaseBrick positionBrick = manager.getRecyclerViewItems().get(3);
+        manager.moveItem(toMove, positionBrick);
+
+        assertEquals(0, observer.getItemRangeChangedPositionStart());
+        assertEquals(4, observer.getItemRangeChangedItemCount());
+
+        assertEquals(3, manager.getRecyclerViewItems().indexOf(toMove));
+        assertEquals(2, manager.getRecyclerViewItems().indexOf(positionBrick));
+    }
+
+    @Test
     public void testRemoveSomeItems() {
         List<BaseBrick> itemsToRemove = new LinkedList<>();
         itemsToRemove.add(manager.getRecyclerViewItems().get(1));
@@ -879,6 +929,23 @@ public class BrickDataManagerTest {
         assertEquals(1, observer.getItemRangeRemovedItemCount());
 
         verify(behavior, atLeastOnce()).onDataSetChanged();
+    }
+
+    @Test
+    public void testRefreshInvalidItem() {
+        manager.refreshItem(brickTestHelper.generateBrick());
+
+        assertEquals(4, manager.getRecyclerViewItems().size());
+        assertEquals(4, manager.getDataManagerItems().size());
+
+        assertEquals(-1, observer.getItemRangeInsertedPositionStart());
+        assertEquals(-1, observer.getItemRangeInsertedItemCount());
+
+        assertEquals(-1, observer.getItemRangeChangedPositionStart());
+        assertEquals(-1, observer.getItemRangeChangedItemCount());
+
+        assertEquals(-1, observer.getItemRangeRemovedPositionStart());
+        assertEquals(-1, observer.getItemRangeRemovedItemCount());
     }
 
     @Test

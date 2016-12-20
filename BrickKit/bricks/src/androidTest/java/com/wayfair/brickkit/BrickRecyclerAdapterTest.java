@@ -81,6 +81,13 @@ public class BrickRecyclerAdapterTest {
     }
 
     @Test
+    public void testNotifyDataSetChangedRunnable() {
+        new BrickRecyclerAdapter.NotifyDataSetChangedRunnable(adapter).run();
+
+        assertTrue(observer.isChanged());
+    }
+
+    @Test
     public void testSafeNotifyDataSetChangedComputingLayout() {
         when(recyclerView.isComputingLayout()).thenReturn(true);
         adapter.safeNotifyDataSetChanged();
@@ -91,6 +98,16 @@ public class BrickRecyclerAdapterTest {
     @Test
     public void testSafeNotifyItemChanged() {
         adapter.safeNotifyItemChanged(POSITION);
+
+        assertEquals(POSITION, observer.getItemRangeChangedPositionStart());
+        assertEquals(1, observer.getItemRangeChangedItemCount());
+        assertNull(observer.getItemRangeChangedPayload());
+    }
+
+
+    @Test
+    public void testNotifyItemChangedRunnable() {
+        new BrickRecyclerAdapter.NotifyItemChangedRunnable(adapter, POSITION).run();
 
         assertEquals(POSITION, observer.getItemRangeChangedPositionStart());
         assertEquals(1, observer.getItemRangeChangedItemCount());
@@ -117,6 +134,15 @@ public class BrickRecyclerAdapterTest {
     }
 
     @Test
+    public void testNotifyItemChangedWithPayloadRunnable() {
+        new BrickRecyclerAdapter.NotifyItemChangedWithPayloadRunnable(adapter, POSITION, PAYLOAD).run();
+
+        assertEquals(POSITION, observer.getItemRangeChangedPositionStart());
+        assertEquals(1, observer.getItemRangeChangedItemCount());
+        assertNotNull(observer.getItemRangeChangedPayload());
+    }
+
+    @Test
     public void testSafeNotifyItemChangedWithPayloadComputingLayout() {
         when(recyclerView.isComputingLayout()).thenReturn(true);
         adapter.safeNotifyItemChanged(POSITION, PAYLOAD);
@@ -129,6 +155,14 @@ public class BrickRecyclerAdapterTest {
     @Test
     public void testSafeNotifyItemInserted() {
         adapter.safeNotifyItemInserted(POSITION);
+
+        assertEquals(POSITION, observer.getItemRangeInsertedPositionStart());
+        assertEquals(1, observer.getItemRangeInsertedItemCount());
+    }
+
+    @Test
+    public void testNotifyItemInsertedRunnable() {
+        new BrickRecyclerAdapter.NotifyItemInsertedRunnable(adapter, POSITION).run();
 
         assertEquals(POSITION, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
@@ -152,6 +186,14 @@ public class BrickRecyclerAdapterTest {
     }
 
     @Test
+    public void testNotifyItemRangeInsertedRunnable() {
+        new BrickRecyclerAdapter.NotifyItemRangeInsertedRunnable(adapter, POSITION, COUNT).run();
+
+        assertEquals(POSITION, observer.getItemRangeInsertedPositionStart());
+        assertEquals(COUNT, observer.getItemRangeInsertedItemCount());
+    }
+
+    @Test
     public void testSafeNotifyItemRangeInsertedComputingLayout() {
         when(recyclerView.isComputingLayout()).thenReturn(true);
         adapter.safeNotifyItemRangeInserted(POSITION, COUNT);
@@ -163,6 +205,15 @@ public class BrickRecyclerAdapterTest {
     @Test
     public void testSafeNotifyItemMoved() {
         adapter.safeNotifyItemMoved(POSITION, TO_POSITION);
+
+        assertEquals(POSITION, observer.getItemRangeMovedFromPosition());
+        assertEquals(TO_POSITION, observer.getItemRangeMovedToPosition());
+        assertEquals(1, observer.getItemRangeMovedItemCount());
+    }
+
+    @Test
+    public void testNotifyItemMovedRunnable() {
+        new BrickRecyclerAdapter.NotifyItemMovedRunnable(adapter, POSITION, TO_POSITION).run();
 
         assertEquals(POSITION, observer.getItemRangeMovedFromPosition());
         assertEquals(TO_POSITION, observer.getItemRangeMovedToPosition());
@@ -189,6 +240,15 @@ public class BrickRecyclerAdapterTest {
     }
 
     @Test
+    public void testNotifyItemRangeChangedWithPayloadRunnable() {
+        new BrickRecyclerAdapter.NotifyItemRangeChangedWithPayloadRunnable(adapter, POSITION, COUNT, PAYLOAD).run();
+
+        assertEquals(POSITION, observer.getItemRangeChangedPositionStart());
+        assertEquals(COUNT, observer.getItemRangeChangedItemCount());
+        assertEquals(PAYLOAD, observer.getItemRangeChangedPayload());
+    }
+
+    @Test
     public void testSafeNotifyItemRangeChangedWithPayloadComputingLayout() {
         when(recyclerView.isComputingLayout()).thenReturn(true);
         adapter.safeNotifyItemRangeChanged(POSITION, COUNT, PAYLOAD);
@@ -206,6 +266,16 @@ public class BrickRecyclerAdapterTest {
         assertEquals(COUNT, observer.getItemRangeChangedItemCount());
         assertNull(observer.getItemRangeChangedPayload());
     }
+
+    @Test
+    public void testNotifyItemRangeChangedRunnable() {
+        new BrickRecyclerAdapter.NotifyItemRangeChangedRunnable(adapter, POSITION, COUNT).run();
+
+        assertEquals(POSITION, observer.getItemRangeChangedPositionStart());
+        assertEquals(COUNT, observer.getItemRangeChangedItemCount());
+        assertNull(observer.getItemRangeChangedPayload());
+    }
+
 
     @Test
     public void testSafeNotifyItemRangeChangedComputingLayout() {
@@ -226,6 +296,14 @@ public class BrickRecyclerAdapterTest {
     }
 
     @Test
+    public void testNotifyItemRemovedRunnable() {
+        new BrickRecyclerAdapter.NotifyItemRemovedRunnable(adapter, POSITION).run();
+
+        assertEquals(POSITION, observer.getItemRangeRemovedPositionStart());
+        assertEquals(1, observer.getItemRangeRemovedItemCount());
+    }
+
+    @Test
     public void testSafeNotifyItemRemovedComputingLayout() {
         when(recyclerView.isComputingLayout()).thenReturn(true);
         adapter.safeNotifyItemRemoved(POSITION);
@@ -237,6 +315,14 @@ public class BrickRecyclerAdapterTest {
     @Test
     public void testSafeNotifyItemRangeRemoved() {
         adapter.safeNotifyItemRangeRemoved(POSITION, COUNT);
+
+        assertEquals(POSITION, observer.getItemRangeRemovedPositionStart());
+        assertEquals(COUNT, observer.getItemRangeRemovedItemCount());
+    }
+
+    @Test
+    public void testNotifyItemRangeRemovedRunnable() {
+        new BrickRecyclerAdapter.NotifyItemRangeRemovedRunnable(adapter, POSITION, COUNT).run();
 
         assertEquals(POSITION, observer.getItemRangeRemovedPositionStart());
         assertEquals(COUNT, observer.getItemRangeRemovedItemCount());
@@ -363,8 +449,8 @@ public class BrickRecyclerAdapterTest {
     public void testGetSectionHeaderNoHeader() {
         BaseBrick brick = mock(BaseBrick.class);
 
-        bricks.addFirst(brick);
         bricks.addFirst(null);
+        bricks.addFirst(brick);
 
         assertNull(adapter.getSectionHeader(1));
     }
@@ -376,11 +462,15 @@ public class BrickRecyclerAdapterTest {
 
         BaseBrick brick = mock(BaseBrick.class);
 
+        bricks.addFirst(brick);
         bricks.addFirst(headerBrick);
         bricks.addFirst(brick);
         bricks.addFirst(null);
 
+        assertNull(adapter.getSectionHeader(0));
+        assertNull(adapter.getSectionHeader(1));
         assertEquals(headerBrick, adapter.getSectionHeader(2));
+        assertEquals(headerBrick, adapter.getSectionHeader(3));
     }
 
     @Test
@@ -410,6 +500,8 @@ public class BrickRecyclerAdapterTest {
         bricks.addLast(footerBrick);
 
         assertEquals(footerBrick, adapter.getSectionFooter(0));
+        assertEquals(footerBrick, adapter.getSectionFooter(1));
+        assertEquals(footerBrick, adapter.getSectionFooter(2));
     }
 
     @Test

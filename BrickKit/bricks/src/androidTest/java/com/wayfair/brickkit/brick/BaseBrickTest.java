@@ -5,17 +5,24 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
+import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.BrickViewHolder;
+import com.wayfair.brickkit.StickyScrollMode;
 import com.wayfair.brickkit.padding.BrickPadding;
+import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.size.BrickSize;
+import com.wayfair.brickkit.size.SimpleBrickSize;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.LinkedList;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -81,6 +88,18 @@ public class BaseBrickTest {
     }
 
     @Test
+    public void testStickyScrollMode() {
+        TestBaseBrick brick = new TestBaseBrick(context, brickSize);
+
+        assertEquals(StickyScrollMode.SHOW_ON_SCROLL, brick.getStickyScrollMode());
+
+        brick.setStickyScrollMode(StickyScrollMode.SHOW_ON_SCROLL_DOWN);
+
+        assertEquals(StickyScrollMode.SHOW_ON_SCROLL_DOWN, brick.getStickyScrollMode());
+
+    }
+
+    @Test
     public void testInFirstRow() {
         TestBaseBrick brick = new TestBaseBrick(context, brickSize);
 
@@ -120,6 +139,72 @@ public class BaseBrickTest {
         assertTrue(brick.isOnRightWall());
     }
 
+    @Test
+    public void testMovedTo() {
+        TestBaseBrick brick = new TestBaseBrick(context, brickSize);
+
+        brick.movedTo(1);
+
+        // nothing to verify
+    }
+
+    @Test
+    public void testDismissed() {
+        TestBaseBrick brick = new TestBaseBrick(context, brickSize);
+
+        brick.dismissed();
+
+        // nothing to verify
+    }
+
+    @Test
+    public void testToStringAllOuterPosition1Spans1() {
+        LinkedList<BaseBrick> bricks = mock(LinkedList.class);
+        when(bricks.indexOf(any(BaseBrick.class))).thenReturn(1);
+
+        BrickDataManager manager = mock(BrickDataManager.class);
+        when(manager.getRecyclerViewItems()).thenReturn(bricks);
+
+        BrickSize smallSize = new SimpleBrickSize(1) {
+            @Override
+            protected int size() {
+                return 1;
+            }
+        };
+
+        BaseBrick brick = new TestBaseBrick(context, smallSize, new TestBrickPadding());
+        brick.setInFirstRow(true);
+        brick.setInLastRow(true);
+        brick.setOnLeftWall(true);
+        brick.setOnRightWall(true);
+
+        assertEquals("--2--\n| 1 |\n2 1 2\n|   |\n--2--", brick.toString(manager));
+    }
+
+    @Test
+    public void testToStringAllInnerPosition111Spans111() {
+        LinkedList<BaseBrick> bricks = mock(LinkedList.class);
+        when(bricks.indexOf(any(BaseBrick.class))).thenReturn(111);
+
+        BrickDataManager manager = mock(BrickDataManager.class);
+        when(manager.getRecyclerViewItems()).thenReturn(bricks);
+
+        BrickSize smallSize = new SimpleBrickSize(111) {
+            @Override
+            protected int size() {
+                return 111;
+            }
+        };
+
+        BaseBrick brick = new TestBaseBrick(context, smallSize, new TestBrickPadding());
+        brick.setInFirstRow(false);
+        brick.setInLastRow(false);
+        brick.setOnLeftWall(false);
+        brick.setOnRightWall(false);
+
+        assertEquals("--1--\n|111|\n11111\n|   |\n--1--", brick.toString(manager));
+    }
+
     private static final class TestBaseBrick extends BaseBrick {
 
         private TestBaseBrick(Context context, BrickSize spanSize, BrickPadding padding) {
@@ -143,6 +228,19 @@ public class BaseBrickTest {
         @Override
         public BrickViewHolder createViewHolder(View itemView) {
             return null;
+        }
+    }
+
+    private static final class TestBrickPadding extends InnerOuterBrickPadding {
+
+        @Override
+        protected int innerPadding() {
+            return 1;
+        }
+
+        @Override
+        protected int outerPadding() {
+            return 2;
         }
     }
 }
