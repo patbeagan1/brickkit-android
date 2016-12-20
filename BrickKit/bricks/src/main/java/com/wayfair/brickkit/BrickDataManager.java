@@ -293,10 +293,10 @@ public class BrickDataManager implements Serializable {
         this.items.remove(item);
 
         if (!item.isHidden()) {
-            int index = getRecyclerViewItems().indexOf(item);
+            int index = adapterIndex(item);
             dataHasChanged();
             brickRecyclerAdapter.safeNotifyItemRemoved(index);
-            if (index < getRecyclerViewItems().size()) {
+            if (index >= 0 && index < getRecyclerViewItems().size()) {
                 int refreshStartIndex = computePaddingPosition(getRecyclerViewItems().get(index));
                 brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
             }
@@ -404,26 +404,28 @@ public class BrickDataManager implements Serializable {
      * @param item the brick to refresh
      */
     public void refreshItem(BaseBrick item) {
-        if ((adapterIndex(item) == -1) == item.isHidden()) {
-            if (!item.isHidden()) {
-                int index = adapterIndex(item);
-                int refreshStartIndex = computePaddingPosition(item);
-                brickRecyclerAdapter.safeNotifyItemChanged(index);
-                brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
-            }
-        } else {
-            if (item.isHidden()) {
-                int index = adapterIndex(item);
-                dataHasChanged();
-                int refreshStartIndex = computePaddingPosition(item);
-                brickRecyclerAdapter.safeNotifyItemRemoved(index);
-                brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+        if (items.indexOf(item) != -1) {
+            if ((adapterIndex(item) == -1) == item.isHidden()) {
+                if (!item.isHidden()) {
+                    int index = adapterIndex(item);
+                    int refreshStartIndex = computePaddingPosition(item);
+                    brickRecyclerAdapter.safeNotifyItemChanged(index);
+                    brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+                }
             } else {
-                dataHasChanged();
-                int index = adapterIndex(item);
-                int refreshStartIndex = computePaddingPosition(item);
-                brickRecyclerAdapter.safeNotifyItemInserted(index);
-                brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+                if (item.isHidden()) {
+                    int index = adapterIndex(item);
+                    dataHasChanged();
+                    int refreshStartIndex = computePaddingPosition(item);
+                    brickRecyclerAdapter.safeNotifyItemRemoved(index);
+                    brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+                } else {
+                    dataHasChanged();
+                    int index = adapterIndex(item);
+                    int refreshStartIndex = computePaddingPosition(item);
+                    brickRecyclerAdapter.safeNotifyItemInserted(index);
+                    brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+                }
             }
         }
     }
