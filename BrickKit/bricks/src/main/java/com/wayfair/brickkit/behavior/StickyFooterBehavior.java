@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wayfair.brickkit.BrickRecyclerAdapter;
 import com.wayfair.brickkit.StickyScrollMode;
 import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickDataManager;
@@ -38,7 +39,7 @@ public class StickyFooterBehavior extends StickyViewBehavior {
     protected void stickyViewFadeTranslate(int dy) {
         if (stickyHolderLayout != null && stickyHolderLayout.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_UP) {
             float headerY = stickyHolderLayout.getY();
-            if (dy > 0 && headerY > adapter.getRecyclerView().getTop()) {
+            if (dy > 0 && headerY > brickDataManager.getBrickRecyclerAdapter().getRecyclerView().getTop()) {
                 stickyHolderLayout.setTranslationY(Math.max(headerY - dy - stickyHolderLayout.getTop(), 0));
             } else if (dy < 0) {
                 stickyHolderLayout.setTranslationY(Math.min(headerY - dy - stickyHolderLayout.getTop(), stickyHolderLayout.getHeight()));
@@ -58,6 +59,7 @@ public class StickyFooterBehavior extends StickyViewBehavior {
 
     @Override
     protected int getStickyViewPosition(int adapterPosHere) {
+        BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
         if (adapterPosHere == RecyclerView.NO_POSITION) {
             View lastChild = adapter.getRecyclerView().getChildAt(adapter.getRecyclerView().getChildCount() - 1);
             adapterPosHere = adapter.getRecyclerView().getChildAdapterPosition(lastChild);
@@ -75,7 +77,9 @@ public class StickyFooterBehavior extends StickyViewBehavior {
 
     @Override
     protected void translateStickyView() {
-        if (stickyViewHolder == null) {
+        BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
+
+        if (stickyViewHolder == null || adapter == null || adapter.getRecyclerView() == null) {
             return;
         }
 

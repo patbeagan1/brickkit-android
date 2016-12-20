@@ -44,13 +44,15 @@ public class BrickDataManagerTest {
             Looper.prepare();
         }
         Context context = InstrumentationRegistry.getTargetContext();
-        manager = new BrickDataManager(context, new RecyclerView(context), MAX_SPANS, GridLayoutManager.VERTICAL, false);
+        manager = new BrickDataManager(MAX_SPANS);
+        manager.setRecyclerView(context, new RecyclerView(context), GridLayoutManager.VERTICAL, false);
         brickTestHelper = new BrickTestHelper(context);
 
         manager.addLast(brickTestHelper.generateBrick());
         manager.addLast(brickTestHelper.generateBrick());
         manager.addLast(brickTestHelper.generateBrick());
         manager.addLast(brickTestHelper.generateBrick());
+
 
         behavior = mock(BrickBehavior.class);
 

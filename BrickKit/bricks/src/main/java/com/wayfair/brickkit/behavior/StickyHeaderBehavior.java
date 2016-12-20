@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wayfair.brickkit.BrickRecyclerAdapter;
 import com.wayfair.brickkit.StickyScrollMode;
 import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickDataManager;
@@ -36,6 +37,8 @@ public class StickyHeaderBehavior extends StickyViewBehavior {
 
     @Override
     protected int getStickyViewPosition(int adapterPosHere) {
+        BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
+
         if (adapterPosHere == RecyclerView.NO_POSITION) {
             View firstChild = adapter.getRecyclerView().getChildAt(0);
             adapterPosHere = adapter.getRecyclerView().getChildAdapterPosition(firstChild);
@@ -53,7 +56,9 @@ public class StickyHeaderBehavior extends StickyViewBehavior {
 
     @Override
     protected void translateStickyView() {
-        if (stickyViewHolder == null) {
+        BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
+
+        if (stickyViewHolder == null || adapter == null || adapter.getRecyclerView() == null) {
             return;
         }
 
