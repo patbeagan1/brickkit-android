@@ -37,13 +37,14 @@ public class BrickDataManagerTest {
     private BrickTestHelper.TestAdapterDataObserver observer;
     private BrickBehavior behavior;
     private BrickTestHelper brickTestHelper;
+    private Context context;
 
     @Before
     public void setup() {
         if (Looper.myLooper() == null) {
             Looper.prepare();
         }
-        Context context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getTargetContext();
         manager = new BrickDataManager(MAX_SPANS);
         manager.addBehavior(mock(BrickBehavior.class));
 
@@ -54,7 +55,6 @@ public class BrickDataManagerTest {
         manager.addLast(brickTestHelper.generateBrick());
         manager.addLast(brickTestHelper.generateBrick());
         manager.addLast(brickTestHelper.generateBrick());
-
 
         behavior = mock(BrickBehavior.class);
 
@@ -197,6 +197,43 @@ public class BrickDataManagerTest {
         BaseBrick newBrick = brickTestHelper.generateBrick();
         manager.addFirst(newBrick);
 
+        assertEquals(5, manager.getRecyclerViewItems().size());
+        assertEquals(5, manager.getDataManagerItems().size());
+
+        assertEquals(0, observer.getItemRangeInsertedPositionStart());
+        assertEquals(1, observer.getItemRangeInsertedItemCount());
+
+        assertEquals(1, observer.getItemRangeChangedPositionStart());
+        assertEquals(4, observer.getItemRangeChangedItemCount());
+
+        assertEquals(newBrick, manager.getDataManagerItems().get(0));
+
+        verify(behavior).onDataSetChanged();
+    }
+
+    @Test
+    public void testAddFirstVisibleHorizontal() {
+        context = InstrumentationRegistry.getTargetContext();
+        manager = new BrickDataManager(MAX_SPANS);
+        manager.addBehavior(mock(BrickBehavior.class));
+
+        manager.setRecyclerView(context, new RecyclerView(context), GridLayoutManager.HORIZONTAL, false);
+        brickTestHelper = new BrickTestHelper(context);
+
+        manager.addLast(brickTestHelper.generateBrick());
+        manager.addLast(brickTestHelper.generateBrick());
+        manager.addLast(brickTestHelper.generateBrick());
+        manager.addLast(brickTestHelper.generateBrick());
+
+        behavior = mock(BrickBehavior.class);
+
+        manager.addBehavior(behavior);
+
+        observer = new BrickTestHelper.TestAdapterDataObserver();
+        manager.getBrickRecyclerAdapter().registerAdapterDataObserver(observer);
+
+        BaseBrick newBrick = brickTestHelper.generateBrick();
+        manager.addFirst(newBrick);
         assertEquals(5, manager.getRecyclerViewItems().size());
         assertEquals(5, manager.getDataManagerItems().size());
 
