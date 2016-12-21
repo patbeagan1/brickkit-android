@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        GolleyConfig.getInstance().init(getApplicationContext());
+
         // Logging
         GolleyConfig.getInstance().setLoggingEnabled(BuildConfig.DEBUG);
 
