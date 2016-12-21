@@ -11,8 +11,6 @@ import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.padding.SimpleBrickPadding;
 import com.wayfair.brickkit.size.BrickSize;
 
-import java.util.Locale;
-
 /**
  * Abstract class which defines Bricks.
  */
