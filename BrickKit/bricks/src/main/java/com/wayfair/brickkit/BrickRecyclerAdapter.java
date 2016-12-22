@@ -40,12 +40,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void safeNotifyDataSetChanged() {
         if (recyclerView.isComputingLayout()) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    BrickRecyclerAdapter.super.notifyDataSetChanged();
-                }
-            });
+            handler.post(new NotifyDataSetChangedRunnable(this));
         } else {
             super.notifyDataSetChanged();
         }
@@ -59,16 +54,10 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void safeNotifyItemChanged(final int position, final Object payload) {
         if (recyclerView.isComputingLayout()) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemChanged(position, payload);
-                }
-            });
+            handler.post(new NotifyItemChangedWithPayloadRunnable(this, position, payload));
         } else {
             notifyItemChanged(position, payload);
         }
-
     }
 
     /**
@@ -78,12 +67,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void safeNotifyItemChanged(final int position) {
         if (recyclerView.isComputingLayout()) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemChanged(position);
-                }
-            });
+            handler.post(new NotifyItemChangedRunnable(this, position));
         } else {
             notifyItemChanged(position);
         }
@@ -97,12 +81,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void safeNotifyItemInserted(final int position) {
         if (recyclerView.isComputingLayout()) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemInserted(position);
-                }
-            });
+            handler.post(new NotifyItemInsertedRunnable(this, position));
         } else {
             notifyItemInserted(position);
         }
@@ -116,12 +95,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void safeNotifyItemMoved(final int fromPosition, final int toPosition) {
         if (recyclerView.isComputingLayout()) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemMoved(fromPosition, toPosition);
-                }
-            });
+            handler.post(new NotifyItemMovedRunnable(this, fromPosition, toPosition));
         } else {
             notifyItemMoved(fromPosition, toPosition);
         }
@@ -136,12 +110,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void safeNotifyItemRangeChanged(final int positionStart, final int itemCount, final Object payload) {
         if (recyclerView.isComputingLayout()) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemRangeChanged(positionStart, itemCount, payload);
-                }
-            });
+            handler.post(new NotifyItemRangeChangedWithPayloadRunnable(this, positionStart, itemCount, payload));
         } else {
             notifyItemRangeChanged(positionStart, itemCount, payload);
         }
@@ -155,12 +124,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void safeNotifyItemRangeChanged(final int positionStart, final int itemCount) {
         if (recyclerView.isComputingLayout()) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemRangeChanged(positionStart, itemCount);
-                }
-            });
+            handler.post(new NotifyItemRangeChangedRunnable(this, positionStart, itemCount));
         } else {
             notifyItemRangeChanged(positionStart, itemCount);
         }
@@ -174,12 +138,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void safeNotifyItemRangeInserted(final int positionStart, final int itemCount) {
         if (recyclerView.isComputingLayout()) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemRangeInserted(positionStart, itemCount);
-                }
-            });
+            handler.post(new NotifyItemRangeInsertedRunnable(this, positionStart, itemCount));
         } else {
             notifyItemRangeInserted(positionStart, itemCount);
         }
@@ -193,12 +152,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void safeNotifyItemRangeRemoved(final int positionStart, final int itemCount) {
         if (recyclerView.isComputingLayout()) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemRangeRemoved(positionStart, itemCount);
-                }
-            });
+            handler.post(new NotifyItemRangeRemovedRunnable(this, positionStart, itemCount));
         } else {
             notifyItemRangeRemoved(positionStart, itemCount);
         }
@@ -211,12 +165,7 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public void safeNotifyItemRemoved(final int position) {
         if (recyclerView.isComputingLayout()) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemRemoved(position);
-                }
-            });
+            handler.post(new NotifyItemRemovedRunnable(this, position));
         } else {
             notifyItemRemoved(position);
         }
@@ -345,5 +294,264 @@ public class BrickRecyclerAdapter extends RecyclerView.Adapter<BrickViewHolder> 
      */
     public RecyclerView getRecyclerView() {
         return recyclerView;
+    }
+
+    /**
+     * Runnable which will call {@link BrickRecyclerAdapter#notifyDataSetChanged()} on the adapter.
+     */
+    static final class NotifyDataSetChangedRunnable implements Runnable {
+        private BrickRecyclerAdapter adapter;
+
+        /**
+         * Constructor.
+         *
+         * @param adapter {@link BrickRecyclerAdapter} to notify
+         */
+        NotifyDataSetChangedRunnable(BrickRecyclerAdapter adapter) {
+            this.adapter = adapter;
+        }
+
+        @Override
+        public void run() {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Runnable which will call {@link BrickRecyclerAdapter#notifyItemChanged(int, Object)} on the adapter.
+     */
+    static final class NotifyItemChangedWithPayloadRunnable implements Runnable {
+        private BrickRecyclerAdapter adapter;
+        private int position;
+        private Object payload;
+
+        /**
+         * Constructor.
+         *
+         * @param adapter {@link BrickRecyclerAdapter} to notify
+         * @param position Position of the item that has changed
+         * @param payload Optional parameter, use null to identify a "full" update
+         */
+        NotifyItemChangedWithPayloadRunnable(BrickRecyclerAdapter adapter, final int position, final Object payload) {
+            this.adapter = adapter;
+            this.position = position;
+            this.payload = payload;
+        }
+
+        @Override
+        public void run() {
+            adapter.notifyItemChanged(position, payload);
+        }
+    }
+
+    /**
+     * Runnable which will call {@link BrickRecyclerAdapter#notifyItemChanged(int)} on the adapter.
+     */
+    static final class NotifyItemChangedRunnable implements Runnable {
+        private BrickRecyclerAdapter adapter;
+        private int position;
+
+        /**
+         * Constructor.
+         *
+         * @param adapter {@link BrickRecyclerAdapter} to notify
+         * @param position Position of the item that has changed
+         */
+        NotifyItemChangedRunnable(BrickRecyclerAdapter adapter, final int position) {
+            this.adapter = adapter;
+            this.position = position;
+        }
+
+        @Override
+        public void run() {
+            adapter.notifyItemChanged(position);
+        }
+    }
+
+    /**
+     * Runnable which will call {@link BrickRecyclerAdapter#notifyItemInserted(int)} on the adapter.
+     */
+    static final class NotifyItemInsertedRunnable implements Runnable {
+        private BrickRecyclerAdapter adapter;
+        private int position;
+
+        /**
+         * Constructor.
+         *
+         * @param adapter {@link BrickRecyclerAdapter} to notify
+         * @param position Position of the newly inserted item in the data set
+         */
+        NotifyItemInsertedRunnable(BrickRecyclerAdapter adapter, final int position) {
+            this.adapter = adapter;
+            this.position = position;
+        }
+
+        @Override
+        public void run() {
+            adapter.notifyItemInserted(position);
+        }
+    }
+
+    /**
+     * Runnable which will call {@link BrickRecyclerAdapter#notifyItemMoved(int, int)} on the adapter.
+     */
+    static final class NotifyItemMovedRunnable implements Runnable {
+        private BrickRecyclerAdapter adapter;
+        private int fromPosition;
+        private int toPosition;
+
+        /**
+         * Constructor.
+         *
+         * @param adapter {@link BrickRecyclerAdapter} to notify
+         * @param fromPosition Previous position of the item.
+         * @param toPosition New position of the item.
+         */
+        NotifyItemMovedRunnable(BrickRecyclerAdapter adapter, final int fromPosition, final int toPosition) {
+            this.adapter = adapter;
+            this.fromPosition = fromPosition;
+            this.toPosition = toPosition;
+
+        }
+
+        @Override
+        public void run() {
+            adapter.notifyItemMoved(fromPosition, toPosition);
+        }
+    }
+
+    /**
+     * Runnable which will call {@link BrickRecyclerAdapter#notifyItemRangeChanged(int, int, Object)} on the adapter.
+     */
+    static final class NotifyItemRangeChangedWithPayloadRunnable implements Runnable {
+        private BrickRecyclerAdapter adapter;
+        private int positionStart;
+        private int itemCount;
+        private Object payload;
+
+        /**
+         * Constructor.
+         *
+         * @param adapter {@link BrickRecyclerAdapter} to notify
+         * @param positionStart Position of the first item that has changed
+         * @param itemCount Number of items that have changed
+         * @param payload  Optional parameter, use null to identify a "full" update
+         */
+        NotifyItemRangeChangedWithPayloadRunnable(BrickRecyclerAdapter adapter, final int positionStart, final int itemCount, final Object payload) {
+            this.adapter = adapter;
+            this.positionStart = positionStart;
+            this.itemCount = itemCount;
+            this.payload = payload;
+        }
+
+        @Override
+        public void run() {
+            adapter.notifyItemRangeChanged(positionStart, itemCount, payload);
+        }
+    }
+
+    /**
+     * Runnable which will call {@link BrickRecyclerAdapter#notifyItemRangeChanged(int, int)} on the adapter.
+     */
+    static final class NotifyItemRangeChangedRunnable implements Runnable {
+        private BrickRecyclerAdapter adapter;
+        private int positionStart;
+        private int itemCount;
+
+        /**
+         * Constructor.
+         *
+         * @param adapter {@link BrickRecyclerAdapter} to notify
+         * @param positionStart Position of the first item that has changed
+         * @param itemCount Number of items that have changed
+         */
+        NotifyItemRangeChangedRunnable(BrickRecyclerAdapter adapter, final int positionStart, final int itemCount) {
+            this.adapter = adapter;
+            this.positionStart = positionStart;
+            this.itemCount = itemCount;
+        }
+
+        @Override
+        public void run() {
+            adapter.notifyItemRangeChanged(positionStart, itemCount);
+        }
+    }
+
+    /**
+     * Runnable which will call {@link BrickRecyclerAdapter#notifyItemRangeInserted(int, int)} on the adapter.
+     */
+    static final class NotifyItemRangeInsertedRunnable implements Runnable {
+        private BrickRecyclerAdapter adapter;
+        private int positionStart;
+        private int itemCount;
+
+        /**
+         * Constructor.
+         *
+         * @param adapter {@link BrickRecyclerAdapter} to notify
+         * @param positionStart Position of the first item that has inserted
+         * @param itemCount Number of items that have inserted
+         */
+        NotifyItemRangeInsertedRunnable(BrickRecyclerAdapter adapter, final int positionStart, final int itemCount) {
+            this.adapter = adapter;
+            this.positionStart = positionStart;
+            this.itemCount = itemCount;
+        }
+
+        @Override
+        public void run() {
+            adapter.notifyItemRangeInserted(positionStart, itemCount);
+        }
+    }
+
+    /**
+     * Runnable which will call {@link BrickRecyclerAdapter#notifyItemRangeRemoved(int, int)} on the adapter.
+     */
+    static final class NotifyItemRangeRemovedRunnable implements Runnable {
+        private BrickRecyclerAdapter adapter;
+        private int positionStart;
+        private int itemCount;
+
+        /**
+         * Constructor.
+         *
+         * @param adapter {@link BrickRecyclerAdapter} to notify
+         * @param positionStart Previous position of the first item that was removed
+         * @param itemCount Number of items removed from the data set
+         */
+        NotifyItemRangeRemovedRunnable(BrickRecyclerAdapter adapter, final int positionStart, final int itemCount) {
+            this.adapter = adapter;
+            this.positionStart = positionStart;
+            this.itemCount = itemCount;
+        }
+
+        @Override
+        public void run() {
+            adapter.notifyItemRangeRemoved(positionStart, itemCount);
+        }
+    }
+
+    /**
+     * Runnable which will call {@link BrickRecyclerAdapter#notifyItemRemoved(int)} on the adapter.
+     */
+    static final class NotifyItemRemovedRunnable implements Runnable {
+        private BrickRecyclerAdapter adapter;
+        private int position;
+
+        /**
+         * Constructor.
+         *
+         * @param adapter {@link BrickRecyclerAdapter} to notify
+         * @param position Position of the item that has now been removed
+         */
+        NotifyItemRemovedRunnable(BrickRecyclerAdapter adapter, final int position) {
+            this.adapter = adapter;
+            this.position = position;
+        }
+
+        @Override
+        public void run() {
+            adapter.notifyItemRemoved(position);
+        }
     }
 }

@@ -11,8 +11,6 @@ import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.padding.SimpleBrickPadding;
 import com.wayfair.brickkit.size.BrickSize;
 
-import java.util.Locale;
-
 /**
  * Abstract class which defines Bricks.
  */
@@ -274,54 +272,35 @@ public abstract class BaseBrick {
         StringBuilder sb = new StringBuilder();
 
         sb.append("--");
-        if (isInFirstRow) {
-            sb.append(padding.getOuterTopPadding());
-        } else {
-            sb.append(padding.getInnerTopPadding());
-        }
+        sb.append(isInFirstRow ? padding.getOuterTopPadding() : padding.getInnerTopPadding());
         sb.append("--\n");
 
-
-        String positionFormat = "|%d|\n";
+        sb.append("|");
         if (position < 100) {
-            positionFormat = "| %d|\n";
-            if (position < 10) {
-                positionFormat = "| %d |\n";
-            }
+            sb.append(" ");
         }
-        sb.append(String.format(Locale.getDefault(), positionFormat, position));
-
-        if (isOnLeftWall) {
-            sb.append(padding.getOuterLeftPadding());
-        } else {
-            sb.append(padding.getInnerLeftPadding());
+        sb.append(position);
+        if (position < 10) {
+            sb.append(" ");
         }
+        sb.append("|\n");
 
-        String widthFormat = "%d";
-        if (spanSize.getSpans(context) < 100) {
-            widthFormat = " %d";
-            if (spanSize.getSpans(context) < 10) {
-                widthFormat = " %d ";
-            }
+        sb.append(isOnLeftWall ? padding.getOuterLeftPadding() : padding.getInnerLeftPadding());
+
+        int spans = spanSize.getSpans(context);
+        if (spans < 100) {
+            sb.append(" ");
         }
-        sb.append(String.format(Locale.getDefault(), widthFormat, spanSize.getSpans(context)));
-
-        if (isOnRightWall) {
-            sb.append(padding.getOuterRightPadding());
-            sb.append("\n");
-        } else {
-            sb.append(padding.getInnerRightPadding());
-            sb.append("\n");
+        sb.append(spans);
+        if (spans < 10) {
+            sb.append(" ");
         }
 
-        sb.append("|   |\n");
+        sb.append(isOnRightWall ? padding.getOuterRightPadding() : padding.getInnerRightPadding());
+        sb.append("\n|   |\n");
 
         sb.append("--");
-        if (isInLastRow) {
-            sb.append(padding.getOuterBottomPadding());
-        } else {
-            sb.append(padding.getInnerBottomPadding());
-        }
+        sb.append(isInLastRow ? padding.getOuterBottomPadding() : padding.getInnerBottomPadding());
         sb.append("--");
 
         return sb.toString();

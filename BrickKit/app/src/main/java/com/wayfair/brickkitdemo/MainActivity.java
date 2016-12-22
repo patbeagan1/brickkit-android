@@ -10,16 +10,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.reflect.TypeToken;
 import com.wayfair.brickkitdemo.models.requests.StatusesUserTimeline;
 import com.wayfair.brickkitdemo.models.requests.TokenRequest;
 import com.wayfair.brickkitdemo.models.responses.Status;
 import com.wayfair.brickkitdemo.models.responses.TokenResponse;
-import com.wayfair.golleycore.core.Golley;
-import com.wayfair.golleycore.core.GolleyBlock;
-import com.wayfair.golleycore.core.GolleyConfig;
+import com.wayfair.golleycore.core.config.GolleyConfig;
+import com.wayfair.golleycore.core.request.Golley;
+import com.wayfair.golleycore.core.request.GolleyBlock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        GolleyConfig.getInstance().setRequestQueue(Volley.newRequestQueue(getApplicationContext()));
+        GolleyConfig.getInstance().init(getApplicationContext());
 
         // Logging
         GolleyConfig.getInstance().setLoggingEnabled(BuildConfig.DEBUG);

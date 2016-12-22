@@ -118,7 +118,7 @@ public class BrickDataManager implements Serializable {
      * This attaches the touch helper to the recycler view if swipe or drag and drop are enabled.
      */
     private void attachTouchHelper() {
-        if (dragAndDrop || swipeToDismiss) {
+        if ((dragAndDrop || swipeToDismiss) && brickRecyclerAdapter != null) {
             itemTouchHelper.attachToRecyclerView(brickRecyclerAdapter.getRecyclerView());
         } else {
             itemTouchHelper.attachToRecyclerView(null);
@@ -336,7 +336,7 @@ public class BrickDataManager implements Serializable {
      * @param fromBrick The brick to move
      * @param toBrick The brick to move fromBrick to
      */
-    void moveItem(BaseBrick fromBrick, BaseBrick toBrick) {
+    public void moveItem(BaseBrick fromBrick, BaseBrick toBrick) {
         int fromPosition = this.items.indexOf(fromBrick);
         int toPosition = this.items.indexOf(toBrick);
         int startPosition = Math.min(fromPosition, toPosition);

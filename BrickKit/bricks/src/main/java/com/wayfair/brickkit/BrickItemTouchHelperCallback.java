@@ -61,9 +61,7 @@ class BrickItemTouchHelperCallback extends ItemTouchHelper.Callback {
         BaseBrick brick = dataManager.brickAtPosition(viewHolder.getAdapterPosition());
         int targetPosition = target.getAdapterPosition();
 
-        dataManager.moveItem(
-                brick, dataManager.brickAtPosition(targetPosition)
-        );
+        dataManager.moveItem(brick, dataManager.brickAtPosition(targetPosition));
         brick.movedTo(targetPosition);
 
         return true;
