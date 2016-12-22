@@ -35,6 +35,7 @@ public class BrickDataManager implements Serializable {
     private boolean dragAndDrop;
     private boolean swipeToDismiss;
     private boolean vertical;
+    private RecyclerView recyclerView;
 
     /**
      * Constructor.
@@ -62,6 +63,7 @@ public class BrickDataManager implements Serializable {
         this.brickRecyclerAdapter = new BrickRecyclerAdapter(this, recyclerView);
         this.vertical = orientation == GridLayout.VERTICAL;
 
+        this.recyclerView = recyclerView;
         recyclerView.setAdapter(brickRecyclerAdapter);
         recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(this));
 
@@ -72,6 +74,15 @@ public class BrickDataManager implements Serializable {
         for (BrickBehavior behavior : behaviors) {
             behavior.attachToRecyclerView();
         }
+    }
+
+    /**
+     * Get the recycler view if available.
+     *
+     * @return the attached recycler view, null if none has been attached
+     */
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 
     /**

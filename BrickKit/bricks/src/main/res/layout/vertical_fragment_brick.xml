@@ -1,23 +1,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:background="#F2F2F4"/>
 
-    <RelativeLayout
-        android:id="@+id/sticky_header_container"
-        android:layout_width="match_parent"
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        tools:layout_height="40dp"/>
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal|top">
+
+        <RelativeLayout
+            android:id="@+id/sticky_header_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@android:color/white"
+            tools:layout_height="40dp"/>
+
+        <ImageView
+            android:id="@+id/bar_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:src="@drawable/bottom_shadow"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
 
     <RelativeLayout
         android:id="@+id/sticky_footer_container"
