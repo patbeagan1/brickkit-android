@@ -8,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.BrickRecyclerAdapter;
 import com.wayfair.brickkit.BrickViewHolder;
+import com.wayfair.brickkit.R;
 import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.StickyScrollMode;
 
@@ -27,6 +29,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
     BrickViewHolder stickyViewHolder;
     private int stickyViewContainerId;
     private final String stickyLayoutName;
+    ImageView stickyLayoutBottomLine;
     @StickyScrollMode
     int stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
 
@@ -81,7 +84,8 @@ abstract class StickyViewBehavior extends BrickBehavior {
         BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
         //Initialize Holder Layout and show sticky view if exists already, the null condition for holder layout is for the unit tests.
         if (stickyHolderLayout == null && (adapter.getRecyclerView() != null && adapter.getRecyclerView().getContext() != null)) {
-            stickyHolderLayout = (ViewGroup) ((Activity) adapter.getRecyclerView().getContext()).findViewById(stickyViewContainerId);
+            stickyHolderLayout = (ViewGroup) ((Activity) brickDataManager.getContext()).findViewById(stickyViewContainerId);
+            stickyLayoutBottomLine = (ImageView) ((Activity) brickDataManager.getContext()).findViewById(R.id.bar_shadow);
         }
 
         if (stickyHolderLayout != null) {
@@ -133,6 +137,13 @@ abstract class StickyViewBehavior extends BrickBehavior {
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         if (Math.abs(dx) + Math.abs(dy) != 0) {
             updateOrClearStickyView(dataSetChanged);
+        }
+        if (stickyHolderLayout != null) {
+            if (stickyHolderLayout.getTop() == stickyHolderLayout.getY()) {
+                stickyLayoutBottomLine.setVisibility(View.VISIBLE);
+            } else {
+                stickyLayoutBottomLine.setVisibility(View.GONE);
+            }
         }
         stickyViewFadeTranslate(dy);
     }

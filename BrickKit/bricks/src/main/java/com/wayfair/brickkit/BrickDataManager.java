@@ -77,6 +77,15 @@ public class BrickDataManager implements Serializable {
     }
 
     /**
+     * Get the context.
+     *
+     * @return the context from getContext()
+     */
+    public Context getContext() {
+        return context;
+    }
+
+    /**
      * Get the recycler view if available.
      *
      * @return the attached recycler view, null if none has been attached

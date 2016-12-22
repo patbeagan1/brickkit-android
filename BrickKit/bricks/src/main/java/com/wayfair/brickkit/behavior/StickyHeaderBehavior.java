@@ -100,9 +100,9 @@ public class StickyHeaderBehavior extends StickyViewBehavior {
     protected void stickyViewFadeTranslate(int dy) {
         if (stickyHolderLayout != null && stickyHolderLayout.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_UP) {
             float headerY = stickyHolderLayout.getY();
-            if (dy > 0 && headerY <= 0) {
+            if (dy > 0) {
                 stickyHolderLayout.setTranslationY(Math.min(headerY + dy, 0));
-            } else if (dy < 0) {
+            } else {
                 stickyHolderLayout.setTranslationY(Math.max(headerY + dy, -stickyHolderLayout.getHeight()));
             }
         }
@@ -111,7 +111,7 @@ public class StickyHeaderBehavior extends StickyViewBehavior {
             float headerY = stickyHolderLayout.getY();
             if (dy > 0) {
                 stickyHolderLayout.setTranslationY(Math.max(headerY - dy, -stickyHolderLayout.getHeight()));
-            } else if (dy < 0) {
+            } else {
                 stickyHolderLayout.setTranslationY(Math.min(headerY - dy, 0));
             }
         }
