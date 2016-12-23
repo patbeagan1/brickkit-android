@@ -38,7 +38,6 @@ public class BrickFragmentTest {
     public void onCreate() {
         testBrickFragment.onCreate(new Bundle());
 
-        assertTrue(testBrickFragment.createBricksCalled);
     }
 
     @Test
@@ -46,10 +45,12 @@ public class BrickFragmentTest {
         testBrickFragment.setOrientation(OrientationHelper.HORIZONTAL);
         View view = testBrickFragment.onCreateView(inflater, null, null);
         assertNotNull(view);
+        assertTrue(testBrickFragment.createBricksCalled);
 
         testBrickFragment.setOrientation(OrientationHelper.VERTICAL);
         view = testBrickFragment.onCreateView(inflater, null, null);
         assertNotNull(view);
+        assertTrue(testBrickFragment.createBricksCalled);
     }
 
     @Test
