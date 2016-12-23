@@ -21,8 +21,6 @@ public abstract class BrickFragment extends Fragment {
         dataManager.setDragAndDrop(true);
         dataManager.setSwipeToDismiss(true);
 
-        addBehaviors();
-        createBricks();
     }
 
     @Override
@@ -35,6 +33,8 @@ public abstract class BrickFragment extends Fragment {
         }
 
         dataManager.setRecyclerView(getContext(), (RecyclerView) view.findViewById(R.id.recycler_view), orientation(), reverse());
+        addBehaviors();
+        createBricks();
 
         return view;
     }
