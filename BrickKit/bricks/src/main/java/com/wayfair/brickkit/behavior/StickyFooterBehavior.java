@@ -39,9 +39,9 @@ public class StickyFooterBehavior extends StickyViewBehavior {
     protected void stickyViewFadeTranslate(int dy) {
         if (stickyHolderLayout != null && stickyHolderLayout.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_UP) {
             float headerY = stickyHolderLayout.getY();
-            if (dy > 0 && headerY > brickDataManager.getBrickRecyclerAdapter().getRecyclerView().getTop()) {
+            if (dy > 0) {
                 stickyHolderLayout.setTranslationY(Math.max(headerY - dy - stickyHolderLayout.getTop(), 0));
-            } else if (dy < 0) {
+            } else {
                 stickyHolderLayout.setTranslationY(Math.min(headerY - dy - stickyHolderLayout.getTop(), stickyHolderLayout.getHeight()));
             }
 
@@ -51,7 +51,7 @@ public class StickyFooterBehavior extends StickyViewBehavior {
             float headerY = stickyHolderLayout.getY();
             if (dy > 0) {
                 stickyHolderLayout.setTranslationY(Math.min(headerY + dy - stickyHolderLayout.getTop(), stickyHolderLayout.getHeight()));
-            } else if (dy < 0) {
+            } else {
                 stickyHolderLayout.setTranslationY(Math.max(headerY + dy - stickyHolderLayout.getTop(), 0));
             }
         }

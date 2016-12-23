@@ -90,12 +90,7 @@ public class BrickTestHelper {
                 return HALF_SPAN;
             }
 
-        }, new SimpleBrickPadding() {
-            @Override
-            protected int padding() {
-                return PADDING;
-            }
-        }, layoutId);
+        }, new SimpleBrickPadding(PADDING), layoutId);
     }
 
     public BaseBrick generateBrick() {
@@ -110,12 +105,7 @@ public class BrickTestHelper {
                 return HALF_SPAN;
             }
 
-        }, new SimpleBrickPadding() {
-            @Override
-            protected int padding() {
-                return PADDING;
-            }
-        }, 0);
+        }, new SimpleBrickPadding(PADDING), 0);
     }
 
     public BaseBrick generateOtherBrick() {
@@ -129,13 +119,7 @@ public class BrickTestHelper {
             protected int size() {
                 return HALF_SPAN;
             }
-        }, new SimpleBrickPadding() {
-
-            @Override
-            protected int padding() {
-                return PADDING;
-            }
-        });
+        }, new SimpleBrickPadding(PADDING));
     }
 
     public static class TestAdapterDataObserver extends RecyclerView.AdapterDataObserver {

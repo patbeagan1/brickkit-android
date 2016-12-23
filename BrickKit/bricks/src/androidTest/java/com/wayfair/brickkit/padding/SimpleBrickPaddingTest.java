@@ -12,11 +12,11 @@ import static org.junit.Assert.assertEquals;
 public class SimpleBrickPaddingTest {
     private static final int PADDING = 2;
 
-    private SimpleBrickPaddingTest.TestSimpleBrickPadding brickPadding;
+    private SimpleBrickPadding brickPadding;
 
     @Before
     public void setup() {
-        brickPadding = new SimpleBrickPaddingTest.TestSimpleBrickPadding();
+        brickPadding = new SimpleBrickPadding(PADDING);
     }
 
     @Test
@@ -57,12 +57,5 @@ public class SimpleBrickPaddingTest {
     @Test
     public void testGetOuterBottomPadding() {
         assertEquals(PADDING, brickPadding.getOuterBottomPadding());
-    }
-
-    private static final class TestSimpleBrickPadding extends SimpleBrickPadding {
-        @Override
-        protected int padding() {
-            return PADDING;
-        }
     }
 }

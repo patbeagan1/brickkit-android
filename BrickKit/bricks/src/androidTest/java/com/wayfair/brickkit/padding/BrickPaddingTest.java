@@ -1,5 +1,6 @@
 package com.wayfair.brickkit.padding;
 
+import android.graphics.Rect;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
@@ -19,11 +20,14 @@ public class BrickPaddingTest {
     private static final int OUTER_RIGHT = 7;
     private static final int OUTER_BOTTOM = 8;
 
-    private TestBrickPadding brickPadding;
+    private BrickPadding brickPadding;
 
     @Before
     public void setup() {
-        brickPadding = new TestBrickPadding();
+        brickPadding = new BrickPadding(
+                new Rect(INNER_LEFT, INNER_TOP, INNER_RIGHT, INNER_BOTTOM),
+                new Rect(OUTER_LEFT, OUTER_TOP, OUTER_RIGHT, OUTER_BOTTOM)
+        );
     }
 
     @Test
@@ -64,47 +68,5 @@ public class BrickPaddingTest {
     @Test
     public void testGetOuterBottomPadding() {
         assertEquals(OUTER_BOTTOM, brickPadding.getOuterBottomPadding());
-    }
-
-    private static final class TestBrickPadding extends BrickPadding {
-        @Override
-        protected int innerLeftPadding() {
-            return INNER_LEFT;
-        }
-
-        @Override
-        protected int innerTopPadding() {
-            return INNER_TOP;
-        }
-
-        @Override
-        protected int innerRightPadding() {
-            return INNER_RIGHT;
-        }
-
-        @Override
-        protected int innerBottomPadding() {
-            return INNER_BOTTOM;
-        }
-
-        @Override
-        protected int outerLeftPadding() {
-            return OUTER_LEFT;
-        }
-
-        @Override
-        protected int outerTopPadding() {
-            return OUTER_TOP;
-        }
-
-        @Override
-        protected int outerRightPadding() {
-            return OUTER_RIGHT;
-        }
-
-        @Override
-        protected int outerBottomPadding() {
-            return OUTER_BOTTOM;
-        }
     }
 }

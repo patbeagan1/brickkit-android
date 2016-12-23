@@ -33,17 +33,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                 return dataManager.getMaxSpanCount();
                             }
                         },
-                        new InnerOuterBrickPadding() {
-                            @Override
-                            protected int innerPadding() {
-                                return 5;
-                            }
-
-                            @Override
-                            protected int outerPadding() {
-                                return 10;
-                            }
-                        },
+                        new InnerOuterBrickPadding(5, 10),
                         String.valueOf(NUMBER_OF_BRICKS - 1),
                         "Index",
                         new View.OnClickListener() {
@@ -78,17 +68,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                                             return dataManager.getMaxSpanCount();
                                                         }
                                                     },
-                                                    new InnerOuterBrickPadding() {
-                                                        @Override
-                                                        protected int innerPadding() {
-                                                            return 5;
-                                                        }
-
-                                                        @Override
-                                                        protected int outerPadding() {
-                                                            return 10;
-                                                        }
-                                                    },
+                                                    new InnerOuterBrickPadding(5, 10),
                                                     String.format(FORMAT, index)
                                             )
                                     );
@@ -103,17 +83,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                                             return dataManager.getMaxSpanCount();
                                                         }
                                                     },
-                                                    new InnerOuterBrickPadding() {
-                                                        @Override
-                                                        protected int innerPadding() {
-                                                            return 5;
-                                                        }
-
-                                                        @Override
-                                                        protected int outerPadding() {
-                                                            return 10;
-                                                        }
-                                                    },
+                                                    new InnerOuterBrickPadding(5, 10),
                                                     String.format(FORMAT, index)
                                             )
                                     );
@@ -138,17 +108,7 @@ public class AddRemoveBrickFragment extends BrickFragment {
                                 return dataManager.getMaxSpanCount();
                             }
                         },
-                        new InnerOuterBrickPadding() {
-                            @Override
-                            protected int innerPadding() {
-                                return 5;
-                            }
-
-                            @Override
-                            protected int outerPadding() {
-                                return 10;
-                            }
-                        },
+                        new InnerOuterBrickPadding(5, 10),
                         String.format(FORMAT, i)
                 );
 

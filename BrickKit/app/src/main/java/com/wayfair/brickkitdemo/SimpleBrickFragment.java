@@ -46,17 +46,7 @@ public class SimpleBrickFragment extends BrickFragment {
                             return HALF;
                         }
                     },
-                    new InnerOuterBrickPadding() {
-                        @Override
-                        protected int innerPadding() {
-                            return 5;
-                        }
-
-                        @Override
-                        protected int outerPadding() {
-                            return 10;
-                        }
-                    },
+                    new InnerOuterBrickPadding(5, 10),
                     "Brick: " + i
             );
             textBrick.setOnDismiss(

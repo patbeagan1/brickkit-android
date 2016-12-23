@@ -20,17 +20,7 @@ public class MainActivityFragment extends BrickFragment {
 
     @Override
     public void createBricks() {
-        InnerOuterBrickPadding padding = new InnerOuterBrickPadding() {
-            @Override
-            protected int innerPadding() {
-                return 8;
-            }
-
-            @Override
-            protected int outerPadding() {
-                return 0;
-            }
-        };
+        InnerOuterBrickPadding padding = new InnerOuterBrickPadding(8, 0);
 
         ArrayList<BaseBrick> usedBricks = new ArrayList<>();
 

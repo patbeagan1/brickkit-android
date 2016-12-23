@@ -1,61 +1,22 @@
 package com.wayfair.brickkit.padding;
 
+import android.graphics.Rect;
+
 /**
  * {@link BrickPadding} which uses the values from innerPadding() and outerPadding().
  */
-public abstract class InnerOuterBrickPadding extends BrickPadding {
-
-    @Override
-    protected int innerLeftPadding() {
-        return innerPadding();
-    }
-
-    @Override
-    protected int innerTopPadding() {
-        return innerPadding();
-    }
-
-    @Override
-    protected int innerRightPadding() {
-        return innerPadding();
-    }
-
-    @Override
-    protected int innerBottomPadding() {
-        return innerPadding();
-    }
-
-    @Override
-    protected int outerLeftPadding() {
-        return outerPadding();
-    }
-
-    @Override
-    protected int outerTopPadding() {
-        return outerPadding();
-    }
-
-    @Override
-    protected int outerRightPadding() {
-        return outerPadding();
-    }
-
-    @Override
-    protected int outerBottomPadding() {
-        return outerPadding();
-    }
+public class InnerOuterBrickPadding extends BrickPadding {
 
     /**
-     * Method to the padding to use for inner padding on this brick.
+     * Constructor for inner and outer padding that are different but symmetrical on all sides.
      *
-     * @return padding to use for inner padding on this brick.
+     * @param innerPadding The inner padding value.
+     * @param outerPadding The outer padding value.
      */
-    protected abstract int innerPadding();
-
-    /**
-     * Method to the padding to use for outer padding on this brick.
-     *
-     * @return padding to use for outer padding on this brick.
-     */
-    protected abstract int outerPadding();
+    public InnerOuterBrickPadding(int innerPadding, int outerPadding) {
+        super(
+                new Rect(innerPadding, innerPadding, innerPadding, innerPadding),
+                new Rect(outerPadding, outerPadding, outerPadding, outerPadding)
+        );
+    }
 }

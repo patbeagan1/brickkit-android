@@ -17,11 +17,11 @@ public class RectBrickPaddingTest {
     private static final int BOTTOM = 4;
     private static final Rect PADDING_RECT = new Rect(LEFT, TOP, RIGHT, BOTTOM);
 
-    private TestRectBrickPadding brickPadding;
+    private RectBrickPadding brickPadding;
 
     @Before
     public void setup() {
-        brickPadding = new TestRectBrickPadding();
+        brickPadding = new RectBrickPadding(PADDING_RECT);
     }
 
     @Test
@@ -62,12 +62,5 @@ public class RectBrickPaddingTest {
     @Test
     public void testGetOuterBottomPadding() {
         assertEquals(BOTTOM, brickPadding.getOuterBottomPadding());
-    }
-
-    private static final class TestRectBrickPadding extends RectBrickPadding {
-        @Override
-        protected Rect padding() {
-            return PADDING_RECT;
-        }
     }
 }

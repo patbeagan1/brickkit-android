@@ -19,8 +19,6 @@ public abstract class BrickFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addBehaviors();
-        createBricks();
     }
 
     @Override
@@ -35,6 +33,9 @@ public abstract class BrickFragment extends Fragment {
         dataManager.setRecyclerView(getContext(), (RecyclerView) view.findViewById(R.id.recycler_view), orientation(), reverse());
         dataManager.setDragAndDrop(true);
         dataManager.setSwipeToDismiss(true);
+
+        addBehaviors();
+        createBricks();
 
         return view;
     }

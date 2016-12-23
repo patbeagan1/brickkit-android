@@ -17,15 +17,13 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class BrickFragmentTest {
 
     private TestBrickFragment testBrickFragment;
     private LayoutInflater inflater;
-    private ViewGroup viewGroup;
-    private View view;
-    private BrickFragment brickFragment;
 
     @Before
     public void setup() {
@@ -37,13 +35,22 @@ public class BrickFragmentTest {
     }
 
     @Test
+    public void onCreate() {
+        testBrickFragment.onCreate(new Bundle());
+
+    }
+
+    @Test
     public void testOnCreateView() {
         testBrickFragment.setOrientation(OrientationHelper.HORIZONTAL);
         View view = testBrickFragment.onCreateView(inflater, null, null);
         assertNotNull(view);
+        assertTrue(testBrickFragment.createBricksCalled);
+
         testBrickFragment.setOrientation(OrientationHelper.VERTICAL);
         view = testBrickFragment.onCreateView(inflater, null, null);
         assertNotNull(view);
+        assertTrue(testBrickFragment.createBricksCalled);
     }
 
     @Test
@@ -66,8 +73,8 @@ public class BrickFragmentTest {
     }
 
     public static final class TestBrickFragment extends BrickFragment {
-
         private int orientation;
+        private boolean createBricksCalled;
 
         public void setOrientation(int orientation) {
             this.orientation = orientation;
@@ -90,7 +97,7 @@ public class BrickFragmentTest {
 
         @Override
         public void createBricks() {
-
+            createBricksCalled = true;
         }
 
         public int getDefaultOrientation(){
@@ -117,6 +124,4 @@ public class BrickFragmentTest {
             super.onDestroy();
         }
     }
-
-
 }
