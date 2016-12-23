@@ -53,17 +53,7 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
                             return HALF;
                         }
                     },
-                    new InnerOuterBrickPadding() {
-                        @Override
-                        protected int innerPadding() {
-                            return 5;
-                        }
-
-                        @Override
-                        protected int outerPadding() {
-                            return 10;
-                        }
-                    },
+                    new InnerOuterBrickPadding(5, 10),
                     "Brick: " + page + " " + i
             );
             dataManager.addLast(unusedBrick2);

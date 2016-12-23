@@ -1,19 +1,35 @@
 package com.wayfair.brickkit.padding;
 
+import android.graphics.Rect;
+
 /**
  * This class defines an abstract implementation of brick padding.
  *
  * It is used to determine the amount of the padding to apply to this brick based off of the location in the screen.
  * Different padding is allowed on sides that are on the outside edge of the screen or any inner edges.
  */
-public abstract class BrickPadding {
+public class BrickPadding {
+    private Rect innerPadding;
+    private Rect outerPadding;
+
+    /**
+     * Constructor for creating padding based on two Rects.
+     *
+     * @param innerPadding The inner padding Rect.
+     * @param outerPadding The outer padding Rect.
+     */
+    public BrickPadding(Rect innerPadding, Rect outerPadding) {
+        this.innerPadding = innerPadding;
+        this.outerPadding = outerPadding;
+    }
+
     /**
      * Gets the padding to be used on the left side for inner edges.
      *
      * @return the padding to be used on the left side for inner edges.
      */
     public int getInnerLeftPadding() {
-        return innerLeftPadding();
+        return innerPadding.left;
     }
 
     /**
@@ -22,7 +38,7 @@ public abstract class BrickPadding {
      * @return the padding to be used on the top side for inner edges.
      */
     public int getInnerTopPadding() {
-        return innerTopPadding();
+        return innerPadding.top;
     }
 
     /**
@@ -31,7 +47,7 @@ public abstract class BrickPadding {
      * @return the padding to be used on the right side for inner edges.
      */
     public int getInnerRightPadding() {
-        return innerRightPadding();
+        return innerPadding.right;
     }
 
     /**
@@ -40,7 +56,7 @@ public abstract class BrickPadding {
      * @return the padding to be used on the bottom side for inner edges.
      */
     public int getInnerBottomPadding() {
-        return innerBottomPadding();
+        return innerPadding.bottom;
     }
 
     /**
@@ -49,7 +65,7 @@ public abstract class BrickPadding {
      * @return the padding to be used on the left side for outer edges.
      */
     public int getOuterLeftPadding() {
-        return outerLeftPadding();
+        return outerPadding.left;
     }
 
     /**
@@ -58,7 +74,7 @@ public abstract class BrickPadding {
      * @return the padding to be used on the top side for outer edges.
      */
     public int getOuterTopPadding() {
-        return outerTopPadding();
+        return outerPadding.top;
     }
 
     /**
@@ -67,7 +83,7 @@ public abstract class BrickPadding {
      * @return the padding to be used on the right side for outer edges.
      */
     public int getOuterRightPadding() {
-        return outerRightPadding();
+        return outerPadding.right;
     }
 
     /**
@@ -76,63 +92,7 @@ public abstract class BrickPadding {
      * @return the padding to be used on the bottom side for outer edges.
      */
     public int getOuterBottomPadding() {
-        return outerBottomPadding();
+        return outerPadding.bottom;
     }
-
-    /**
-     * Method called to get the inner left padding.
-     *
-     * @return the inner left padding
-     */
-    protected abstract int innerLeftPadding();
-
-    /**
-     * Method called to get the inner top padding.
-     *
-     * @return the inner top padding
-     */
-    protected abstract int innerTopPadding();
-
-    /**
-     * Method called to get the inner right padding.
-     *
-     * @return the inner right padding
-     */
-    protected abstract int innerRightPadding();
-
-    /**
-     * Method called to get the inner bottom padding.
-     *
-     * @return the inner bottom padding
-     */
-    protected abstract int innerBottomPadding();
-
-    /**
-     * Method called to get the outer left padding.
-     *
-     * @return the outer left padding
-     */
-    protected abstract int outerLeftPadding();
-
-    /**
-     * Method called to get the outer top padding.
-     *
-     * @return the outer top padding
-     */
-    protected abstract int outerTopPadding();
-
-    /**
-     * Method called to get the outer right padding.
-     *
-     * @return the outer right padding
-     */
-    protected abstract int outerRightPadding();
-
-    /**
-     * Method called to get the outer bottom padding.
-     *
-     * @return the outer bottom padding
-     */
-    protected abstract int outerBottomPadding();
 
 }

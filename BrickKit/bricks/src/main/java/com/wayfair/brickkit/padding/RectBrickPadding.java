@@ -5,52 +5,14 @@ import android.graphics.Rect;
 /**
  * {@link BrickPadding} which uses the {@link Rect} to get padding values.
  */
-public abstract class RectBrickPadding extends BrickPadding {
-
-    @Override
-    protected int innerLeftPadding() {
-        return padding().left;
-    }
-
-    @Override
-    protected int innerTopPadding() {
-        return padding().top;
-    }
-
-    @Override
-    protected int innerRightPadding() {
-        return padding().right;
-    }
-
-    @Override
-    protected int innerBottomPadding() {
-        return padding().bottom;
-    }
-
-    @Override
-    protected int outerLeftPadding() {
-        return padding().left;
-    }
-
-    @Override
-    protected int outerTopPadding() {
-        return padding().top;
-    }
-
-    @Override
-    protected int outerRightPadding() {
-        return padding().right;
-    }
-
-    @Override
-    protected int outerBottomPadding() {
-        return padding().bottom;
-    }
+public class RectBrickPadding extends BrickPadding {
 
     /**
-     * Method to return the {@link Rect} to use to get the padding to use for this brick.
+     * Constructor for one Rect for both inner and outer padding.
      *
-     * @return {@link Rect} to use to get the padding to use for this brick.
+     * @param padding The Rect for padding the brick.
      */
-    protected abstract Rect padding();
+    public RectBrickPadding(Rect padding) {
+        super(padding, padding);
+    }
 }

@@ -172,7 +172,7 @@ public class BaseBrickTest {
             }
         };
 
-        BaseBrick brick = new TestBaseBrick(context, smallSize, new TestBrickPadding());
+        BaseBrick brick = new TestBaseBrick(context, smallSize, new TestBrickPadding(1, 2));
         brick.setInFirstRow(true);
         brick.setInLastRow(true);
         brick.setOnLeftWall(true);
@@ -196,7 +196,7 @@ public class BaseBrickTest {
             }
         };
 
-        BaseBrick brick = new TestBaseBrick(context, smallSize, new TestBrickPadding());
+        BaseBrick brick = new TestBaseBrick(context, smallSize, new TestBrickPadding(1, 2));
         brick.setInFirstRow(false);
         brick.setInLastRow(false);
         brick.setOnLeftWall(false);
@@ -233,14 +233,14 @@ public class BaseBrickTest {
 
     private static final class TestBrickPadding extends InnerOuterBrickPadding {
 
-        @Override
-        protected int innerPadding() {
-            return 1;
-        }
-
-        @Override
-        protected int outerPadding() {
-            return 2;
+        /**
+         * Constructor for inner and outer padding that are different but symmetrical on all sides.
+         *
+         * @param innerPadding The inner padding value.
+         * @param outerPadding The outer padding value.
+         */
+        public TestBrickPadding(int innerPadding, int outerPadding) {
+            super(innerPadding, outerPadding);
         }
     }
 }

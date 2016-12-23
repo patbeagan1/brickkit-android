@@ -13,11 +13,11 @@ public class InnerOuterBrickPaddingTest {
     private static final int INNER_PADDING = 1;
     private static final int OUTER_PADDING = 2;
 
-    private TestInnerOuterBrickPadding brickPadding;
+    private InnerOuterBrickPadding brickPadding;
 
     @Before
     public void setup() {
-        brickPadding = new TestInnerOuterBrickPadding();
+        brickPadding = new InnerOuterBrickPadding(INNER_PADDING, OUTER_PADDING);
     }
 
     @Test
@@ -58,17 +58,5 @@ public class InnerOuterBrickPaddingTest {
     @Test
     public void testGetOuterBottomPadding() {
         assertEquals(OUTER_PADDING, brickPadding.getOuterBottomPadding());
-    }
-
-    private static final class TestInnerOuterBrickPadding extends InnerOuterBrickPadding {
-        @Override
-        protected int innerPadding() {
-            return INNER_PADDING;
-        }
-
-        @Override
-        protected int outerPadding() {
-            return OUTER_PADDING;
-        }
     }
 }
