@@ -26,4 +26,11 @@ public interface MultiTouchableBrick {
      * @return true if the brick is currently handling click events, false otherwise
      */
     boolean isEnabled();
+
+    /**
+     * Whether or not the brick is currently handling click events on the secondary touch target.
+     *
+     * @return true if the brick is currently handling click events on the secondary touch target, false otherwise
+     */
+    boolean isSecondaryEnabled();
 }
