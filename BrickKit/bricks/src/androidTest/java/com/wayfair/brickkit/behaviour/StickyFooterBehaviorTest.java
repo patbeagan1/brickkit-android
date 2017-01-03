@@ -4,23 +4,22 @@ import android.content.Context;
 import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.BrickRecyclerAdapter;
 import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.R;
+import com.wayfair.brickkit.StickyScrollMode;
 import com.wayfair.brickkit.behavior.StickyFooterBehavior;
 import com.wayfair.brickkit.brick.BaseBrick;
-import com.wayfair.brickkit.padding.BrickPadding;
-import com.wayfair.brickkit.util.BrickTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,200 +27,151 @@ import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class StickyFooterBehaviorTest {
 
     private BrickDataManager dataManager;
-    private BrickTestHelper brickTestHelper;
     private TestStickyFooterBehavior footerBehavior;
     private RecyclerView recyclerView;
     private BrickRecyclerAdapter adapter;
     private ViewGroup stickyHolderLayout;
     private Context context;
     private View view;
-    private View textBrickView;
-
-    private static final int INNER_LEFT = 1;
-    private static final int INNER_TOP = 2;
-    private static final int INNER_RIGHT = 3;
-    private static final int INNER_BOTTOM = 4;
-    private static final int OUTER_LEFT = 5;
-    private static final int OUTER_TOP = 6;
-    private static final int OUTER_RIGHT = 7;
-    private static final int OUTER_BOTTOM = 8;
+    private BrickViewHolder stickyViewHolder;
+    private View itemView;
+    private static int MOCK_VIEW_SIZE = 10;
+    private static int ADAPTER_COUNT = 10;
+    private static int FOOTER_INDEX = 10;
+    private static int SCROLL_DISTANCE = 10;
+    private static int BOUNDARY_AXIS = 1;
+    private static String TEST = "TEXT";
 
     @Before
     public void setup() {
-        BaseBrick footer;
         if (Looper.myLooper() == null) {
             Looper.prepare();
         }
 
-
         context = InstrumentationRegistry.getTargetContext();
         recyclerView = mock(RecyclerView.class);
-        when(recyclerView.isComputingLayout()).thenReturn(false);
         adapter = mock(BrickRecyclerAdapter.class);
-        footer = mock(BaseBrick.class);
         view = mock(View.class);
-
-        when(adapter.getRecyclerView()).thenReturn(recyclerView);
-        when(adapter.getItemCount()).thenReturn(30);
-        when(adapter.getRecyclerView().getChildCount()).thenReturn(10);
-        for (int i = 0; i < 30; i++) {
-            when(adapter.getRecyclerView().getChildAt(i)).thenReturn(view);
-        }
-
-        when(adapter.getRecyclerView().getChildAdapterPosition(view)).thenReturn(9);
-        for (int i = 0; i < 30; i++) {
-            when(adapter.getSectionFooter(i)).thenReturn(footer);
-        }
-
-        when(adapter.indexOf(footer)).thenReturn(9);
-        when(footer.getLayout()).thenReturn(R.layout.text_brick);
-        when(adapter.getItemViewType(9)).thenReturn(R.layout.text_brick);
         dataManager = mock(BrickDataManager.class);
+
         when(dataManager.getBrickRecyclerAdapter()).thenReturn(adapter);
-        when(dataManager.brickAtPosition(9)).thenReturn(footer);
-        when(dataManager.brickAtPosition(0)).thenReturn(footer);
+        when(adapter.getRecyclerView()).thenReturn(recyclerView);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        final ViewGroup nullParent = null;
-        View fragmentBrick = inflater.inflate(R.layout.vertical_fragment_brick, nullParent);
-        textBrickView = inflater.inflate(R.layout.text_brick, nullParent);
-        stickyHolderLayout = (ViewGroup) fragmentBrick.findViewById(R.id.sticky_footer_container);
-
-        textBrickView.setLayoutParams(
-                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        BrickViewHolder holder = new BrickViewHolder(textBrickView);
-        when(adapter.onCreateViewHolder(null, R.layout.text_brick)).thenReturn(holder);
-        when(adapter.createViewHolder(null, R.layout.text_brick)).thenReturn(holder);
-
-        when(adapter.onCreateViewHolder(recyclerView, R.layout.text_brick)).thenReturn(holder);
-        when(adapter.createViewHolder(recyclerView, R.layout.text_brick)).thenReturn(holder);
-
-        brickTestHelper = new BrickTestHelper(context);
-
-        BrickPadding brickPadding = mock(BrickPadding.class);
-        when(brickPadding.getInnerLeftPadding()).thenReturn(INNER_LEFT);
-        when(brickPadding.getInnerTopPadding()).thenReturn(INNER_TOP);
-        when(brickPadding.getInnerRightPadding()).thenReturn(INNER_RIGHT);
-        when(brickPadding.getInnerBottomPadding()).thenReturn(INNER_BOTTOM);
-        when(brickPadding.getOuterLeftPadding()).thenReturn(OUTER_LEFT);
-        when(brickPadding.getOuterTopPadding()).thenReturn(OUTER_TOP);
-        when(brickPadding.getOuterRightPadding()).thenReturn(OUTER_RIGHT);
-        when(brickPadding.getOuterBottomPadding()).thenReturn(OUTER_BOTTOM);
-        when(dataManager.brickAtPosition(0).getPadding()).thenReturn(brickPadding);
-        when(dataManager.brickAtPosition(9).getPadding()).thenReturn(brickPadding);
+        itemView = new TextView(context);
+        ((TextView) itemView).setText(TEST);
+        itemView.measure(MOCK_VIEW_SIZE, MOCK_VIEW_SIZE);
+        stickyViewHolder = new BrickViewHolder(itemView);
 
         footerBehavior = new TestStickyFooterBehavior(dataManager);
-        footerBehavior = new TestStickyFooterBehavior(dataManager, stickyHolderLayout);
+        footerBehavior.swapStickyView(null);
+        footerBehavior.translateStickyView();
+
+        stickyHolderLayout = spy((ViewGroup) LayoutInflater.from(context).inflate(R.layout.text_brick, new LinearLayout(context), false));
+        stickyHolderLayout.layout(0, 0, MOCK_VIEW_SIZE, MOCK_VIEW_SIZE);
+        stickyHolderLayout.setLayoutParams(new ViewGroup.LayoutParams(MOCK_VIEW_SIZE, MOCK_VIEW_SIZE));
+
+        footerBehavior = spy(new TestStickyFooterBehavior(dataManager, stickyHolderLayout));
+        footerBehavior.swapStickyView(stickyViewHolder);
     }
 
     @Test
     public void testGetStickyViewPosition() {
-        for (int i = 0; i < 10; i++) {
-            dataManager.addLast(brickTestHelper.generateBrick());
-        }
-        BaseBrick brick = brickTestHelper.generateBrick();
-        brick.setFooter(true);
-        dataManager.addLast(brick);
-        int position = footerBehavior.getStickyViewPosition(RecyclerView.NO_POSITION);
+        when(adapter.getRecyclerView().getChildCount() - 1).thenReturn(ADAPTER_COUNT);
+        when(adapter.getRecyclerView().getChildAt(ADAPTER_COUNT)).thenReturn(view);
+        when(adapter.getRecyclerView().getChildAdapterPosition(view)).thenReturn(FOOTER_INDEX);
+        when(adapter.getSectionFooter(FOOTER_INDEX)).thenReturn(null);
 
-        assertEquals(position, 9);
-        position = footerBehavior.getStickyViewPosition(5);
-        assertEquals(position, 9);
+        int position = footerBehavior.getStickyViewPosition(RecyclerView.NO_POSITION);
+        assertEquals(position, RecyclerView.NO_POSITION);
+
+        BaseBrick footer = mock(BaseBrick.class);
+        when(adapter.getSectionFooter(FOOTER_INDEX)).thenReturn(footer);
+        when(footer.getStickyScrollMode()).thenReturn(StickyScrollMode.SHOW_ON_SCROLL_UP);
+        when(adapter.indexOf(footer)).thenReturn(FOOTER_INDEX);
+
+        position = footerBehavior.getStickyViewPosition(FOOTER_INDEX);
+        assertEquals(position, FOOTER_INDEX);
+    }
+
+    @Test
+    public void testStickyViewFadeTranslate() {
+        BaseBrick footer = mock(BaseBrick.class);
+        when(adapter.getSectionFooter(FOOTER_INDEX)).thenReturn(footer);
+        when(footer.getStickyScrollMode()).thenReturn(StickyScrollMode.SHOW_ON_SCROLL_UP);
+        when(adapter.indexOf(footer)).thenReturn(FOOTER_INDEX);
+        footerBehavior.getStickyViewPosition(FOOTER_INDEX);
+
+        footerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
+        assertEquals(stickyHolderLayout.getY(), 0f);
+
+        footerBehavior.stickyViewFadeTranslate(-SCROLL_DISTANCE);
+        assertEquals(stickyHolderLayout.getY(), 10f);
+
+        when(footer.getStickyScrollMode()).thenReturn(StickyScrollMode.SHOW_ON_SCROLL_DOWN);
+        footerBehavior.getStickyViewPosition(FOOTER_INDEX);
+        footerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
+        assertEquals(stickyHolderLayout.getY(), 10f);
+
+        footerBehavior.stickyViewFadeTranslate(-SCROLL_DISTANCE);
+        assertEquals(stickyHolderLayout.getY(), 0f);
+
+        stickyHolderLayout.layout(BOUNDARY_AXIS, BOUNDARY_AXIS, BOUNDARY_AXIS, BOUNDARY_AXIS);
+        footerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
+        assertEquals(stickyHolderLayout.getY(), 1f);
+
+        footerBehavior = new TestStickyFooterBehavior(dataManager, null);
+        footerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
     }
 
     @Test
     public void testTranslateStickyView() {
+        when(adapter.getRecyclerView().getChildCount()).thenReturn(ADAPTER_COUNT);
+        when(adapter.getItemCount()).thenReturn(ADAPTER_COUNT);
+        when(adapter.getRecyclerView().getChildAt(8)).thenReturn(null);
         footerBehavior.translateStickyView();
+        verify(recyclerView).getChildAt(8);
+        assertNull(recyclerView.getChildAt(8));
 
-        for (int i = 0; i < 30; i++) {
-            dataManager.addLast(brickTestHelper.generateBrick());
-        }
-        BaseBrick brick = brickTestHelper.generateBrick();
-        brick.setFooter(true);
-        dataManager.addLast(brick);
-        DummyLayoutManager layoutManager = new DummyLayoutManager(context);
-        layoutManager.setOrientation(OrientationHelper.HORIZONTAL);
-        when(recyclerView.getLayoutManager()).thenReturn(layoutManager);
-
-
-        for (int i = 0; i < 30; i++) {
-            when(adapter.getRecyclerView().getChildAt(i)).thenReturn(textBrickView);
-        }
-
-        footerBehavior.onScroll();
-        footerBehavior.onDataSetChanged();
-
-        when(adapter.getRecyclerView().getChildAdapterPosition(view)).thenReturn(0);
-        when(adapter.getSectionFooter(0)).thenReturn(null);
+        View textView = new TextView(context);
+        when(adapter.getRecyclerView().getChildAt(8)).thenReturn(textView);
+        when(adapter.getRecyclerView().getChildAdapterPosition(textView)).thenReturn(RecyclerView.NO_POSITION);
         footerBehavior.translateStickyView();
+        verify(footerBehavior, atLeastOnce()).getStickyViewPosition(RecyclerView.NO_POSITION);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
-        when(recyclerView.getLayoutManager()).thenReturn(gridLayoutManager);
+        when(adapter.getRecyclerView().getChildAdapterPosition(textView)).thenReturn(FOOTER_INDEX);
+        BaseBrick footer = mock(BaseBrick.class);
+        when(adapter.getSectionFooter(FOOTER_INDEX)).thenReturn(footer);
+        when(adapter.indexOf(footer)).thenReturn(FOOTER_INDEX);
+        textView.layout(-BOUNDARY_AXIS, -BOUNDARY_AXIS, -BOUNDARY_AXIS, -BOUNDARY_AXIS);
         footerBehavior.translateStickyView();
-    }
+        verify(footerBehavior, atLeastOnce()).getStickyViewPosition(FOOTER_INDEX);
 
-    @Test
-    public void testOnScrolledForNullHolderLayout() {
-        for (int i = 0; i < 10; i++) {
-            dataManager.addLast(brickTestHelper.generateBrick());
-        }
-
-        footerBehavior = new TestStickyFooterBehavior(dataManager, null);
-        footerBehavior.onScrolled(recyclerView, 10, 10);
-        footerBehavior.onScroll();
-        assertNull(footerBehavior.getStickyViewHolder());
-    }
-
-    @Test
-    public void testOnDestroy() {
-        for (int i = 0; i < 30; i++) {
-            dataManager.addLast(brickTestHelper.generateBrick());
-        }
-        BaseBrick brick = brickTestHelper.generateBrick();
-        brick.setFooter(true);
-        dataManager.addLast(brick);
-        DummyLayoutManager layoutManager = new DummyLayoutManager(context);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         when(recyclerView.getLayoutManager()).thenReturn(layoutManager);
-        footerBehavior.onDataSetChanged();
+        footerBehavior.translateStickyView();
+        assertEquals(((LinearLayoutManager)recyclerView.getLayoutManager()).getOrientation(), OrientationHelper.VERTICAL);
 
-        dataManager.onDestroyView();
-        footerBehavior.detachFromRecyclerView();
-        assertNull(footerBehavior.getStickyViewHolder());
+        when(adapter.getRecyclerView()). thenReturn(null);
+        footerBehavior.translateStickyView();
+        assertNull(adapter.getRecyclerView());
 
-        when(adapter.getRecyclerView()).thenReturn(null);
-        footerBehavior.detachFromRecyclerView();
-        assertNull(footerBehavior.getStickyViewHolder());
+        when(dataManager.getBrickRecyclerAdapter()).thenReturn(null);
+        footerBehavior.translateStickyView();
+        assertNull(dataManager.getBrickRecyclerAdapter());
     }
 
-    @Test
-    public void testOnDataSetChanged() {
-        when(adapter.getItemCount()).thenReturn(0);
-        footerBehavior.onDataSetChanged();
-
-        when(adapter.getSectionFooter(9)).thenReturn(null);
-        footerBehavior.onDataSetChanged();
-
-        when(adapter.getRecyclerView().getChildCount()).thenReturn(0);
-        footerBehavior.onDataSetChanged();
-
-        stickyHolderLayout = null;
-        footerBehavior.onDataSetChanged();
-
-        when(adapter.getRecyclerView()).thenReturn(null);
-        footerBehavior.onDataSetChanged();
-        assertEquals(footerBehavior.getStickyPosition(), -1);
-    }
-
-    public static final class TestStickyFooterBehavior extends StickyFooterBehavior {
+    public class TestStickyFooterBehavior extends StickyFooterBehavior {
         TestStickyFooterBehavior(BrickDataManager brickDataManager) {
             super(brickDataManager);
         }
@@ -239,11 +189,15 @@ public class StickyFooterBehaviorTest {
         protected void translateStickyView() {
             super.translateStickyView();
         }
-    }
 
-    private final class DummyLayoutManager extends LinearLayoutManager {
-        DummyLayoutManager(Context context) {
-            super(context);
+        @Override
+        protected void stickyViewFadeTranslate(int dy) {
+            super.stickyViewFadeTranslate(dy);
+        }
+
+        @Override
+        protected  void swapStickyView(BrickViewHolder newStickyView) {
+             super.swapStickyView(newStickyView);
         }
     }
 
