@@ -83,7 +83,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
     public void onScroll() {
         BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
         //Initialize Holder Layout and show sticky view if exists already, the null condition for holder layout is for the unit tests.
-        if (stickyHolderLayout == null && (adapter.getRecyclerView() != null && adapter.getRecyclerView().getContext() != null)) {
+        if (stickyHolderLayout == null && adapter.getRecyclerView() != null && brickDataManager.getContext() != null) {
             stickyHolderLayout = (ViewGroup) ((Activity) brickDataManager.getContext()).findViewById(stickyViewContainerId);
             stickyLayoutBottomLine = (ImageView) ((Activity) brickDataManager.getContext()).findViewById(R.id.bar_shadow);
         }
@@ -167,6 +167,15 @@ abstract class StickyViewBehavior extends BrickBehavior {
     }
 
     /**
+     * Getter for stickyHolderLayout.
+     *
+     * @return stickyHolderLayout of the stickyHolder
+     */
+    public ViewGroup getStickyHolderLayout() {
+        return stickyHolderLayout;
+    }
+
+    /**
      * Static helper method to get the orientation of a recycler view.
      *
      * @param recyclerView {@link RecyclerView} whose orientation we are getting
@@ -211,7 +220,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
      *
      * @param newStickyView the new sticky view to use
      */
-    private void swapStickyView(BrickViewHolder newStickyView) {
+    protected void swapStickyView(BrickViewHolder newStickyView) {
         if (stickyViewHolder != null) {
             resetStickyView(stickyViewHolder);
         }
@@ -276,9 +285,6 @@ abstract class StickyViewBehavior extends BrickBehavior {
      */
     private void updateStickyView(int stickyPosition, boolean updateStickyContent) {
         BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
-        if (adapter == null) {
-            return;
-        }
 
         // Check if there is a new sticky view should be sticky
         if (this.stickyPosition != stickyPosition) {
@@ -303,9 +309,6 @@ abstract class StickyViewBehavior extends BrickBehavior {
      */
     private BrickViewHolder getStickyViewHolder(int position) {
         BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
-        if (adapter == null) {
-            return null;
-        }
 
         //Find existing ViewHolder
         BrickViewHolder holder = (BrickViewHolder) adapter.getRecyclerView().findViewHolderForAdapterPosition(position);
