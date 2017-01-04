@@ -1,4 +1,3 @@
-
 <div align="center">
 <span><img src="Docs/SampleImage/BrickKit.png" alt="BrickKit" title="BrickKit" ></span>
 <span style="font-size:60px; writing-mode: tb-rl;">BrickKit</span>
@@ -7,7 +6,7 @@
 
 ## What is the BrickKit
 
-BrickKit is a tool developed with the Android RecyclerView and GridLayout. With BrickKit, you could manager complex and different layouts (bricks) on the same page by one RecyclerView and DataManger. It's easy to reuse and extend bricks which highly reduces the code redundancy and difficulty of UI testing.
+BrickKit is a tool developed with the Android RecyclerView and GridLayout. With BrickKit, you can manage complex and different layouts (bricks) on the same page by one RecyclerView and DataManger. It's easy to reuse and extend bricks which highly reduces the code redundancy and difficulty of UI testing.
 
 
 ## How to import BrickKit as a library
@@ -89,8 +88,8 @@ public class SimpleBrickFragment extends BrickFragment {
 |----------|:-------------:|
 | createBricks |  Allows to constitute the different types of 'bricks' to the View.
 | addBehaviors |  Adds complex layout interactions to the View.  
-| orientation |   Allows the 'bricks' displayed at two orientations (GridLayoutManager.VERTICAL/GridLayoutManager.HORIZONTAL)
-| reverse |  While reverse is false, the bricks will be added from the top of screen, otherwise it will be added from the bottom.
+| orientation |   Defines the orientations in which the 'bricks' are layed out (GridLayoutManager.VERTICAL/GridLayoutManager.HORIZONTAL)
+| reverse |  If false, the bricks will be added from the top of screen, otherwise it will be added from the bottom.
 
 
 ### Bricks with different spans
@@ -367,12 +366,12 @@ public class CustomizedBrick extends BaseBrick {
 
 ## Manager your bricks with BrickDataManager
 
-The 'BaseDataManager' manages the RecyclerView's adapter and manipulate the each bricks. You could add/remove 'bricks' at different positions, get/replace certain 'bricks' at the certain position.
+The 'BrickDataManager' manages the RecyclerView's adapter and manipulates the bricks. You could add/remove 'bricks' at different positions, get/replace 'bricks' at certain positions.
 
 | Methods Used Frequently   |      Description  |
 |----------|:-------------:|
-| getRecyclerViewItems |  Gets all 'visible brick' items in the 'BaseDataManager'.
-| getDataManagerItems |  Gets all 'brick' items in the 'BaseDataManager'.
+| getRecyclerViewItems |  Gets all 'visible' bricks in the 'BaseDataManager'.
+| getDataManagerItems |  Gets all bricks in the 'BaseDataManager'.
 | addLast |  Inserts brick/Collection of bricks after all other bricks.
 | addFirst |   Inserts brick/Collection of bricks before all other bricks.
 | removeItem |  Remove a brick from the 'BaseDataManager'.
