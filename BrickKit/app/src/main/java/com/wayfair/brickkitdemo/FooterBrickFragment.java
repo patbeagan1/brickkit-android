@@ -32,7 +32,7 @@ public class FooterBrickFragment extends BrickFragment {
 
             if (i % 10 == 0) {
                 unusedBrick2.setFooter(true);
-                unusedBrick2.setStickyScrollMode(StickyScrollMode.SHOW_ON_SCROLL_DOWN);
+                unusedBrick2.setStickyScrollMode(StickyScrollMode.SHOW_ON_SCROLL_UP);
             }
 
             dataManager.addLast(unusedBrick2);

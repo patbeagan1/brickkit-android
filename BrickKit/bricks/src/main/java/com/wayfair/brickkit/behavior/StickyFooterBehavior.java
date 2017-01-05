@@ -22,37 +22,36 @@ public class StickyFooterBehavior extends StickyViewBehavior {
      * @param brickDataManager {@link BrickDataManager} whose adapter is used for finding bricks
      */
     public StickyFooterBehavior(BrickDataManager brickDataManager) {
-        super(brickDataManager, R.id.sticky_footer_container, "@layout/sticky_footer_layout");
+        super(brickDataManager, R.id.footer_sticky_container, R.id.footer_sticky_layout, R.id.footer_bar_shadow);
     }
 
     /**
      * Constructor for Unit Tests.
      *
      * @param brickDataManager   {@link BrickDataManager} whose adapter is used for finding bricks
-     * @param stickyHolderLayout sticky layout needed for the behavior
+     * @param stickyHolderContainer sticky layout needed for the behavior
      */
-    public StickyFooterBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderLayout) {
-        super(brickDataManager, "@layout/sticky_footer_layout", stickyHolderLayout);
+    public StickyFooterBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderContainer) {
+        super(brickDataManager, stickyHolderContainer, R.id.footer_sticky_layout, R.id.footer_bar_shadow);
     }
 
     @Override
     protected void stickyViewFadeTranslate(int dy) {
-        if (stickyHolderLayout != null && stickyHolderLayout.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_UP) {
-            float headerY = stickyHolderLayout.getY();
+        if (stickyHolderContainer != null && stickyHolderContainer.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_UP) {
+            float headerY = stickyHolderContainer.getY();
             if (dy > 0) {
-                stickyHolderLayout.setTranslationY(Math.max(headerY - dy - stickyHolderLayout.getTop(), 0));
+                stickyHolderContainer.setTranslationY(Math.max(headerY - dy - stickyHolderContainer.getTop(), 0));
             } else {
-                stickyHolderLayout.setTranslationY(Math.min(headerY - dy - stickyHolderLayout.getTop(), stickyHolderLayout.getHeight()));
+                stickyHolderContainer.setTranslationY(Math.min(headerY - dy - stickyHolderContainer.getTop(), stickyHolderContainer.getHeight()));
             }
-
         }
 
-        if (stickyHolderLayout != null && stickyHolderLayout.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_DOWN) {
-            float headerY = stickyHolderLayout.getY();
+        if (stickyHolderContainer != null && stickyHolderContainer.getHeight() > 0 && stickyScrollMode == StickyScrollMode.SHOW_ON_SCROLL_DOWN) {
+            float headerY = stickyHolderContainer.getY();
             if (dy > 0) {
-                stickyHolderLayout.setTranslationY(Math.min(headerY + dy - stickyHolderLayout.getTop(), stickyHolderLayout.getHeight()));
+                stickyHolderContainer.setTranslationY(Math.min(headerY + dy - stickyHolderContainer.getTop(), stickyHolderContainer.getHeight()));
             } else {
-                stickyHolderLayout.setTranslationY(Math.max(headerY + dy - stickyHolderLayout.getTop(), 0));
+                stickyHolderContainer.setTranslationY(Math.max(headerY + dy - stickyHolderContainer.getTop(), 0));
             }
         }
     }
@@ -112,8 +111,13 @@ public class StickyFooterBehavior extends StickyViewBehavior {
                 }
             }
         }
+
         //Apply translation
         stickyViewHolder.itemView.setTranslationX(footerOffsetX);
         stickyViewHolder.itemView.setTranslationY(footerOffsetY);
+        if (stickyHolderShadowImage != null) {
+            stickyHolderShadowImage.setTranslationX(footerOffsetX);
+            stickyHolderShadowImage.setTranslationY(footerOffsetY);
+        }
     }
 }

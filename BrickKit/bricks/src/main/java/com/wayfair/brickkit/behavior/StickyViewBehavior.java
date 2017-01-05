@@ -1,6 +1,8 @@
 package com.wayfair.brickkit.behavior;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,7 +15,6 @@ import android.widget.ImageView;
 import com.wayfair.brickkit.BrickDataManager;
 import com.wayfair.brickkit.BrickRecyclerAdapter;
 import com.wayfair.brickkit.BrickViewHolder;
-import com.wayfair.brickkit.R;
 import com.wayfair.brickkit.padding.BrickPadding;
 import com.wayfair.brickkit.StickyScrollMode;
 
@@ -24,25 +25,29 @@ import com.wayfair.brickkit.StickyScrollMode;
 abstract class StickyViewBehavior extends BrickBehavior {
     private boolean dataSetChanged;
     protected BrickDataManager brickDataManager;
+    ViewGroup stickyHolderContainer;
     ViewGroup stickyHolderLayout;
+    protected ImageView stickyHolderShadowImage;
     int stickyPosition = RecyclerView.NO_POSITION;
     BrickViewHolder stickyViewHolder;
     private int stickyViewContainerId;
-    private final String stickyLayoutName;
-    ImageView stickyLayoutBottomLine;
-    @StickyScrollMode
-    int stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
+    private int stickyViewLayoutId;
+    private int stickyShadowImageId;
+    @StickyScrollMode int stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
+    @ColorInt private int stickyBackgroundColor = Color.TRANSPARENT;
 
     /**
      * Constructor.
      *
-     * @param brickDataManager      {@link BrickDataManager} whose adapter is used for finding bricks
-     * @param stickyViewContainerId id of the container id which will be container for the sticky view
-     * @param stickyLayoutName      layout name for the sticky layout needed for the behavior
+     * @param brickDataManager      {@link BrickDataManager} whose adapter is used for finding bricks.
+     * @param stickyViewContainerId The ID of the wrapping view containing the layout view and the shadow.
+     * @param stickyViewLayoutId    The ID of the view that gets the contents of the sticky item.
+     * @param stickyShadowImageId   The ID of the shadow image view to accent the sticky view.
      */
-    StickyViewBehavior(BrickDataManager brickDataManager, int stickyViewContainerId, String stickyLayoutName) {
+    StickyViewBehavior(BrickDataManager brickDataManager, int stickyViewContainerId, int stickyViewLayoutId, int stickyShadowImageId) {
         this.stickyViewContainerId = stickyViewContainerId;
-        this.stickyLayoutName = stickyLayoutName;
+        this.stickyViewLayoutId = stickyViewLayoutId;
+        this.stickyShadowImageId = stickyShadowImageId;
         this.brickDataManager = brickDataManager;
         attachToRecyclerView();
     }
@@ -51,12 +56,18 @@ abstract class StickyViewBehavior extends BrickBehavior {
      * Constructor for Unit Tests.
      *
      * @param brickDataManager   {@link BrickDataManager} whose adapter is used for finding bricks
-     * @param stickyLayoutName   layout name for the sticky layout needed for the behavior
-     * @param stickyHolderLayout sticky layout needed for the behavior
+     * @param stickyHolderContainer sticky layout needed for the behavior
+     * @param stickyViewLayoutId    The ID of the view that gets the contents of the sticky item.
+     * @param stickyShadowImageId   The ID of the shadow image view to accent the sticky view.
      */
-    StickyViewBehavior(BrickDataManager brickDataManager, String stickyLayoutName, ViewGroup stickyHolderLayout) {
-        this.stickyLayoutName = stickyLayoutName;
-        this.stickyHolderLayout = stickyHolderLayout;
+    StickyViewBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderContainer, int stickyViewLayoutId, int stickyShadowImageId) {
+        this.stickyHolderContainer = stickyHolderContainer;
+
+        if (stickyHolderContainer != null) {
+            this.stickyHolderLayout = (ViewGroup) stickyHolderContainer.findViewById(stickyViewLayoutId);
+            this.stickyHolderShadowImage = (ImageView) stickyHolderContainer.findViewById(stickyShadowImageId);
+        }
+
         this.brickDataManager = brickDataManager;
         attachToRecyclerView();
     }
@@ -82,10 +93,18 @@ abstract class StickyViewBehavior extends BrickBehavior {
     @Override
     public void onScroll() {
         BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
+        if (stickyHolderContainer == null && adapter.getRecyclerView() != null && brickDataManager.getContext() != null) {
+            stickyHolderContainer = (ViewGroup) ((Activity) brickDataManager.getContext()).findViewById(stickyViewContainerId);
+        }
+
         //Initialize Holder Layout and show sticky view if exists already, the null condition for holder layout is for the unit tests.
-        if (stickyHolderLayout == null && adapter.getRecyclerView() != null && brickDataManager.getContext() != null) {
-            stickyHolderLayout = (ViewGroup) ((Activity) brickDataManager.getContext()).findViewById(stickyViewContainerId);
-            stickyLayoutBottomLine = (ImageView) ((Activity) brickDataManager.getContext()).findViewById(R.id.bar_shadow);
+        if (stickyHolderContainer != null && stickyHolderLayout == null) {
+            stickyHolderLayout = (ViewGroup) stickyHolderContainer.findViewById(stickyViewLayoutId);
+            stickyHolderLayout.setBackgroundColor(stickyBackgroundColor);
+        }
+
+        if (stickyHolderContainer != null && stickyHolderShadowImage == null) {
+            stickyHolderShadowImage = (ImageView) stickyHolderContainer.findViewById(stickyShadowImageId);
         }
 
         if (stickyHolderLayout != null) {
@@ -96,8 +115,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
             }
             updateOrClearStickyView(dataSetChanged);
         } else {
-            Log.w(this.getClass().getSimpleName(), "WARNING! ViewGroup for Sticky View unspecified! You must include " + stickyLayoutName
-                    + " or implement FlexibleAdapter.getStickySectionHolder() method");
+            Log.w(this.getClass().getSimpleName(), "WARNING! ViewGroup for Sticky View unspecified! You must include a view with a sticky layout");
         }
     }
 
@@ -138,13 +156,7 @@ abstract class StickyViewBehavior extends BrickBehavior {
         if (Math.abs(dx) + Math.abs(dy) != 0) {
             updateOrClearStickyView(dataSetChanged);
         }
-        if (stickyHolderLayout != null) {
-            if (stickyHolderLayout.getTop() == stickyHolderLayout.getY()) {
-                stickyLayoutBottomLine.setVisibility(View.VISIBLE);
-            } else {
-                stickyLayoutBottomLine.setVisibility(View.GONE);
-            }
-        }
+
         stickyViewFadeTranslate(dy);
     }
 
@@ -248,10 +260,13 @@ abstract class StickyViewBehavior extends BrickBehavior {
      */
     private void clearStickyView() {
         if (stickyViewHolder != null) {
-            //if (FlexibleAdapter.DEBUG) Log.v(TAG, "clearStickyView");
             resetStickyView(stickyViewHolder);
             stickyViewHolder = null;
             stickyPosition = RecyclerView.NO_POSITION;
+        }
+
+        if (stickyHolderContainer != null) {
+            stickyHolderContainer.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -286,18 +301,22 @@ abstract class StickyViewBehavior extends BrickBehavior {
     private void updateStickyView(int stickyPosition, boolean updateStickyContent) {
         BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
 
+        if (stickyHolderContainer != null) {
+            stickyHolderContainer.setVisibility(View.VISIBLE);
+        }
+
         // Check if there is a new sticky view should be sticky
         if (this.stickyPosition != stickyPosition) {
             this.stickyPosition = stickyPosition;
             BrickViewHolder holder = getStickyViewHolder(stickyPosition);
             if (stickyViewHolder != holder) {
-                //if (FlexibleAdapter.DEBUG) Log.v(TAG, "updateStickyView newPosition = " + stickyPosition);
                 swapStickyView(holder);
             }
         } else if (updateStickyContent && stickyViewHolder != null) {
             adapter.onBindViewHolder(stickyViewHolder, this.stickyPosition);
             ensureStickyViewParent();
         }
+
         translateStickyView();
     }
 
@@ -343,5 +362,18 @@ abstract class StickyViewBehavior extends BrickBehavior {
             stickyView.layout(0, 0, stickyView.getMeasuredWidth(), stickyView.getMeasuredHeight());
         }
         return holder;
+    }
+
+    /**
+     * Set the background color of the sticky view.
+     *
+     * @param backgroundColor The background color to use as the BG of the sticky view.
+     */
+    public void setStickyBackgroundColor(@ColorInt int backgroundColor) {
+        stickyBackgroundColor = backgroundColor;
+
+        if (stickyHolderLayout != null) {
+            stickyHolderLayout.setBackgroundColor(stickyBackgroundColor);
+        }
     }
 }

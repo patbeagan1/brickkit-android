@@ -1,4 +1,4 @@
-package com.wayfair.brickkit.behaviour;
+package com.wayfair.brickkit.behavior;
 
 import android.content.Context;
 import android.os.Looper;
@@ -18,7 +18,6 @@ import com.wayfair.brickkit.BrickRecyclerAdapter;
 import com.wayfair.brickkit.BrickViewHolder;
 import com.wayfair.brickkit.R;
 import com.wayfair.brickkit.StickyScrollMode;
-import com.wayfair.brickkit.behavior.StickyFooterBehavior;
 import com.wayfair.brickkit.brick.BaseBrick;
 
 import org.junit.Before;
@@ -41,6 +40,7 @@ public class StickyFooterBehaviorTest {
     private RecyclerView recyclerView;
     private BrickRecyclerAdapter adapter;
     private ViewGroup stickyHolderLayout;
+    private ViewGroup stickyContainer;
     private Context context;
     private View view;
     private BrickViewHolder stickyViewHolder;
@@ -67,21 +67,36 @@ public class StickyFooterBehaviorTest {
         when(dataManager.getBrickRecyclerAdapter()).thenReturn(adapter);
         when(adapter.getRecyclerView()).thenReturn(recyclerView);
 
+        footerBehavior = spy(new TestStickyFooterBehavior(dataManager));
+
         itemView = new TextView(context);
         ((TextView) itemView).setText(TEST);
         itemView.measure(MOCK_VIEW_SIZE, MOCK_VIEW_SIZE);
         stickyViewHolder = new BrickViewHolder(itemView);
 
-        footerBehavior = new TestStickyFooterBehavior(dataManager);
-        footerBehavior.swapStickyView(null);
-        footerBehavior.translateStickyView();
+        stickyContainer = spy((ViewGroup) LayoutInflater.from(context).inflate(R.layout.vertical_footer, new LinearLayout(context), false));
+        stickyContainer.layout(0, 0, MOCK_VIEW_SIZE, MOCK_VIEW_SIZE);
+        stickyContainer.setLayoutParams(new ViewGroup.LayoutParams(MOCK_VIEW_SIZE, MOCK_VIEW_SIZE));
 
         stickyHolderLayout = spy((ViewGroup) LayoutInflater.from(context).inflate(R.layout.text_brick, new LinearLayout(context), false));
         stickyHolderLayout.layout(0, 0, MOCK_VIEW_SIZE, MOCK_VIEW_SIZE);
         stickyHolderLayout.setLayoutParams(new ViewGroup.LayoutParams(MOCK_VIEW_SIZE, MOCK_VIEW_SIZE));
 
-        footerBehavior = spy(new TestStickyFooterBehavior(dataManager, stickyHolderLayout));
+        footerBehavior = spy(new TestStickyFooterBehavior(dataManager, stickyContainer));
         footerBehavior.swapStickyView(stickyViewHolder);
+        footerBehavior.translateStickyView();
+    }
+
+    @Test
+    public void testSimpleHeaderBehaviour() {
+        StickyFooterBehavior footerBehavior = spy(new TestStickyFooterBehavior(dataManager));
+        footerBehavior.onScroll();
+    }
+
+    @Test
+    public void testSimpleHeaderBehaviourWithContatiner() {
+        StickyFooterBehavior footerBehavior = spy(new TestStickyFooterBehavior(dataManager, stickyContainer));
+        footerBehavior.onScroll();
     }
 
     @Test
@@ -92,7 +107,7 @@ public class StickyFooterBehaviorTest {
         when(adapter.getSectionFooter(FOOTER_INDEX)).thenReturn(null);
 
         int position = footerBehavior.getStickyViewPosition(RecyclerView.NO_POSITION);
-        assertEquals(position, RecyclerView.NO_POSITION);
+        assertEquals(RecyclerView.NO_POSITION, position);
 
         BaseBrick footer = mock(BaseBrick.class);
         when(adapter.getSectionFooter(FOOTER_INDEX)).thenReturn(footer);
@@ -100,7 +115,7 @@ public class StickyFooterBehaviorTest {
         when(adapter.indexOf(footer)).thenReturn(FOOTER_INDEX);
 
         position = footerBehavior.getStickyViewPosition(FOOTER_INDEX);
-        assertEquals(position, FOOTER_INDEX);
+        assertEquals(FOOTER_INDEX, position);
     }
 
     @Test
@@ -112,24 +127,24 @@ public class StickyFooterBehaviorTest {
         footerBehavior.getStickyViewPosition(FOOTER_INDEX);
 
         footerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
-        assertEquals(stickyHolderLayout.getY(), 0f);
+        assertEquals(0f, stickyContainer.getY());
 
         footerBehavior.stickyViewFadeTranslate(-SCROLL_DISTANCE);
-        assertEquals(stickyHolderLayout.getY(), 10f);
+        assertEquals(10f, stickyContainer.getY());
 
         when(footer.getStickyScrollMode()).thenReturn(StickyScrollMode.SHOW_ON_SCROLL_DOWN);
         footerBehavior.getStickyViewPosition(FOOTER_INDEX);
         footerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
-        assertEquals(stickyHolderLayout.getY(), 10f);
+        assertEquals(10f, stickyContainer.getY());
 
         footerBehavior.stickyViewFadeTranslate(-SCROLL_DISTANCE);
-        assertEquals(stickyHolderLayout.getY(), 0f);
+        assertEquals(0f, stickyContainer.getY());
 
-        stickyHolderLayout.layout(BOUNDARY_AXIS, BOUNDARY_AXIS, BOUNDARY_AXIS, BOUNDARY_AXIS);
+        stickyContainer.layout(BOUNDARY_AXIS, BOUNDARY_AXIS, BOUNDARY_AXIS, BOUNDARY_AXIS);
         footerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
-        assertEquals(stickyHolderLayout.getY(), 1f);
+        assertEquals(1f, stickyContainer.getY());
 
-        footerBehavior = new TestStickyFooterBehavior(dataManager, null);
+        footerBehavior = new TestStickyFooterBehavior(dataManager, stickyContainer);
         footerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
     }
 
@@ -176,8 +191,8 @@ public class StickyFooterBehaviorTest {
             super(brickDataManager);
         }
 
-        TestStickyFooterBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderLayout) {
-            super(brickDataManager, stickyHolderLayout);
+        TestStickyFooterBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderContainer) {
+            super(brickDataManager, stickyHolderContainer);
         }
 
         @Override

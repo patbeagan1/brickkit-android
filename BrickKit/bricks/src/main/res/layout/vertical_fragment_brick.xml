@@ -9,38 +9,10 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:scrollbars="vertical"
-        android:background="#F2F2F4"/>
+        tools:background="#F2F2F4"/>
 
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal|top">
+    <include layout="@layout/vertical_header" />
 
-        <RelativeLayout
-            android:id="@+id/sticky_header_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@android:color/white"
-            tools:layout_height="40dp"/>
-
-        <ImageView
-            android:id="@+id/bar_shadow"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:src="@drawable/bottom_shadow"
-            tools:ignore="ContentDescription" />
-    </LinearLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/sticky_footer_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        tools:layout_height="40dp"/>
+    <include layout="@layout/vertical_footer" />
 
 </RelativeLayout>
