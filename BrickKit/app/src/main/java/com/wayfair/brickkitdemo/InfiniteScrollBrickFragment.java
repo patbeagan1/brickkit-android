@@ -1,5 +1,10 @@
 package com.wayfair.brickkitdemo;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
@@ -20,6 +25,13 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
 
     @Override
     public void createBricks() {
+        addNewBricks();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
         dataManager.getBrickRecyclerAdapter().setOnReachedItemAtPosition(
                 new OnReachedItemAtPosition() {
                     @Override
@@ -32,7 +44,7 @@ public class InfiniteScrollBrickFragment extends BrickFragment {
                 }
         );
 
-        addNewBricks();
+        return view;
     }
 
     /**

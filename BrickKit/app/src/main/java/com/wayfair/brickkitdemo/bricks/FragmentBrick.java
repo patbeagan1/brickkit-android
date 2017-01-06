@@ -57,7 +57,6 @@ public class FragmentBrick extends BaseBrick {
                 fragmentManager.beginTransaction().add(fragment, tag).commit();
                 fragmentManager.executePendingTransactions();
                 fragment.onAttach(context);
-                fragment.onCreate(null);
                 view = fragment.onCreateView(
                         LayoutInflater.from(holder.itemView.getContext()),
                         ((FragmentBrickViewHolder) holder).frameLayout,

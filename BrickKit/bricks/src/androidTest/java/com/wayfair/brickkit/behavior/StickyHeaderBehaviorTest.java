@@ -1,7 +1,8 @@
-package com.wayfair.brickkit.behaviour;
+package com.wayfair.brickkit.behavior;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
@@ -46,6 +47,7 @@ public class StickyHeaderBehaviorTest {
     private RecyclerView recyclerView;
     private BrickRecyclerAdapter adapter;
     private ViewGroup stickyHolderLayout;
+    private ViewGroup stickyContainer;
     private Context context;
     private View view;
     private BrickViewHolder stickyViewHolder;
@@ -78,16 +80,27 @@ public class StickyHeaderBehaviorTest {
 
         stickyViewHolder = new BrickViewHolder(itemView);
 
-        headerBehavior = spy(new TestStickyHeaderBehavior(dataManager));
-        headerBehavior.swapStickyView(null);
-        headerBehavior.translateStickyView();
+        stickyContainer = spy((ViewGroup) LayoutInflater.from(context).inflate(R.layout.vertical_header, new LinearLayout(context), false));
+        stickyContainer.layout(0, 0, MOCK_VIEW_SIZE, MOCK_VIEW_SIZE);
+        stickyContainer.setLayoutParams(new ViewGroup.LayoutParams(MOCK_VIEW_SIZE, MOCK_VIEW_SIZE));
 
-        stickyHolderLayout = spy((ViewGroup) LayoutInflater.from(context).inflate(R.layout.text_brick, new LinearLayout(context), false));
-        stickyHolderLayout.layout(0, 0, MOCK_VIEW_SIZE, MOCK_VIEW_SIZE);
-        stickyHolderLayout.setLayoutParams(new ViewGroup.LayoutParams(MOCK_VIEW_SIZE, MOCK_VIEW_SIZE));
+        View header = spy((ViewGroup) LayoutInflater.from(context).inflate(R.layout.text_brick, new LinearLayout(context), false));
+        header.layout(0, 0, MOCK_VIEW_SIZE, MOCK_VIEW_SIZE);
+        header.setLayoutParams(new ViewGroup.LayoutParams(MOCK_VIEW_SIZE, MOCK_VIEW_SIZE));
 
-        headerBehavior = spy(new TestStickyHeaderBehavior(dataManager, stickyHolderLayout));
+        stickyHolderLayout = ((ViewGroup) stickyContainer.findViewById(R.id.header_sticky_layout));
+        stickyHolderLayout.addView(header);
+
+        headerBehavior = spy(new TestStickyHeaderBehavior(dataManager, stickyContainer));
         headerBehavior.swapStickyView(stickyViewHolder);
+        headerBehavior.translateStickyView();
+        headerBehavior.setStickyBackgroundColor(Color.WHITE);
+    }
+
+    @Test
+    public void testSimpleHeaderBehaviour() {
+        StickyHeaderBehavior headerBehavior = spy(new TestStickyHeaderBehavior(dataManager));
+        headerBehavior.onScroll();
     }
 
     @Test
@@ -118,24 +131,24 @@ public class StickyHeaderBehaviorTest {
         headerBehavior.getStickyViewPosition(HEADER_INDEX);
 
         headerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
-        assertEquals(stickyHolderLayout.getY(), 0f);
+        assertEquals(0f, stickyContainer.getY());
 
         headerBehavior.stickyViewFadeTranslate(-SCROLL_DISTANCE);
-        assertEquals(stickyHolderLayout.getY(), -10f);
+        assertEquals(-10f, stickyContainer.getY());
 
         when(header.getStickyScrollMode()).thenReturn(StickyScrollMode.SHOW_ON_SCROLL_DOWN);
         headerBehavior.getStickyViewPosition(HEADER_INDEX);
         headerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
-        assertEquals(stickyHolderLayout.getY(), -10f);
+        assertEquals(-10f, stickyContainer.getY());
 
         headerBehavior.stickyViewFadeTranslate(-SCROLL_DISTANCE);
-        assertEquals(stickyHolderLayout.getY(), 0f);
+        assertEquals(0f, stickyContainer.getY());
 
-        stickyHolderLayout.layout(BOUNDARY_AXIS, BOUNDARY_AXIS, BOUNDARY_AXIS, BOUNDARY_AXIS);
+        stickyContainer.layout(BOUNDARY_AXIS, BOUNDARY_AXIS, BOUNDARY_AXIS, BOUNDARY_AXIS);
         headerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
-        assertEquals(stickyHolderLayout.getY(), 1f);
+        assertEquals(1f, stickyContainer.getY());
 
-        headerBehavior = spy(new TestStickyHeaderBehavior(dataManager, null));
+        headerBehavior = spy(new TestStickyHeaderBehavior(dataManager, stickyContainer));
         headerBehavior.stickyViewFadeTranslate(SCROLL_DISTANCE);
     }
 
@@ -143,7 +156,7 @@ public class StickyHeaderBehaviorTest {
     public void testTranslateStickyView() {
         when(adapter.getRecyclerView().getChildAt(HEADER_INDEX)).thenReturn(null);
         headerBehavior.translateStickyView();
-        verify(recyclerView).getChildAt(HEADER_INDEX);
+        verify(recyclerView, atLeastOnce()).getChildAt(HEADER_INDEX);
         assertNull(recyclerView.getChildAt(HEADER_INDEX));
 
         View textView = new TextView(context);
@@ -162,17 +175,17 @@ public class StickyHeaderBehaviorTest {
 
         textView.layout(-BOUNDARY_AXIS, BOUNDARY_AXIS, MOCK_VIEW_SIZE, MOCK_VIEW_SIZE);
         headerBehavior.translateStickyView();
-        assertEquals(textView.getLeft(), -BOUNDARY_AXIS);
+        assertEquals(-BOUNDARY_AXIS, textView.getLeft());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         when(recyclerView.getLayoutManager()).thenReturn(layoutManager);
         headerBehavior.translateStickyView();
-        assertEquals(((LinearLayoutManager)recyclerView.getLayoutManager()).getOrientation(), OrientationHelper.VERTICAL);
+        assertEquals(OrientationHelper.VERTICAL, ((LinearLayoutManager)recyclerView.getLayoutManager()).getOrientation());
 
         textView.layout(-BOUNDARY_AXIS, -BOUNDARY_AXIS, MOCK_VIEW_SIZE, MOCK_VIEW_SIZE);
         headerBehavior.translateStickyView();
-        assertEquals(textView.getTop(), -BOUNDARY_AXIS);
+        assertEquals(-BOUNDARY_AXIS, textView.getTop());
 
         when(adapter.getRecyclerView()). thenReturn(null);
         headerBehavior.translateStickyView();
@@ -205,16 +218,15 @@ public class StickyHeaderBehaviorTest {
         headerBehavior.onScroll();
         verify(headerBehavior).onScroll();
 
-        doReturn(null).when(stickyHolderLayout).getLayoutParams();
         headerBehavior.onScroll();
         verify(headerBehavior, atLeastOnce()).onScroll();
 
-        headerBehavior = spy(new TestStickyHeaderBehavior(dataManager, null));
+        headerBehavior = spy(new TestStickyHeaderBehavior(dataManager, stickyContainer));
         Activity context = mock(Activity.class);
         when(dataManager.getContext()).thenReturn(context);
-        when((context).findViewById(R.id.sticky_header_container)).thenReturn(stickyHolderLayout);
+        when((context).findViewById(R.id.header_sticky_layout)).thenReturn(stickyHolderLayout);
         ImageView imageView = mock(ImageView.class);
-        when((context).findViewById(R.id.bar_shadow)).thenReturn(imageView);
+        when((context).findViewById(R.id.header_bar_shadow)).thenReturn(imageView);
         headerBehavior.onScroll();
 
         when(dataManager.getContext()).thenReturn(null);
@@ -228,15 +240,15 @@ public class StickyHeaderBehaviorTest {
 
     @Test
     public void testOnScrolled() {
-        headerBehavior = spy(new TestStickyHeaderBehavior(dataManager, null));
+        headerBehavior = spy(new TestStickyHeaderBehavior(dataManager, stickyContainer));
         headerBehavior.onScrolled(recyclerView, 0, 0);
 
         headerBehavior = spy(new TestStickyHeaderBehavior(dataManager));
         Activity context = mock(Activity.class);
         when(dataManager.getContext()).thenReturn(context);
-        when((context).findViewById(R.id.sticky_header_container)).thenReturn(stickyHolderLayout);
+        when((context).findViewById(R.id.header_sticky_layout)).thenReturn(stickyHolderLayout);
         ImageView imageView = mock(ImageView.class);
-        when((context).findViewById(R.id.bar_shadow)).thenReturn(imageView);
+        when((context).findViewById(R.id.header_bar_shadow)).thenReturn(imageView);
         headerBehavior.onScroll();
         headerBehavior.onScrolled(recyclerView, BOUNDARY_AXIS, BOUNDARY_AXIS);
         assertEquals(stickyHolderLayout.getTop(), (int)stickyHolderLayout.getY());
@@ -270,23 +282,17 @@ public class StickyHeaderBehaviorTest {
     @Test
     public void testUpdateOrClearStickyView() {
         //have to set up stickyLayoutBottomLine
-        headerBehavior = spy(new TestStickyHeaderBehavior(dataManager));
-        Activity activityContext = mock(Activity.class);
-        when(dataManager.getContext()).thenReturn(activityContext);
-        when((activityContext).findViewById(R.id.sticky_header_container)).thenReturn(stickyHolderLayout);
-        ImageView imageView = mock(ImageView.class);
-        when((activityContext).findViewById(R.id.bar_shadow)).thenReturn(imageView);
         headerBehavior.onScroll();
-        assertEquals(headerBehavior.getStickyHolderLayout(), stickyHolderLayout);
+        assertEquals(stickyHolderLayout, headerBehavior.getStickyHolderLayout());
 
         when(recyclerView.getChildCount()).thenReturn(ADAPTER_COUNT);
         doReturn(RecyclerView.NO_POSITION).when(headerBehavior).getStickyViewPosition(RecyclerView.NO_POSITION);
-        headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE ,SCROLL_DISTANCE);
-        assertEquals(headerBehavior.getStickyViewPosition(RecyclerView.NO_POSITION), RecyclerView.NO_POSITION);
+        headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE, SCROLL_DISTANCE);
+        assertEquals(RecyclerView.NO_POSITION, headerBehavior.getStickyViewPosition(RecyclerView.NO_POSITION));
 
         doReturn(HEADER_INDEX).when(headerBehavior).getStickyViewPosition(RecyclerView.NO_POSITION);
         when(adapter.getItemCount()).thenReturn(0);
-        headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE ,SCROLL_DISTANCE);
+        headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE, SCROLL_DISTANCE);
 
         doReturn(HEADER_INDEX).when(headerBehavior).getStickyViewPosition(RecyclerView.NO_POSITION);
         when(adapter.getItemCount()).thenReturn(ADAPTER_COUNT);
@@ -296,11 +302,11 @@ public class StickyHeaderBehaviorTest {
         BaseBrick brick = mock(BaseBrick.class);
         when(dataManager.brickAtPosition(HEADER_INDEX)).thenReturn(brick);
         when(brick.getPadding()).thenReturn(padding);
-        headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE ,SCROLL_DISTANCE);
+        headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE, SCROLL_DISTANCE);
         verify(dataManager.brickAtPosition(HEADER_INDEX), atLeastOnce()).getPadding();
 
         headerBehavior.onDataSetChanged();
-        headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE ,SCROLL_DISTANCE);
+        headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE, SCROLL_DISTANCE);
 
         doReturn(2).when(headerBehavior).getStickyViewPosition(RecyclerView.NO_POSITION);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
@@ -310,13 +316,13 @@ public class StickyHeaderBehaviorTest {
         when(adapter.onCreateViewHolder(recyclerView, 2)).thenReturn(stickyViewHolder);
         when(dataManager.brickAtPosition(2)).thenReturn(brick);
         when(brick.getPadding()).thenReturn(padding);
-        headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE ,SCROLL_DISTANCE);
+        headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE, SCROLL_DISTANCE);
         verify(dataManager.brickAtPosition(2), atLeastOnce()).getPadding();
-        assertEquals((((LinearLayoutManager)recyclerView.getLayoutManager()).getOrientation()), OrientationHelper.VERTICAL);
+        assertEquals(OrientationHelper.VERTICAL, (((LinearLayoutManager)recyclerView.getLayoutManager()).getOrientation()));
 
         when(adapter.getRecyclerView().getChildCount()).thenReturn(0);
         headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE, SCROLL_DISTANCE);
-        assertEquals(adapter.getRecyclerView().getChildCount(), 0);
+        assertEquals(0, adapter.getRecyclerView().getChildCount());
 
         when(adapter.getRecyclerView()).thenReturn(null);
         headerBehavior.onScrolled(recyclerView, SCROLL_DISTANCE, SCROLL_DISTANCE);
@@ -348,8 +354,8 @@ public class StickyHeaderBehaviorTest {
             super(brickDataManager);
         }
 
-        TestStickyHeaderBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderLayout) {
-            super(brickDataManager, stickyHolderLayout);
+        TestStickyHeaderBehavior(BrickDataManager brickDataManager, ViewGroup stickyHolderContainer) {
+            super(brickDataManager, stickyHolderContainer);
         }
 
         @Override
