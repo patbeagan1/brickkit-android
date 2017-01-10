@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2017 Wayfair. All rights reserved.
+ */
 package com.wayfair.brickkitdemo;
 
 import com.wayfair.brickkit.BrickFragment;

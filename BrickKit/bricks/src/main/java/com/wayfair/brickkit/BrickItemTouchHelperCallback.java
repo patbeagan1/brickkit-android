@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2017 Wayfair. All rights reserved.
+ */
 package com.wayfair.brickkit;
 
 import android.support.v7.widget.GridLayoutManager;
