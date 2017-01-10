@@ -15,10 +15,10 @@ import com.wayfair.brickkit.size.BrickSize;
  * Abstract class which defines Bricks.
  */
 public abstract class BaseBrick {
-    protected final Context context;
     private final BrickPadding padding;
     private final BrickSize spanSize;
 
+    protected Context context;
     private boolean hidden = false;
     private boolean header = false;
     private boolean footer = false;
