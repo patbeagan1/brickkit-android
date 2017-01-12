@@ -1,6 +1,5 @@
 package com.wayfair.brickkit.behavior;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.LinearLayoutManager;
@@ -93,8 +92,8 @@ abstract class StickyViewBehavior extends BrickBehavior {
     @Override
     public void onScroll() {
         BrickRecyclerAdapter adapter = brickDataManager.getBrickRecyclerAdapter();
-        if (stickyHolderContainer == null && adapter.getRecyclerView() != null && brickDataManager.getContext() != null) {
-            stickyHolderContainer = (ViewGroup) ((Activity) brickDataManager.getContext()).findViewById(stickyViewContainerId);
+        if (stickyHolderContainer == null && adapter.getRecyclerView() != null && brickDataManager.getRecyclerViewParent() != null) {
+            stickyHolderContainer = (ViewGroup) (brickDataManager.getRecyclerViewParent()).findViewById(stickyViewContainerId);
         }
 
         //Initialize Holder Layout and show sticky view if exists already, the null condition for holder layout is for the unit tests.

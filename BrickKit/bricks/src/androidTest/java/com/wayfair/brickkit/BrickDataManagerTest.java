@@ -7,6 +7,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.wayfair.brickkit.behavior.BrickBehavior;
 import com.wayfair.brickkit.brick.BaseBrick;
@@ -47,8 +48,8 @@ public class BrickDataManagerTest {
         context = InstrumentationRegistry.getTargetContext();
         manager = new BrickDataManager(MAX_SPANS);
         manager.addBehavior(mock(BrickBehavior.class));
-
-        manager.setRecyclerView(context, new RecyclerView(context), GridLayoutManager.VERTICAL, false);
+        View parentView = mock(View.class);
+        manager.setRecyclerView(context, new RecyclerView(context), GridLayoutManager.VERTICAL, false, parentView);
         brickTestHelper = new BrickTestHelper(context);
 
         manager.addLast(brickTestHelper.generateBrick());
@@ -216,8 +217,8 @@ public class BrickDataManagerTest {
         context = InstrumentationRegistry.getTargetContext();
         manager = new BrickDataManager(MAX_SPANS);
         manager.addBehavior(mock(BrickBehavior.class));
-
-        manager.setRecyclerView(context, new RecyclerView(context), GridLayoutManager.HORIZONTAL, false);
+        View parentView = mock(View.class);
+        manager.setRecyclerView(context, new RecyclerView(context), GridLayoutManager.HORIZONTAL, false, parentView);
         brickTestHelper = new BrickTestHelper(context);
 
         manager.addLast(brickTestHelper.generateBrick());

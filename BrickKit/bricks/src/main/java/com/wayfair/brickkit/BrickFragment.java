@@ -37,7 +37,7 @@ public abstract class BrickFragment extends Fragment {
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setBackgroundColor(recyclerViewBackground);
-        dataManager.setRecyclerView(getContext(), recyclerView, orientation(), reverse());
+        dataManager.setRecyclerView(getContext(), recyclerView, orientation(), reverse(), view);
 
         return view;
     }

@@ -5,6 +5,7 @@ import android.support.annotation.LayoutRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 import android.widget.GridLayout;
 
 import com.wayfair.brickkit.behavior.BrickBehavior;
@@ -36,6 +37,7 @@ public class BrickDataManager implements Serializable {
     private boolean swipeToDismiss;
     private boolean vertical;
     private RecyclerView recyclerView;
+    private View recyclerViewParent;
 
     /**
      * Constructor.
@@ -57,11 +59,13 @@ public class BrickDataManager implements Serializable {
      * @param recyclerView {@link RecyclerView} to put views in
      * @param orientation Layout orientation. Should be {@link GridLayoutManager#HORIZONTAL} or {@link GridLayoutManager#VERTICAL}.
      * @param reverse When set to true, layouts from end to start.
+     * @param recyclerViewParent View RecyclerView's parent view
      */
-    public void setRecyclerView(Context context, RecyclerView recyclerView, int orientation, boolean reverse) {
+    public void setRecyclerView(Context context, RecyclerView recyclerView, int orientation, boolean reverse, View recyclerViewParent) {
         this.context = context;
         this.brickRecyclerAdapter = new BrickRecyclerAdapter(this, recyclerView);
         this.vertical = orientation == GridLayout.VERTICAL;
+        this.recyclerViewParent = recyclerViewParent;
 
         this.recyclerView = recyclerView;
         recyclerView.setAdapter(brickRecyclerAdapter);
@@ -103,6 +107,15 @@ public class BrickDataManager implements Serializable {
         this.dragAndDrop = dragAndDrop;
 
         attachTouchHelper();
+    }
+
+    /**
+     * Get the recycler view's parent.
+     *
+     * @return the attached recyclerview's parent, null if none has been attached
+     */
+    public View getRecyclerViewParent() {
+        return recyclerViewParent;
     }
 
     /**
