@@ -700,6 +700,11 @@ public class BrickDataManager implements Serializable {
      * @param behavior {@link BrickBehavior} to add
      */
     public void addBehavior(BrickBehavior behavior) {
+        for (BrickBehavior brickBehavior : behaviors) {
+            if (brickBehavior.getClass().isInstance(behavior.getClass().getName())) {
+                return;
+            }
+        }
         behaviors.add(behavior);
     }
 

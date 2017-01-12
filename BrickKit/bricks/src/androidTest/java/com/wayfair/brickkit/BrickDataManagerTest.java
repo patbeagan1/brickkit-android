@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.wayfair.brickkit.behavior.BrickBehavior;
+import com.wayfair.brickkit.behavior.StickyFooterBehavior;
+import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
 import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.util.BrickTestHelper;
 
@@ -47,7 +49,7 @@ public class BrickDataManagerTest {
         }
         context = InstrumentationRegistry.getTargetContext();
         manager = new BrickDataManager(MAX_SPANS);
-        manager.addBehavior(mock(BrickBehavior.class));
+        manager.addBehavior(mock(StickyHeaderBehavior.class));
         View parentView = mock(View.class);
         manager.setRecyclerView(context, new RecyclerView(context), GridLayoutManager.VERTICAL, false, parentView);
         brickTestHelper = new BrickTestHelper(context);
@@ -57,7 +59,7 @@ public class BrickDataManagerTest {
         manager.addLast(brickTestHelper.generateBrick());
         manager.addLast(brickTestHelper.generateBrick());
 
-        behavior = mock(BrickBehavior.class);
+        behavior = mock(StickyFooterBehavior.class);
 
         manager.addBehavior(behavior);
 
@@ -226,7 +228,7 @@ public class BrickDataManagerTest {
         manager.addLast(brickTestHelper.generateBrick());
         manager.addLast(brickTestHelper.generateBrick());
 
-        behavior = mock(BrickBehavior.class);
+        behavior = mock(StickyHeaderBehavior.class);
 
         manager.addBehavior(behavior);
 
