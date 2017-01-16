@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/header_sticky_container"
-              android:layout_height="wrap_content"
-              android:layout_width="match_parent"
-              android:orientation="vertical"
-              android:layout_gravity="center_horizontal|top">
+<!-- Copyright © 2017 Wayfair. All rights reserved. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/header_sticky_container"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal|top">
 
     <RelativeLayout
         android:id="@+id/header_sticky_layout"
