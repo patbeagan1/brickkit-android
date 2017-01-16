@@ -485,13 +485,13 @@ public class BrickDataManager implements Serializable {
     }
 
     /**
-     * Hide visible the brick.
+     * Update the visibility of the brick and set it invisible.
      *
      * @param item the brick to be hided
      */
     public void hideItem(BaseBrick item) {
         item.setHidden(true);
-        if (items.indexOf(item) != -1 && adapterIndex(item) != -1 && item.isHidden()) {
+        if (items.indexOf(item) != -1 && adapterIndex(item) != -1) {
             int index = adapterIndex(item);
             dataHasChanged();
             if (brickRecyclerAdapter != null) {
@@ -503,13 +503,13 @@ public class BrickDataManager implements Serializable {
     }
 
     /**
-     * Show the hidden brick.
+     * Update the visibility of the brick and set it visible.
      *
      * @param item the brick to be showed
      */
     public void showItem(BaseBrick item) {
         item.setHidden(false);
-        if (items.indexOf(item) != -1 && adapterIndex(item) == -1 && !item.isHidden()) {
+        if (items.indexOf(item) != -1 && adapterIndex(item) == -1) {
             dataHasChanged();
             if (brickRecyclerAdapter != null) {
                 int index = adapterIndex(item);
