@@ -81,6 +81,11 @@ public class BrickDataManager implements Serializable {
         for (BrickBehavior behavior : behaviors) {
             behavior.attachToRecyclerView();
         }
+
+        if (getRecyclerViewItems().size() > 0) {
+            computePaddingPosition(getRecyclerViewItems().get(0));
+            brickRecyclerAdapter.notifyItemRangeInserted(0, getRecyclerViewItems().size());
+        }
     }
 
     /**
@@ -576,12 +581,21 @@ public class BrickDataManager implements Serializable {
 
         ListIterator<BaseBrick> iterator = getRecyclerViewItems().listIterator(startingBrickIndex);
 
-        while (iterator.hasPrevious()) {
-            currentBrick = iterator.previous();
-            startingBrickIndex--;
-            if ((vertical && currentBrick.isOnLeftWall())
-                    || (!vertical && currentBrick.isInFirstRow())) {
-                break;
+        if (!(vertical && currentBrick.isOnLeftWall())
+                && !(!vertical && currentBrick.isInFirstRow())) {
+            while (iterator.hasPrevious()) {
+                currentBrick = iterator.previous();
+                if ((vertical && currentBrick.isOnRightWall())
+                        ||(!vertical && currentBrick.isInLastRow())) {
+                    currentBrick = iterator.next();
+                    break;
+                } else {
+                    startingBrickIndex--;
+                    if ((vertical && currentBrick.isOnLeftWall())
+                            || (!vertical && currentBrick.isInFirstRow())) {
+                        break;
+                    }
+                }
             }
         }
 
