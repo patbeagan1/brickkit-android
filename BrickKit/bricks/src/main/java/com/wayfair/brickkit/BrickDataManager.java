@@ -586,7 +586,7 @@ public class BrickDataManager implements Serializable {
             while (iterator.hasPrevious()) {
                 currentBrick = iterator.previous();
                 if ((vertical && currentBrick.isOnRightWall())
-                        ||(!vertical && currentBrick.isInLastRow())) {
+                        || (!vertical && currentBrick.isInLastRow())) {
                     currentBrick = iterator.next();
                     break;
                 } else {
