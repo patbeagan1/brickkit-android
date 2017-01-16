@@ -909,8 +909,8 @@ public class BrickDataManagerTest {
         assertEquals(-1, observer.getItemRangeInsertedPositionStart());
         assertEquals(-1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(0, observer.getItemRangeChangedPositionStart());
-        assertEquals(5, observer.getItemRangeChangedItemCount());
+        assertEquals(1, observer.getItemRangeChangedPositionStart());
+        assertEquals(1, observer.getItemRangeChangedItemCount());
 
         assertEquals(-1, observer.getItemRangeRemovedPositionStart());
         assertEquals(-1, observer.getItemRangeRemovedItemCount());
@@ -928,8 +928,7 @@ public class BrickDataManagerTest {
         observer.setItemRangeChangedPositionStart(-1);
         observer.setItemRangeChangedItemCount(-1);
 
-        brickToRefresh.setHidden(false);
-        manager.refreshItem(brickToRefresh);
+        manager.showItem(brickToRefresh);
 
         assertEquals(5, manager.getRecyclerViewItems().size());
         assertEquals(5, manager.getDataManagerItems().size());
@@ -956,8 +955,7 @@ public class BrickDataManagerTest {
         observer.setItemRangeChangedPositionStart(-1);
         observer.setItemRangeChangedItemCount(-1);
 
-        brickToRefresh.setHidden(true);
-        manager.refreshItem(brickToRefresh);
+        manager.hideItem(brickToRefresh);
 
         assertEquals(4, manager.getRecyclerViewItems().size());
         assertEquals(5, manager.getDataManagerItems().size());
