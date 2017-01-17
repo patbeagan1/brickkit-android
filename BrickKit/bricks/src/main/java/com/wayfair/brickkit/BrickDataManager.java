@@ -434,9 +434,9 @@ public class BrickDataManager implements Serializable {
      * @param replacement the brick being added
      */
     public void replaceItem(BaseBrick target, BaseBrick replacement) {
-        if ((adapterIndex(target) == -1) == replacement.isHidden()) {
+        int index = adapterIndex(target);
+        if ((index == -1) == replacement.isHidden()) {
             if (!target.isHidden()) {
-                int index = adapterIndex(target);
                 items.remove(index);
                 items.add(index, replacement);
                 dataHasChanged();
@@ -448,14 +448,13 @@ public class BrickDataManager implements Serializable {
             }
         } else {
             if (replacement.isHidden()) {
-                int adapterIndex = adapterIndex(target);
                 int dataIndex = getDataManagerItems().indexOf(target);
                 items.remove(dataIndex);
                 items.add(dataIndex, replacement);
                 dataHasChanged();
                 if (brickRecyclerAdapter != null) {
                     int refreshStartIndex = computePaddingPosition(target);
-                    brickRecyclerAdapter.safeNotifyItemRemoved(adapterIndex);
+                    brickRecyclerAdapter.safeNotifyItemRemoved(index);
                     brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
                 }
             } else {
@@ -479,10 +478,12 @@ public class BrickDataManager implements Serializable {
      * @param item the brick to refresh
      */
     public void refreshItem(BaseBrick item) {
-        if (items.indexOf(item) != -1 && adapterIndex(item) != -1 && !item.isHidden()) {
+        int index = adapterIndex(item);
+        if (items.indexOf(item) != -1 && index != -1 && !item.isHidden()) {
             if (brickRecyclerAdapter != null) {
-                int index = adapterIndex(item);
+                int refreshStartIndex = computePaddingPosition(item);
                 brickRecyclerAdapter.safeNotifyItemChanged(index);
+                brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
             }
         }
     }
@@ -494,13 +495,14 @@ public class BrickDataManager implements Serializable {
      */
     public void hideItem(BaseBrick item) {
         item.setHidden(true);
-        if (items.indexOf(item) != -1 && adapterIndex(item) != -1) {
-            int index = adapterIndex(item);
+        int index = adapterIndex(item);
+        if (items.indexOf(item) != -1 && index != -1) {
             dataHasChanged();
             if (brickRecyclerAdapter != null) {
-                int refreshStartIndex = computePaddingPosition(item);
+                computePaddingPosition(item);
                 brickRecyclerAdapter.safeNotifyItemRemoved(index);
-                brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
+                //TODO Temporary fix
+                brickRecyclerAdapter.safeNotifyDataSetChanged();
             }
         }
     }
