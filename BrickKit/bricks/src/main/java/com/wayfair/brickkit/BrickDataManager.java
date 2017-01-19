@@ -590,10 +590,15 @@ public class BrickDataManager implements Serializable {
                     currentBrick = iterator.next();
                     break;
                 } else {
-                    startingBrickIndex--;
                     if ((vertical && currentBrick.isOnLeftWall())
                             || (!vertical && currentBrick.isInFirstRow())) {
                         break;
+                    } else {
+                        startingBrickIndex--;
+                        if ((vertical && currentBrick.isOnLeftWall())
+                                || (!vertical && currentBrick.isInFirstRow())) {
+                            break;
+                        }
                     }
                 }
             }

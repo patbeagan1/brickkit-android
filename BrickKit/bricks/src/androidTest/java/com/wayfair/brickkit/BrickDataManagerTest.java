@@ -130,8 +130,8 @@ public class BrickDataManagerTest {
         assertEquals(4, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(2, observer.getItemRangeChangedPositionStart());
-        assertEquals(2, observer.getItemRangeChangedItemCount());
+        assertEquals(4, observer.getItemRangeChangedPositionStart());
+        assertEquals(0, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -169,8 +169,8 @@ public class BrickDataManagerTest {
         assertEquals(4, observer.getItemRangeInsertedPositionStart());
         assertEquals(3, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(2, observer.getItemRangeChangedPositionStart());
-        assertEquals(2, observer.getItemRangeChangedItemCount());
+        assertEquals(4, observer.getItemRangeChangedPositionStart());
+        assertEquals(0, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -361,8 +361,8 @@ public class BrickDataManagerTest {
         assertEquals(4, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(2, observer.getItemRangeChangedPositionStart());
-        assertEquals(3, observer.getItemRangeChangedItemCount());
+        assertEquals(4, observer.getItemRangeChangedPositionStart());
+        assertEquals(1, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -381,8 +381,8 @@ public class BrickDataManagerTest {
         assertEquals(1, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(0, observer.getItemRangeChangedPositionStart());
-        assertEquals(5, observer.getItemRangeChangedItemCount());
+        assertEquals(1, observer.getItemRangeChangedPositionStart());
+        assertEquals(4, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -436,8 +436,8 @@ public class BrickDataManagerTest {
         assertEquals(4, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(2, observer.getItemRangeChangedPositionStart());
-        assertEquals(3, observer.getItemRangeChangedItemCount());
+        assertEquals(4, observer.getItemRangeChangedPositionStart());
+        assertEquals(1, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -456,8 +456,8 @@ public class BrickDataManagerTest {
         assertEquals(1, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(0, observer.getItemRangeChangedPositionStart());
-        assertEquals(5, observer.getItemRangeChangedItemCount());
+        assertEquals(1, observer.getItemRangeChangedPositionStart());
+        assertEquals(4, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -492,8 +492,8 @@ public class BrickDataManagerTest {
         assertEquals(3, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(2, observer.getItemRangeChangedPositionStart());
-        assertEquals(3, observer.getItemRangeChangedItemCount());
+        assertEquals(3, observer.getItemRangeChangedPositionStart());
+        assertEquals(2, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -524,8 +524,8 @@ public class BrickDataManagerTest {
         assertEquals(1, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(0, observer.getItemRangeChangedPositionStart());
-        assertEquals(5, observer.getItemRangeChangedItemCount());
+        assertEquals(1, observer.getItemRangeChangedPositionStart());
+        assertEquals(4, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -540,8 +540,8 @@ public class BrickDataManagerTest {
         assertEquals(4, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(2, observer.getItemRangeChangedPositionStart());
-        assertEquals(3, observer.getItemRangeChangedItemCount());
+        assertEquals(4, observer.getItemRangeChangedPositionStart());
+        assertEquals(1, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -557,8 +557,8 @@ public class BrickDataManagerTest {
         assertEquals(4, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(2, observer.getItemRangeChangedPositionStart());
-        assertEquals(3, observer.getItemRangeChangedItemCount());
+        assertEquals(4, observer.getItemRangeChangedPositionStart());
+        assertEquals(1, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -573,8 +573,8 @@ public class BrickDataManagerTest {
         assertEquals(4, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(2, observer.getItemRangeChangedPositionStart());
-        assertEquals(3, observer.getItemRangeChangedItemCount());
+        assertEquals(4, observer.getItemRangeChangedPositionStart());
+        assertEquals(1, observer.getItemRangeChangedItemCount());
 
         verify(behavior).onDataSetChanged();
     }
@@ -801,8 +801,8 @@ public class BrickDataManagerTest {
         assertEquals(-1, observer.getItemRangeInsertedPositionStart());
         assertEquals(-1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(0, observer.getItemRangeChangedPositionStart());
-        assertEquals(5, observer.getItemRangeChangedItemCount());
+        assertEquals(1, observer.getItemRangeChangedPositionStart());
+        assertEquals(4, observer.getItemRangeChangedItemCount());
 
         assertEquals(-1, observer.getItemRangeRemovedPositionStart());
         assertEquals(-1, observer.getItemRangeRemovedItemCount());
@@ -936,8 +936,8 @@ public class BrickDataManagerTest {
         assertEquals(1, observer.getItemRangeInsertedPositionStart());
         assertEquals(1, observer.getItemRangeInsertedItemCount());
 
-        assertEquals(0, observer.getItemRangeChangedPositionStart());
-        assertEquals(5, observer.getItemRangeChangedItemCount());
+        assertEquals(1, observer.getItemRangeChangedPositionStart());
+        assertEquals(4, observer.getItemRangeChangedItemCount());
 
         assertEquals(-1, observer.getItemRangeRemovedPositionStart());
         assertEquals(-1, observer.getItemRangeRemovedItemCount());
