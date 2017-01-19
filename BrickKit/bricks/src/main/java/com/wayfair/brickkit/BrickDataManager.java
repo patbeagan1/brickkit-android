@@ -504,10 +504,9 @@ public class BrickDataManager implements Serializable {
         if (items.indexOf(item) != -1 && index != -1) {
             dataHasChanged();
             if (brickRecyclerAdapter != null) {
-                computePaddingPosition(item);
+                int refreshStartIndex = computePaddingPosition(getRecyclerViewItems().get(index));
                 brickRecyclerAdapter.safeNotifyItemRemoved(index);
-                //TODO Temporary fix
-                brickRecyclerAdapter.safeNotifyDataSetChanged();
+                brickRecyclerAdapter.safeNotifyItemRangeChanged(refreshStartIndex, getRecyclerViewItems().size() - refreshStartIndex);
             }
         }
     }
