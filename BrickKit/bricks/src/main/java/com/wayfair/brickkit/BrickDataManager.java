@@ -35,7 +35,6 @@ public class BrickDataManager implements Serializable {
     private LinkedList<BaseBrick> currentlyVisibleItems;
     private boolean dataHasChanged;
     private Context context;
-    private ItemTouchHelper itemTouchHelper;
     private boolean dragAndDrop;
     private boolean swipeToDismiss;
     private boolean vertical;
@@ -52,7 +51,6 @@ public class BrickDataManager implements Serializable {
         this.items = new LinkedList<>();
         this.behaviors = new ArrayList<>();
         this.currentlyVisibleItems = new LinkedList<>();
-        this.itemTouchHelper = new ItemTouchHelper(new BrickItemTouchHelperCallback(this));
     }
 
     /**
@@ -154,6 +152,8 @@ public class BrickDataManager implements Serializable {
      * This attaches the touch helper to the recycler view if swipe or drag and drop are enabled.
      */
     private void attachTouchHelper() {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new BrickItemTouchHelperCallback(this));
+
         if ((dragAndDrop || swipeToDismiss) && brickRecyclerAdapter != null) {
             itemTouchHelper.attachToRecyclerView(brickRecyclerAdapter.getRecyclerView());
         } else {
