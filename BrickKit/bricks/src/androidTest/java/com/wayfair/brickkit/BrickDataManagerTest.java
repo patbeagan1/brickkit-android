@@ -910,7 +910,7 @@ public class BrickDataManagerTest {
         assertEquals(-1, observer.getItemRangeInsertedItemCount());
 
         assertEquals(1, observer.getItemRangeChangedPositionStart());
-        assertEquals(4, observer.getItemRangeChangedItemCount());
+        assertEquals(1, observer.getItemRangeChangedItemCount());
 
         assertEquals(-1, observer.getItemRangeRemovedPositionStart());
         assertEquals(-1, observer.getItemRangeRemovedItemCount());
