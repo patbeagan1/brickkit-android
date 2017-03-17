@@ -7,6 +7,7 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.GridLayout;
@@ -24,13 +25,13 @@ import java.util.ListIterator;
 
 /**
  * Class which maintains a collection of bricks and manages how they are laid out in an provided RecyclerView.
- *
+ * <p>
  * This class maintains the bricks and handles notifying the underlying adapter when items are updated.
  */
 public class BrickDataManager implements Serializable {
+    private final int maxSpanCount;
     private ArrayList<BrickBehavior> behaviors;
     private BrickRecyclerAdapter brickRecyclerAdapter;
-    private final int maxSpanCount;
     private LinkedList<BaseBrick> items;
     private LinkedList<BaseBrick> currentlyVisibleItems;
     private boolean dataHasChanged;
@@ -54,12 +55,40 @@ public class BrickDataManager implements Serializable {
     }
 
     /**
+     * Sets the layout for the recyclerview to be a GridLayout.
+     *
+     * @param orientation the orientation of the layout
+     * @param reverse     whether the layout should make items appear in reverse order
+     */
+    public void applyGridLayout(int orientation, boolean reverse) {
+        if (recyclerView != null) {
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(context, maxSpanCount, orientation, reverse);
+            gridLayoutManager.setSpanSizeLookup(new BrickSpanSizeLookup(context, this));
+            recyclerView.setLayoutManager(gridLayoutManager);
+        }
+    }
+
+    /**
+     * Sets the layout for the recyclerview to be a StaggeredGridLayout.
+     *
+     * @param spanCount   the number of columns to which the bricks will conform
+     * @param orientation the orientation of the layout
+     */
+    public void applyStaggeredLayout(int spanCount, int orientation) {
+        if (recyclerView != null) {
+            StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(spanCount, orientation);
+            staggeredGridLayoutManager.setItemPrefetchEnabled(false);
+            recyclerView.setLayoutManager(staggeredGridLayoutManager);
+        }
+    }
+
+    /**
      * Set the recycler view for this BrickDataManager, this will setup the underlying adapter and begin displaying any bricks.
      *
-     * @param context {@link Context} to use
-     * @param recyclerView {@link RecyclerView} to put views in
-     * @param orientation Layout orientation. Should be {@link GridLayoutManager#HORIZONTAL} or {@link GridLayoutManager#VERTICAL}.
-     * @param reverse When set to true, layouts from end to start.
+     * @param context            {@link Context} to use
+     * @param recyclerView       {@link RecyclerView} to put views in
+     * @param orientation        Layout orientation. Should be {@link GridLayoutManager#HORIZONTAL} or {@link GridLayoutManager#VERTICAL}.
+     * @param reverse            When set to true, layouts from end to start.
      * @param recyclerViewParent View RecyclerView's parent view
      */
     public void setRecyclerView(Context context, RecyclerView recyclerView, int orientation, boolean reverse, View recyclerViewParent) {
@@ -72,9 +101,7 @@ public class BrickDataManager implements Serializable {
         recyclerView.setAdapter(brickRecyclerAdapter);
         recyclerView.addItemDecoration(new BrickRecyclerItemDecoration(this));
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, maxSpanCount, orientation, reverse);
-        gridLayoutManager.setSpanSizeLookup(new BrickSpanSizeLookup(context, this));
-        recyclerView.setLayoutManager(gridLayoutManager);
+        applyGridLayout(orientation, reverse);
 
         for (BrickBehavior behavior : behaviors) {
             behavior.attachToRecyclerView();
@@ -91,6 +118,7 @@ public class BrickDataManager implements Serializable {
      *
      * @return the context from getContext()
      */
+
     public Context getContext() {
         return context;
     }
@@ -105,34 +133,12 @@ public class BrickDataManager implements Serializable {
     }
 
     /**
-     * Toggle the ability to drag and drop bricks.
-     *
-     * @param dragAndDrop Toggle drag and drop for bricks.
-     */
-    public void setDragAndDrop(boolean dragAndDrop) {
-        this.dragAndDrop = dragAndDrop;
-
-        attachTouchHelper();
-    }
-
-    /**
      * Get the recycler view's parent.
      *
      * @return the attached recyclerview's parent, null if none has been attached
      */
     public View getRecyclerViewParent() {
         return recyclerViewParent;
-    }
-
-    /**
-     * Toggle the ability to swipe to dismiss bricks.
-     *
-     * @param swipeToDismiss Toggle swipe to dismiss for bricks.
-     */
-    public void setSwipeToDismiss(boolean swipeToDismiss) {
-        this.swipeToDismiss = swipeToDismiss;
-
-        attachTouchHelper();
     }
 
     /**
@@ -145,12 +151,34 @@ public class BrickDataManager implements Serializable {
     }
 
     /**
+     * Toggle the ability to drag and drop bricks.
+     *
+     * @param dragAndDrop Toggle drag and drop for bricks.
+     */
+    public void setDragAndDrop(boolean dragAndDrop) {
+        this.dragAndDrop = dragAndDrop;
+
+        attachTouchHelper();
+    }
+
+    /**
      * Is swipe to dismiss enabled.
      *
      * @return Is swipe to dismiss enabled.
      */
     public boolean getSwipeToDismiss() {
         return swipeToDismiss;
+    }
+
+    /**
+     * Toggle the ability to swipe to dismiss bricks.
+     *
+     * @param swipeToDismiss Toggle swipe to dismiss for bricks.
+     */
+    public void setSwipeToDismiss(boolean swipeToDismiss) {
+        this.swipeToDismiss = swipeToDismiss;
+
+        attachTouchHelper();
     }
 
     /**
@@ -304,7 +332,7 @@ public class BrickDataManager implements Serializable {
      * Inserts brick before the anchor brick.
      *
      * @param anchor brick to insert before
-     * @param item the brick to add
+     * @param item   the brick to add
      */
     public void addBeforeItem(BaseBrick anchor, BaseBrick item) {
         int anchorDataManagerIndex = items.indexOf(anchor);
@@ -329,7 +357,7 @@ public class BrickDataManager implements Serializable {
      * Inserts brick after the anchor brick.
      *
      * @param anchor brick to insert after
-     * @param item the brick to add
+     * @param item   the brick to add
      */
     public void addAfterItem(BaseBrick anchor, BaseBrick item) {
         int anchorDataManagerIndex = this.items.indexOf(anchor);
@@ -375,7 +403,7 @@ public class BrickDataManager implements Serializable {
      * Moves an item from one location to the location of the other.
      *
      * @param fromBrick The brick to move
-     * @param toBrick The brick to move fromBrick to
+     * @param toBrick   The brick to move fromBrick to
      */
     public void moveItem(BaseBrick fromBrick, BaseBrick toBrick) {
         int fromPosition = this.items.indexOf(fromBrick);
@@ -435,7 +463,7 @@ public class BrickDataManager implements Serializable {
     /**
      * Replace a target brick with a replacement.
      *
-     * @param target brick to replace
+     * @param target      brick to replace
      * @param replacement the brick being added
      */
     public void replaceItem(BaseBrick target, BaseBrick replacement) {
@@ -749,8 +777,8 @@ public class BrickDataManager implements Serializable {
     /**
      * Retrieves a brick who's associated layout resource ID matches that of the parameter.
      *
-     * @param layoutResId   Layout resource ID
-     * @return              An instance of BaseBrick or null
+     * @param layoutResId Layout resource ID
+     * @return An instance of BaseBrick or null
      */
     public BaseBrick brickWithLayout(@LayoutRes int layoutResId) {
         List<BaseBrick> visibleItems = getRecyclerViewItems();
@@ -766,8 +794,8 @@ public class BrickDataManager implements Serializable {
     /**
      * Retrieves a brick at a specific position.
      *
-     * @param position  Position of the brick within the data set
-     * @return          An instance of BaseBrick or null
+     * @param position Position of the brick within the data set
+     * @return An instance of BaseBrick or null
      */
     public BaseBrick brickAtPosition(int position) {
         if (position >= 0 && position < getRecyclerViewItems().size()) {

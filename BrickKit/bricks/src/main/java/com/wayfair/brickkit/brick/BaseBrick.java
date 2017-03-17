@@ -31,6 +31,7 @@ public abstract class BaseBrick {
     private boolean isOnRightWall;
     @StickyScrollMode
     private int stickyScrollMode = StickyScrollMode.SHOW_ON_SCROLL;
+    private boolean fullSize;
 
     /**
      * Constructor.
@@ -92,6 +93,16 @@ public abstract class BaseBrick {
     }
 
     /**
+     * Whether the brick should take up the width or height of the fragment
+     * This is important for the StaggeredGridLayout, because it allows for different column sizes.
+     *
+     * @return true if the brick takes up the whole row, false otherwise
+     */
+    public boolean isFullSize(){
+        return fullSize;
+    }
+
+    /**
      * Gets the {@link BrickPadding} for this brick.
      *
      * @return the {@link BrickPadding} for this brick
@@ -134,6 +145,15 @@ public abstract class BaseBrick {
      */
     public void setHeader(boolean header) {
         this.header = header;
+    }    /**
+
+     * Set whether the brick should take up the whole row
+     * This is only important for the StaggeredGridLayout
+     *
+     * @param fullSize whether the brick should take up the whole row
+     */
+    public void setFullSize(boolean fullSize) {
+        this.fullSize = fullSize;
     }
 
     /**
