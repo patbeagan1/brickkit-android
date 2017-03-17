@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.BrickFragment;
+import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
 import com.wayfair.brickkit.size.SimpleBrickSize;
 import com.wayfair.brickkitdemo.bricks.UnusedBrick;
@@ -158,6 +158,28 @@ public class MainActivityFragment extends BrickFragment {
                             public void onClick(View v) {
                                 getFragmentManager().beginTransaction()
                                         .replace(R.id.content, new InfiniteScrollBrickFragment())
+                                        .addToBackStack(null)
+                                        .commit();
+                            }
+                        }
+                )
+        );
+        usedBricks.add(
+                new UsedBrick(
+                        getContext(),
+                        new SimpleBrickSize(maxSpans()) {
+                            @Override
+                            protected int size() {
+                                return TWO_FIFTH;
+                            }
+                        },
+                        padding,
+                        "Staggered Infinite Scroll Brick View",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.content, new StaggeredInfiniteScrollBrickFragment())
                                         .addToBackStack(null)
                                         .commit();
                             }
