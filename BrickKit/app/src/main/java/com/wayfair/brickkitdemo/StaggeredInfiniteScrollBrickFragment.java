@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.wayfair.brickkit.BrickFragment;
 import com.wayfair.brickkit.OnReachedItemAtPosition;
+import com.wayfair.brickkit.StickyScrollMode;
+import com.wayfair.brickkit.behavior.StickyHeaderBehavior;
 import com.wayfair.brickkit.brick.BaseBrick;
 import com.wayfair.brickkit.brick.TextBrick;
 import com.wayfair.brickkit.padding.InnerOuterBrickPadding;
@@ -85,7 +87,13 @@ public class StaggeredInfiniteScrollBrickFragment extends BrickFragment {
                     text + textToAppend
             );
 
+            if (i % 10 == 0) {
+                unusedBrick2.setHeader(true);
+                unusedBrick2.setStickyScrollMode(StickyScrollMode.SHOW_ON_SCROLL_DOWN);
+            }
+
             dataManager.addLast(unusedBrick2);
         }
+        dataManager.addBehavior(new StickyHeaderBehavior(dataManager));
     }
 }
